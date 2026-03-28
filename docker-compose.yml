@@ -1,0 +1,33 @@
+services:
+  db16:
+    image: postgres:16
+    container_name: odoo16_db_container
+    environment:
+      POSTGRES_DB: ${DB16_NAME}
+      POSTGRES_USER: ${DB16_USER}
+      POSTGRES_PASSWORD: ${DB16_PASSWORD}
+    volumes:
+      - odoo16_postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  odoo16:
+    image: odoo:16
+    container_name: odoo16_app_container
+    depends_on:
+      - db16
+    ports:
+      - "${HOST_PORT_WEB}:8069"
+      - "${HOST_PORT_CHAT}:8072"
+    volumes:
+      - odoo16_web_data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./custom_addons:/mnt/extra-addons
+    environment:
+      - HOST=${DB16_HOST}
+      - USER=${DB16_USER}
+      - PASSWORD=${DB16_PASSWORD}
+    restart: always
+
+volumes:
+  odoo16_postgres_data:
+  odoo16_web_data:

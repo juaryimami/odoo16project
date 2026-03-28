@@ -1,0 +1,279 @@
+.o_action_manager{
+    margin: 10px;
+    //margin-left: 30px;
+    display: flex;
+    justify-content: right;
+   // background-color: white !important;
+   // margin-left: 10px;
+.o_DiscussContainer{
+    width: $content-width !important;
+    margin-left: 10px;
+}
+.o_action{
+//justify-content: right;
+width: $content-width !important;
+  margin-left: 10px;
+   // margin-left: 10px;
+ .o_control_panel{
+  //margin-left: 15px;
+ //  width: $content-width !important;
+}
+ }
+.o_content{
+//width: 80% !important;
+//margin-left: 15px;
+.o_view_controller{
+justify-content: right;
+width: $content-width !important;
+ }
+}
+}
+// .o_action {
+//     .o_view_controller{
+//         .o_kanban_view{
+//             margin: 15px !important;
+//         }
+//     }
+//         }
+// .container-fluid-dashboard{
+//    align-items: right;
+//    width: $content-width !important;
+// }
+// .o_onboarding_container{
+//     width: $content-width !important;
+// }
+// .o_cp_bottom_right{
+//     display:flex;
+// }
+
+
+// .o_setting_container{
+//     display: flex;
+//     justify-content: right;
+//     //width: 80%;
+//    .settings_tab{
+//     background: white !important;
+//     .tab{
+
+//      .selected{
+//       color: red !important;
+//       background: green !important;
+//        > span{
+//         color: $ashewa-text-color !important;
+//        }
+//      }
+//     }
+//     }
+
+//    }
+
+
+// .oe_form_configuration{
+//     color: $ashewa-text-color !important;
+
+//     //color: red !important;
+// }
+// .o_onboarding_main{
+// margin-left: 15px;
+// margin-right: 0;
+//  width: 100% !important;
+// }
+
+.o_action {
+.o_spreadsheet_dashboard_action {
+.o_field_highlight{
+    color: red !important;
+  //  background: yellow !important;
+}
+}
+}
+//apps icon rounded corners
+.oe_module_icon{
+    border-radius: 50px;
+}
+//apps icon side bar category list
+.o_search_panel{
+
+    margin-top: 12px !important;
+    background-color: none;
+
+}
+//apps list view style
+.o_list_renderer{
+    margin-top: 12px !important;
+}
+//employees department side bar
+.o_search_panel{
+    margin-top: 12px !important;
+}
+.o_mobile_menu_toggle{
+    color: $ashewa-text-color !important;
+}
+//mobile menu
+.o_user_menu_mobile{ 
+    > a{
+        color: blanchedalmond !important;
+    }
+    
+} 
+//user name
+.o_burger_menu_username{
+    color: white !important;
+}
+.o_burger_menu_topbar{
+    background-color: darkslategray !important;
+}
+// .bg-view{
+//     // color: blanchedalmond !important;
+//     background-color: darkslategray !important;
+// }
+.o_burger_menu_content{
+    background-color: darkslategray !important;
+}
+
+//measure button sytle
+
+    .btn-primary{
+        color: white !important;
+    }
+.o-chart-container{
+    //o-scorecard style
+    >div {
+        margin-top: 2px;
+        background-color: $o-brand-primary !important;
+        // align-items: left;
+        border-radius: 5px !important;
+        // width: 200px !important;
+        // border-top-right-radius: 5px !important;
+        // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        .o-title-text{
+            color: white !important;
+
+            // text-decoration: underline;
+            border-bottom: 2px solid #f0f0f0;
+            font-size: 30px;
+           
+        }
+        .o-scorecard-content{
+            color: white !important;
+            > div{
+                color: white !important;
+           
+            }
+                .o-baseline-text{
+                    > span {
+                        color: white !important;
+                    }
+
+                }
+            }
+          
+        }
+        // >div:hover{
+        //     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        //     background-color: green !important;
+        // }
+
+        }
+      
+        // .o-grid-overlay{
+        //     color: yellow !important;
+        //     .o-dashboard-clickable-cell{
+        //        background-color: $o-brand-odoo !important;
+        //     }
+            
+        // }
+//dashboard side bar
+        .o_spreadsheet_dashboard_search_panel {
+
+            // margin: 10px;
+           
+            font-style: $ashewa-text-color;
+            font-family: $ashewa-font-type;
+            font-weight: bold;
+            border-radius: 5px !important;
+            background-color: $o-brand-odoo !important;
+            color: white !important;
+            >section{
+                
+                background-color: $o-brand-odoo !important;
+                >ul{
+                    >li{
+                        background-color: $o-brand-odoo;
+                        color: white !important;
+                      
+                    }
+                    .active{
+                        border-radius: 3px;
+                        color: black !important;
+                        background-color: rgb(206, 206, 206) !important;
+                    }
+                    >li:hover{
+                        border-radius: 3px;
+                        background-color: rgb(206, 206, 206) !important;
+                        color: black !important;
+                    }
+                }
+            }
+        }
+    
+        //dashboard top bar
+        .o_cp_top{
+            padding: 10px;
+            border-radius: 5px;
+            // background-color: rgb(235, 235, 235) !important;
+            //dashboard title
+            .o_cp_top_left{
+                display: none;
+            }
+            .o_cp_top_right{
+                border: 1px;
+                // padding: 5px;
+                // border-radius: 3px;
+                // width: fit-content;
+            .o-autocomplete--input{
+                border-radius: 2px !important;
+                // background-color: yellow !important;
+                // .o_input{
+                //     border-radius: 2px !important;
+                //     background-color: yellow !important;
+                // }
+            } 
+            .o-filter-value{
+                border: 1px solid;
+                color: $o-brand-odoo;
+            }
+            }
+        }
+
+      .o_content{
+        color: $o-brand-primary !important;
+        // background-color: red !important;
+        .o_graph_renderer {
+           
+        .o_graph_canvas_container {
+            // background-color: red !important;
+        
+        >canvas {
+            color: red !important;
+            // background-color: red !important;
+        }
+    }
+}
+        }
+   
+    //     .o_spreadsheet_dashboard_action{
+    //     .o_renderer{
+    //         .o-spreadsheet {
+    //             .o-grid {
+    //                 background-color: rgb(59, 54, 133);
+    //         }
+    //     } 
+    //     }
+    // }
+
+//     .o_spreadsheet_dashboard_action{
+//     .o_renderer {
+//         background-color: yellow !important;
+//     }
+// }

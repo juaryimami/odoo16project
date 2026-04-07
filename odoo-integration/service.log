@@ -1,0 +1,9 @@
+nohup: ignoring input
+
+> odoo-integration@1.0.0 start
+> node server.js
+
+◇ injected env (6) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+🚀 Odoo Integration Service listening at http://localhost:9098
+📅 Daily bulk sync scheduled for 1:00 AM.

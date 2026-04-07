@@ -1,0 +1,8 @@
+2026-04-07 12:05:00: ◇ injected env (6) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+2026-04-07 12:05:00: ◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+2026-04-07 12:05:00: 🚀 Odoo Integration Service listening at http://localhost:9098
+2026-04-07 12:05:00: 📅 Daily bulk sync scheduled for 1:00 AM.
+2026-04-07 12:58:43: ◇ injected env (6) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+2026-04-07 12:58:43: ◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+2026-04-07 12:58:44: 🚀 Odoo Integration Service listening at http://localhost:9098
+2026-04-07 12:58:44: 📅 Daily bulk sync scheduled for 1:00 AM.

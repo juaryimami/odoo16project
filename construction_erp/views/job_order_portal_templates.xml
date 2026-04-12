@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="job_order_accepted_page" name="Job Order Accepted">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <div class="container mt-5 text-center">
+                        <div class="alert alert-success p-5 shadow-sm" style="border-radius: 12px;">
+                            <i class="fa fa-check-circle fa-5x mb-4" style="color: #28a745;"/>
+                            <h1 class="display-4 fw-bold">Contract Accepted!</h1>
+                            <p class="lead mt-3">
+                                Thank you, <strong><t t-esc="job_order.contractor_id.name"/></strong>.
+                                You have successfully accepted the job offer for <strong><t t-esc="job_order.project_id.name"/></strong>.
+                            </p>
+                            <hr class="my-4"/>
+                            <p>The Project Manager has been notified. You can now coordinate the next steps for <strong><t t-esc="job_order.phase_id.name"/></strong>.</p>
+                            <a href="/" class="btn btn-primary btn-lg px-5 mt-3">Return to Homepage</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="job_order_already_accepted_page" name="Job Order Already Accepted">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <div class="container mt-5 text-center">
+                        <div class="alert alert-info p-5 shadow-sm" style="border-radius: 12px;">
+                            <i class="fa fa-info-circle fa-5x mb-4 text-info"/>
+                            <h1 class="display-4 fw-bold">Already Processed</h1>
+                            <p class="lead mt-3">
+                                This contract offer for <strong><t t-esc="job_order.name"/></strong> has already been accepted or is currently active.
+                            </p>
+                            <hr class="my-4"/>
+                            <p>Current Status: <strong><t t-esc="dict(job_order._fields['state'].selection).get(job_order.state)"/></strong></p>
+                            <a href="/" class="btn btn-outline-primary px-5 mt-3">Return to Homepage</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

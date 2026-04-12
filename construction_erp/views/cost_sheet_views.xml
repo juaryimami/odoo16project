@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_cost_sheet_tree" model="ir.ui.view">
+        <field name="name">construction.cost.sheet.tree</field>
+        <field name="model">construction.cost.sheet</field>
+        <field name="arch" type="xml">
+            <tree string="Job Cost Sheets">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="job_order_id"/>
+                <field name="total_cost" sum="Total Cost"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_cost_sheet_form" model="ir.ui.view">
+        <field name="name">construction.cost.sheet.form</field>
+        <field name="model">construction.cost.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Job Cost Sheet">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" states="draft" class="oe_highlight"/>
+                    <button name="action_approve" string="Approve" type="object" states="confirmed" class="oe_highlight"/>
+                    <button name="action_done" string="Mark as Done" type="object" states="approved" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,approved,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchase_orders" type="object" class="oe_stat_button" icon="fa-shopping-cart">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Purchase Orders</span>
+                            </div>
+                        </button>
+                        <button name="action_view_vendor_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Vendor Invoices</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <span class="o_form_label">Job Cost Sheet</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Project Identification">
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="analytic_account_id" readonly="1"/>
+                            <field name="job_order_id" domain="[('project_id', '=', project_id)]" options="{'no_create': True}"/>
+                            <field name="partner_id" readonly="1"/>
+                        </group>
+                        <group string="Control Dates &amp; Authorship">
+                            <field name="create_date" readonly="1"/>
+                            <field name="closed_date" readonly="1" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                            <field name="user_id" readonly="1" widget="many2one_avatar_user"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <!-- 1. Materials Tab -->
+                        <page string="Materials" name="materials">
+                            <field name="material_line_ids">
+                                <tree editable="bottom" decoration-danger="variance_amount &lt; 0" decoration-success="variance_amount &gt; 0">
+                                    <field name="phase_id" optional="show"/>
+                                    <field name="product_id" domain="[('type', 'in', ['product', 'consu'])]"/>
+                                    <field name="description" optional="hide"/>
+                                    <field name="quantity" string="Planned Qty"/>
+                                    <field name="uom_id" optional="show"/>
+                                    <field name="cost_unit"/>
+                                    <field name="subtotal" string="Budgeted Amount" sum="Total Budget"/>
+                                    <field name="actual_amount_spent" string="Actual Spend" sum="Total Actual"/>
+                                    <field name="variance_amount" widget="monetary" decoration-bf="True"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- 2. Labours Tab -->
+                        <page string="Labours" name="labours">
+                            <field name="labor_line_ids">
+                                <tree editable="bottom" decoration-danger="variance_amount &lt; 0" decoration-success="variance_amount &gt; 0">
+                                    <field name="phase_id"/>
+                                    <field name="role_id"/>
+                                    <field name="employee_count"/>
+                                    <field name="hours_per_person" widget="float_time"/>
+                                    <field name="cost_unit" string="Hourly Rate"/>
+                                    <field name="subtotal" string="Budgeted Cost" sum="Total Labor Budget"/>
+                                    <field name="actual_amount_spent" string="Actual Hourly Cost" sum="Total Labor Actual"/>
+                                    <field name="variance_amount" decoration-bf="True"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- 3. Equipment & Machinery -->
+                        <page string="Equipment" name="equipment">
+                            <field name="equipment_line_ids">
+                                <tree editable="bottom" decoration-danger="variance_amount &lt; 0" decoration-success="variance_amount &gt; 0">
+                                    <field name="phase_id"/>
+                                    <field name="equipment_id"/>
+                                    <field name="rate_type"/>
+                                    <field name="quantity" string="Planned Hours/Days"/>
+                                    <field name="cost_unit" string="Rate"/>
+                                    <field name="subtotal" sum="Budget"/>
+                                    <field name="actual_amount_spent" string="Actual Op Cost" sum="Actual"/>
+                                    <field name="variance_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- 4. Vehicle & Fleet -->
+                        <page string="Vehicle" name="vehicle">
+                            <field name="vehicle_line_ids">
+                                <tree editable="bottom" decoration-danger="variance_amount &lt; 0" decoration-success="variance_amount &gt; 0">
+                                    <field name="phase_id"/>
+                                    <field name="vehicle_id"/>
+                                    <field name="quantity" string="Planned Trips/Km"/>
+                                    <field name="cost_unit" string="Rate / Unit"/>
+                                    <field name="subtotal" sum="Budget"/>
+                                    <field name="actual_amount_spent" sum="Actual"/>
+                                    <field name="variance_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- 5. Overhead & Others -->
+                        <page string="Overhead" name="overhead">
+                            <field name="overhead_line_ids">
+                                <tree editable="bottom" decoration-danger="variance_amount &lt; 0" decoration-success="variance_amount &gt; 0">
+                                    <field name="phase_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="cost_unit"/>
+                                    <field name="subtotal" sum="Total Overhead Budget"/>
+                                    <field name="actual_amount_spent" sum="Actual Overhead"/>
+                                    <field name="variance_amount"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- 6. Summary Dashboard -->
+                        <page string="Financial Summary" name="budget">
+                            <div class="o_horizontal_separator mt16 mb16">Project Financial Pulse</div>
+                            <group>
+                                <group>
+                                    <field name="total_budget_amount" widget="monetary" decoration-bf="1"/>
+                                    <field name="total_actual_cost" widget="monetary" decoration-danger="total_actual_cost &gt; total_budget_amount"/>
+                                    <field name="total_variance_amount" widget="monetary" decoration-success="total_variance_amount &gt; 0" decoration-danger="total_variance_amount &lt; 0"/>
+                                </group>
+                                <group>
+                                    <label for="budget_utilization_percent" string="Budget Utilization"/>
+                                    <div class="o_row">
+                                        <field name="budget_utilization_percent" widget="progressbar"/>
+                                    </div>
+                                </group>
+                            </group>
+                            
+                            <separator string="Budget Allocation by Category"/>
+                            <group>
+                                <group>
+                                    <field name="material_budget_total"/>
+                                    <field name="labor_budget_total"/>
+                                    <field name="overhead_budget_total"/>
+                                </group>
+                                <group>
+                                    <field name="vehicle_budget_total" string="Fleet / Logistics"/>
+                                    <field name="equipment_budget_total"/>
+                                    <field name="total_cost" string="Total Planned" class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group string="Project Scope &amp; Execution Notes">
+                        <field name="description" nolabel="1" placeholder="Describe the scope of work, technical specifications, and key execution milestones for this costing period..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_cost_sheet" model="ir.actions.act_window">
+        <field name="name">Job Cost Sheets</field>
+        <field name="res_model">construction.cost.sheet</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Cost Sheet for your Job Order.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_construction_cost_sheets"
+              name="Job Costing"
+              parent="menu_construction_operations"
+              action="action_construction_cost_sheet"
+              sequence="30"/>
+</odoo>

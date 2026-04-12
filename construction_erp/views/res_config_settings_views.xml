@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_construction" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.construction</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Construction ERP" id="construction_erp" string="Construction">
+                    <h2>Supply Chain Automation</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="construction_procurement">
+                            <div class="o_setting_left_pane">
+                                <field name="construction_auto_generate_rfq"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="construction_auto_generate_rfq" string="Automated RFQs"/>
+                                <div class="text-muted">
+                                    Automatically spawn Draft POs for Material Requisition stock deficits natively.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="construction_scrap_routing">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <label for="construction_default_scrap_location_id"/>
+                                <div class="text-muted">
+                                    Define the exact Native Location for physical site loss extraction tracking.
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="construction_default_scrap_location_id" class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h2>Quality Assurance Architecture</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="construction_qa_rules">
+                            <div class="o_setting_left_pane">
+                                <field name="construction_inspection_strict"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="construction_inspection_strict" string="QA Isolation Billing"/>
+                                <div class="text-muted">
+                                    Lock Subcontractor Vendor Bills strictly behind Quality Assurance validation loops visually.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2>Communication Gateways</h2>
+                    <div class="row mt16 o_settings_container">
+                        <!-- Twilio Section -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="twilio_settings">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">WhatsApp (Twilio)</span>
+                                <div class="text-muted">Configure Twilio API for automated WhatsApp reminders.</div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="twilio_account_sid" class="col-lg-4 o_light_label"/>
+                                        <field name="twilio_account_sid" password="True"/>
+                                    </div>
+                                    <div class="row">
+                                        <label for="twilio_auth_token" class="col-lg-4 o_light_label"/>
+                                        <field name="twilio_auth_token" password="True"/>
+                                    </div>
+                                    <div class="row">
+                                        <label for="twilio_from_number" class="col-lg-4 o_light_label"/>
+                                        <field name="twilio_from_number"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Telegram Section -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="telegram_settings">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Telegram Bot</span>
+                                <div class="text-muted">Configure Telegram Bot Token for reminders.</div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="telegram_bot_token" class="col-lg-4 o_light_label"/>
+                                        <field name="telegram_bot_token" password="True"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Throttling Section -->
+                        <div class="col-12 col-lg-6 o_setting_box" id="reminder_throttling">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Reminder Throttling</span>
+                                <div class="text-muted">Control the frequency and limit of automated notifications.</div>
+                                <div class="content-group">
+                                    <div class="row mt16">
+                                        <label for="reminder_interval_days" class="col-lg-4 o_light_label"/>
+                                        <field name="reminder_interval_days"/>
+                                    </div>
+                                    <div class="row">
+                                        <label for="max_reminder_limit" class="col-lg-4 o_light_label"/>
+                                        <field name="max_reminder_limit"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_construction_notification_gateways" model="ir.actions.act_window">
+        <field name="name">Notification Gateways</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'construction_erp', 'focused_communication': True}</field>
+    </record>
+
+
+    <menuitem id="menu_construction_notification_gateways"
+              name="Notification Gateways"
+              parent="menu_construction_configuration"
+              action="action_construction_notification_gateways"
+              sequence="20"/>
+
+    <record id="action_construction_config" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'construction_erp'}</field>
+    </record>
+
+    <menuitem id="menu_construction_settings"
+              name="Settings"
+              parent="menu_construction_configuration"
+              action="action_construction_config"
+              groups="base.group_system"
+              sequence="0"/>
+</odoo>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_estimate_tree" model="ir.ui.view">
+        <field name="name">construction.estimate.tree</field>
+        <field name="model">construction.estimate</field>
+        <field name="arch" type="xml">
+            <tree string="Estimates (BOQ)">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="total_estimated_amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_estimate_form" model="ir.ui.view">
+        <field name="name">construction.estimate.form</field>
+        <field name="model">construction.estimate</field>
+        <field name="arch" type="xml">
+            <form string="Estimate (BOQ)">
+                <header>
+                    <button name="action_submit" string="Submit for Review" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_approve" string="Approve" type="object" states="submitted" class="btn-primary" groups="project.group_project_manager"/>
+                    <button name="action_reject" string="Reject" type="object" states="submitted" class="btn-secondary" groups="project.group_project_manager"/>
+                    <button name="action_create_cost_sheet" string="Initialize Project Budget" type="object" states="approved" class="btn-success" icon="fa-rocket"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Estimate Reference (e.g., BOQ-001)"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="project_info">
+                            <field name="project_id"/>
+                            <field name="task_id" string="Associated Phase Task"/>
+                            <field name="date"/>
+                        </group>
+                        <group name="budget_info">
+                            <field name="cost_sheet_id" attrs="{'invisible': [('cost_sheet_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Estimation Lines">
+                            <field name="line_ids">
+                                <tree editable="bottom" decoration-danger="quantity_consumed &gt; quantity">
+                                    <field name="product_id"/>
+                                    <field name="type"/>
+                                    <field name="quantity"/>
+                                    <field name="quantity_consumed" force_save="1" readonly="1"/>
+                                    <field name="quantity_variance" force_save="1" readonly="1" optional="show"/>
+                                    <field name="consumption_percentage" widget="progressbar" string="Consumed (%)" optional="show"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_material" widget="monetary"/>
+                                <field name="total_labor" widget="monetary"/>
+                                <field name="total_equipment" widget="monetary"/>
+                                <field name="total_vehicle" widget="monetary"/>
+                                <field name="total_overhead" widget="monetary"/>
+                                <field name="total_estimated_amount" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_estimate" model="ir.actions.act_window">
+        <field name="name">Estimations (BOQ)</field>
+        <field name="res_model">construction.estimate</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_estimate"
+              name="Estimations (BOQ)"
+              parent="menu_construction_commercials"
+              action="action_construction_estimate"
+              sequence="10"/>
+</odoo>

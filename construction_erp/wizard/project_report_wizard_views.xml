@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_report_wizard_form" model="ir.ui.view">
+        <field name="name">project.report.wizard.form</field>
+        <field name="model">project.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Executive Reporting Console">
+                <field name="state" invisible="1"/>
+                
+                <!-- State 1: Parameter Selection -->
+                <div attrs="{'invisible': [('state', '!=', 'choose')]}">
+                    <div class="alert alert-info" role="alert" style="margin-bottom:15px;">
+                        <strong>Deep Analytics Extractor:</strong> This wizard bridges native financial accounting, consumption telemetry, and sales ledgers. Select your target framework below.
+                    </div>
+                    <group>
+                        <field name="project_id" options="{'no_create': True}"/>
+                        <field name="report_type" widget="radio"/>
+                    </group>
+                    <footer>
+                        <button name="action_generate_report" string="Run Extraction" type="object" class="btn-primary" icon="fa-cogs"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </div>
+
+                <!-- State 2: Download Ready -->
+                <div attrs="{'invisible': [('state', '!=', 'get')]}">
+                    <div class="alert alert-success" role="alert" style="margin-bottom:15px;">
+                        <strong>Extraction Complete!</strong> Your multi-sheet analytical Excel matrix has been rendered securely within active memory.
+                    </div>
+                    <group>
+                        <field name="file_name" invisible="1"/>
+                        <field name="excel_file" readonly="1" filename="file_name" widget="binary" string="Download Report"/>
+                    </group>
+                    <footer>
+                        <button string="Close Console" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_project_report_wizard" model="ir.actions.act_window">
+        <field name="name">Comprehensive Master Report</field>
+        <field name="res_model">project.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <!-- Menu Item -->
+    <menuitem id="menu_construction_master_report"
+              name="Comprehensive Project Report"
+              parent="menu_construction_reporting"
+              action="action_project_report_wizard"
+              sequence="10"/>
+</odoo>

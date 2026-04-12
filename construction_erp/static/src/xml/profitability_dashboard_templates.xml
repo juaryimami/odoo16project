@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="construction_erp.ProjectProfitabilityTemplate" owl="1">
+        <div class="o_profitability_dashboard">
+            <!-- Header section with high-fidelity gradients -->
+            <div class="o_profitability_header">
+                <div class="o_header_left">
+                    <h1>Project Profitability Analysis</h1>
+                    <p>Live financial performance tracking across construction portfolio.</p>
+                </div>
+                <div class="o_header_right">
+                    <button class="btn btn-light" t-on-click="() => this.loadData()">
+                        <i class="fa fa-refresh me-1"/> Refresh Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Total Portfolio KPI Cards -->
+            <div class="o_profitability_kpi_row">
+                <div class="o_profitability_card">
+                    <div class="o_card_label">Total Budgeted Cost</div>
+                    <div class="o_card_value"><t t-esc="formatCurrency(state.totals.budget)"/></div>
+                    <div class="o_card_growth text-muted">Planned across 5 projects</div>
+                </div>
+                <div class="o_profitability_card danger">
+                    <div class="o_card_label">Actual Spend</div>
+                    <div class="o_card_value"><t t-esc="formatCurrency(state.totals.actual)"/></div>
+                    <div class="o_card_growth text-danger"><i class="fa fa-arrow-up me-1"/> Consumption Trends</div>
+                </div>
+                <div class="o_profitability_card success">
+                    <div class="o_card_label">Certified vs Paid</div>
+                    <div class="o_card_value"><t t-esc="formatCurrency(state.totals.certified)"/> / <t t-esc="formatCurrency(state.totals.paid)"/></div>
+                    <div class="o_card_growth text-success"><i class="fa fa-check-circle me-1"/> CPR Validated</div>
+                </div>
+                <div class="o_profitability_card warning">
+                    <div class="o_card_label">Total Retention Held</div>
+                    <div class="o_card_value"><t t-esc="formatCurrency(state.totals.retention)"/></div>
+                    <div class="o_card_growth text-warning"><i class="fa fa-lock me-1"/> Contractor Security</div>
+                </div>
+            </div>
+
+            <!-- Visual Charts Row -->
+            <div class="o_profitability_charts">
+                <div class="o_chart_container">
+                    <div class="o_chart_title">Budget vs Actual by Project</div>
+                    <canvas id="budgetActualChart"></canvas>
+                </div>
+                <div class="o_chart_container">
+                    <div class="o_chart_title">Cost Breakdown Analysis</div>
+                    <canvas id="categoryBreakdownChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Granular Project Table -->
+            <div class="o_profitability_table_container">
+                <div class="o_chart_title">Detailed Project Profitability Matrix</div>
+                <table class="o_profitability_table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Budget</th>
+                            <th>Actual Spend</th>
+                            <th>Variance</th>
+                            <th>Margin (%)</th>
+                            <th>Retention</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.metrics" t-as="m" t-key="m.project_id">
+                            <tr>
+                                <td style="font-weight: 600;"><t t-esc="m.project_name"/></td>
+                                <td><t t-esc="formatCurrency(m.budget)"/></td>
+                                <td t-att-class="m.actual > m.budget ? 'text-danger' : ''">
+                                    <t t-esc="formatCurrency(m.actual)"/>
+                                </td>
+                                <td t-att-class="m.variance &lt; 0 ? 'text-danger' : 'text-success'">
+                                    <t t-esc="formatCurrency(m.variance)"/>
+                                </td>
+                                <td>
+                                    <span t-attf-class="badge #{m.margin_percent > 20 ? 'badge-profit' : 'badge-loss'}">
+                                        <t t-esc="m.margin_percent.toFixed(1)"/>%
+                                    </span>
+                                </td>
+                                <td><t t-esc="formatCurrency(m.retention)"/></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" t-on-click="() => this.openProject(m.project_id)">
+                                        <i class="fa fa-external-link"/>
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

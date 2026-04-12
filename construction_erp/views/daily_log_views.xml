@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_daily_log_tree" model="ir.ui.view">
+        <field name="name">construction.daily.log.tree</field>
+        <field name="model">construction.daily.log</field>
+        <field name="arch" type="xml">
+            <tree string="Daily Logs">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="supervisor_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_daily_log_form" model="ir.ui.view">
+        <field name="name">construction.daily.log.form</field>
+        <field name="model">construction.daily.log</field>
+        <field name="arch" type="xml">
+            <form string="Daily Progress Log">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="task_id"/>
+                            <field name="date"/>
+                            <field name="supervisor_id"/>
+                        </group>
+                        <group string="Site Manpower">
+                            <field name="skilled_labor_count"/>
+                            <field name="unskilled_labor_count"/>
+                            <field name="labor_count" readonly="1" string="Total Manpower" decoration-bf="1"/>
+                        </group>
+                        <group string="Operational Context">
+                            <field name="weather_conditions"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Log / Issues" name="issues">
+                            <group string="Equipment Usage">
+                                <field name="equipment_notes" nolabel="1" placeholder="Machinery active today..."/>
+                            </group>
+                            <group string="Issues &amp; Delays">
+                                <field name="issues_notes" nolabel="1" placeholder="Explain any site stoppages or external delays..."/>
+                            </group>
+                        </page>
+                        <page string="Visitor Registry" name="visitors">
+                            <field name="visitor_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="company"/>
+                                    <field name="reason"/>
+                                    <field name="time_in" widget="float_time"/>
+                                    <field name="time_out" widget="float_time"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Material Consumption" name="consumption">
+                            <field name="consumption_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                    <field name="line_ids" widget="many2many_tags"/>
+                                    <field name="state"/>
+                                    <button name="action_validate" string="Validate" type="object" icon="fa-check" attrs="{'invisible': [('state', '=', 'validated')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_daily_logs" model="ir.actions.act_window">
+        <field name="name">Daily Logs</field>
+        <field name="res_model">construction.daily.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_daily_logs"
+              name="Daily Site Logs"
+              parent="menu_construction_operations"
+              action="action_construction_daily_logs"
+              sequence="10"/>
+</odoo>

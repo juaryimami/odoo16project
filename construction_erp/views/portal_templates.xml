@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_receipt_upload_template" name="Upload Installment Receipt">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+            </t>
+            <div id="wrap">
+                <div class="container mt-5 mb-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card shadow-sm">
+                                <div class="card-header bg-primary text-white">
+                                    <h4>Upload Payment Receipt</h4>
+                                </div>
+                                <div class="card-body">
+                                    <p>Uploading payment proof for Invoice: <strong><t t-esc="invoice.name"/></strong></p>
+                                    <p>Amount Due: <strong><t t-esc="invoice.amount_residual"/> <t t-esc="invoice.currency_id.name"/></strong></p>
+                                    <form action="/my/installment/receipt/submit" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="invoice_id" t-att-value="invoice.id"/>
+                                        <div class="form-group mb-3">
+                                            <label for="client_pin">Security PIN</label>
+                                            <input type="password" id="client_pin" name="client_pin" class="form-control" placeholder="Enter your secret PIN" required="1"/>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="receipt_file">Select Bank Receipt (Image/PDF)</label>
+                                            <input type="file" id="receipt_file" name="receipt_file" class="form-control" required="1"/>
+                                        </div>
+                                        <t t-if="error">
+                                            <div class="alert alert-danger" role="alert">
+                                                <t t-esc="error"/>
+                                            </div>
+                                        </t>
+                                        <button type="submit" class="btn btn-success w-100">Submit Receipt</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

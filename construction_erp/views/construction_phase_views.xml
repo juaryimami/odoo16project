@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_phase_tree" model="ir.ui.view">
+        <field name="name">construction.phase.tree</field>
+        <field name="model">construction.phase</field>
+        <field name="arch" type="xml">
+            <tree string="Standard Phases" decoration-success="active == True" decoration-muted="active == False">
+                <field name="sequence" widget="handle"/>
+                <field name="lifecycle_id"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_phase_form" model="ir.ui.view">
+        <field name="name">construction.phase.form</field>
+        <field name="model">construction.phase</field>
+        <field name="arch" type="xml">
+            <form string="Project Phase">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Phase Name"/>
+                        <h1>
+                            <field name="name" placeholder="Phase Title (e.g. Excavation)"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="phase_config" string="General Info">
+                            <field name="lifecycle_id" options="{'no_create': True}"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group name="phase_status" string="Visibility">
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Phase Scope" name="scope">
+                            <field name="description" placeholder="Standard outline representing tasks in this phase..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_phase" model="ir.actions.act_window">
+        <field name="name">Standard Phases</field>
+        <field name="res_model">construction.phase</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- Menu Item -->
+    <menuitem id="menu_construction_phases_config"
+              name="Standard Phases"
+              parent="menu_construction_configuration"
+              action="action_construction_phase"
+              sequence="20"/>
+</odoo>

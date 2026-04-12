@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Safety Incident Views -->
+    <record id="view_construction_safety_incident_form" model="ir.ui.view">
+        <field name="name">construction.safety.incident.form</field>
+        <field name="model">construction.safety.incident</field>
+        <field name="arch" type="xml">
+            <form string="Safety Incident">
+                <header>
+                    <button name="action_investigate" string="Start Investigation" type="object" states="reported" class="btn-primary"/>
+                    <button name="action_resolve" string="Mark Resolved" type="object" states="investigating" class="btn-success"/>
+                    <button name="action_close" string="Close Entry" type="object" states="resolved" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="reported,investigating,resolved,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="incident_core">
+                            <field name="project_id"/>
+                            <field name="incident_type"/>
+                            <field name="severity" decoration-danger="severity in ['high', 'extreme']" decoration-warning="severity == 'medium'" decoration-info="severity == 'low'"/>
+                            <field name="date"/>
+                        </group>
+                        <group name="location_info">
+                            <field name="location_on_site"/>
+                            <field name="involved_party"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Occurrence Details" name="details">
+                            <group string="Description of Event">
+                                <field name="description" nolabel="1" placeholder="Provide a detailed description of the incident..."/>
+                            </group>
+                        </page>
+                        <page string="Investigation &amp; Action" name="investigation">
+                            <group>
+                                <field name="root_cause" placeholder="Identify the underlying cause..."/>
+                                <field name="corrective_action" placeholder="Detail action taken to prevent recurrence..."/>
+                            </group>
+                            <group string="Witness Statements">
+                                <field name="witness_notes" nolabel="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_safety_incident_tree" model="ir.ui.view">
+        <field name="name">construction.safety.incident.tree</field>
+        <field name="model">construction.safety.incident</field>
+        <field name="arch" type="xml">
+            <tree string="Safety Incidents" decoration-danger="severity in ['high', 'extreme']" decoration-warning="severity == 'medium'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="incident_type"/>
+                <field name="severity" widget="badge" decoration-danger="severity in ['high', 'extreme']" decoration-warning="severity == 'medium'" decoration-info="severity == 'low'"/>
+                <field name="state" widget="badge" decoration-info="state == 'investigating'" decoration-success="state == 'resolved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_safety_incident_kanban" model="ir.ui.view">
+        <field name="name">construction.safety.incident.kanban</field>
+        <field name="model">construction.safety.incident</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="severity"/>
+                <field name="incident_type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click container shadow-sm border-left-4 #{record.severity.raw_value == 'extreme' ? 'border-danger' : (record.severity.raw_value == 'high' ? 'border-warning' : 'border-info')}">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div class="text-muted">
+                                    <field name="project_id"/>
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge badge-pill badge-secondary">
+                                        <field name="incident_type"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Permit to Work (PTW) Views -->
+    <record id="view_construction_permit_work_form" model="ir.ui.view">
+        <field name="name">construction.permit.work.form</field>
+        <field name="model">construction.permit.work</field>
+        <field name="arch" type="xml">
+            <form string="Permit to Work">
+                <header>
+                    <button name="action_request" string="Request Approval" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_approve" string="Approve Permit" type="object" states="requested" class="btn-success" groups="project.group_project_manager"/>
+                    <button name="action_reject" string="Reject" type="object" states="requested" class="btn-secondary" groups="project.group_project_manager"/>
+                    <button name="action_cancel" string="Cancel" type="object" states="draft,requested,approved" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,requested,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="permit_details">
+                            <field name="project_id"/>
+                            <field name="permit_type"/>
+                            <field name="applicant_id" string="Issuer"/>
+                            <field name="receiver_id" string="Receiver (Contractor)"/>
+                        </group>
+                        <group name="validity">
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Safety Controls" name="safety">
+                            <group>
+                                <field name="hazards_identified" placeholder="Identify activity risks..."/>
+                                <field name="precautions_required" placeholder="Mandatory safety measures..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_permit_work_tree" model="ir.ui.view">
+        <field name="name">construction.permit.work.tree</field>
+        <field name="model">construction.permit.work</field>
+        <field name="arch" type="xml">
+            <tree string="Permits to Work" decoration-success="state == 'approved'" decoration-info="state == 'requested'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="permit_type"/>
+                <field name="receiver_id"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="state" widget="badge" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Non-Conformance Report (NCR) Views -->
+    <record id="view_construction_ncr_form" model="ir.ui.view">
+        <field name="name">construction.ncr.form</field>
+        <field name="model">construction.ncr</field>
+        <field name="arch" type="xml">
+            <form string="Non-Conformance Report (NCR)">
+                <header>
+                    <button name="action_open" string="Open NCR" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_repair" string="Confirm Repair Started" type="object" states="open" class="btn-info"/>
+                    <button name="action_verify" string="Mark as Repaired &amp; Verified" type="object" states="repair" class="btn-success"/>
+                    <button name="action_close" string="Close NCR" type="object" states="verified" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open,repair,verified,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="ncr_header">
+                            <field name="project_id"/>
+                            <field name="inspection_id"/>
+                            <field name="date_identified"/>
+                        </group>
+                        <group name="responsibility">
+                            <field name="responsible_id"/>
+                            <field name="target_date"/>
+                            <field name="completion_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Issue &amp; Root Cause" name="issue">
+                            <group string="Non-Conformance Description">
+                                <field name="non_conformance_desc" nolabel="1" placeholder="Detailed description of the quality failure..."/>
+                            </group>
+                            <group string="Root Cause Analysis">
+                                <field name="root_cause" nolabel="1" placeholder="Why did this happen?"/>
+                            </group>
+                        </page>
+                        <page string="Corrective Action" name="actions">
+                            <group string="Proposed Corrective Action">
+                                <field name="corrective_action" nolabel="1" placeholder="Steps required to rectify the issue..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_ncr_tree" model="ir.ui.view">
+        <field name="name">construction.ncr.tree</field>
+        <field name="model">construction.ncr</field>
+        <field name="arch" type="xml">
+            <tree string="Non-Conformance Reports" decoration-danger="state in ['open', 'repair']" decoration-success="state == 'closed'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="inspection_id"/>
+                <field name="date_identified"/>
+                <field name="responsible_id"/>
+                <field name="state" widget="badge" decoration-danger="state == 'open'" decoration-info="state == 'repair'" decoration-success="state == 'closed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Actions and Menus -->
+    <record id="action_construction_safety_incident" model="ir.actions.act_window">
+        <field name="name">Safety Incidents</field>
+        <field name="res_model">construction.safety.incident</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <record id="action_construction_permit_work" model="ir.actions.act_window">
+        <field name="name">Permits to Work (PTW)</field>
+        <field name="res_model">construction.permit.work</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_construction_ncr" model="ir.actions.act_window">
+        <field name="name">Non-Conformance Reports (NCR)</field>
+        <field name="res_model">construction.ncr</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Structure -->
+    <menuitem id="menu_construction_compliance_root"
+              name="HSE &amp; Quality"
+              parent="menu_construction_root"
+              sequence="40"/>
+
+    <menuitem id="menu_construction_safety"
+              name="Safety &amp; HSE"
+              parent="menu_construction_compliance_root"
+              sequence="10"/>
+
+    <menuitem id="menu_construction_incident_log"
+              name="Safety Incident Log"
+              parent="menu_construction_safety"
+              action="action_construction_safety_incident"
+              sequence="10"/>
+
+    <menuitem id="menu_construction_permit_log"
+              name="Permits to Work (PTW)"
+              parent="menu_construction_safety"
+              action="action_construction_permit_work"
+              sequence="20"/>
+
+    <menuitem id="menu_construction_quality_ncr"
+              name="Quality NCRs"
+              parent="menu_construction_compliance_root"
+              action="action_construction_ncr"
+              sequence="20"/>
+</odoo>

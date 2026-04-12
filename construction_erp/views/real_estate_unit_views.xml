@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_real_estate_unit_tree" model="ir.ui.view">
+        <field name="name">real.estate.unit.tree</field>
+        <field name="model">real_estate.unit</field>
+        <field name="arch" type="xml">
+            <tree string="Property Unit Profiles">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="unit_type"/>
+                <field name="total_quantity" sum="Total Aggregate Units"/>
+                <field name="quantity_sold" sum="Total Sold Units" decoration-success="quantity_sold &gt; 0"/>
+                <field name="quantity_available" sum="Total Inventory Available" decoration-warning="quantity_available &lt; 5" decoration-danger="quantity_available == 0"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_real_estate_unit_form" model="ir.ui.view">
+        <field name="name">real.estate.unit.form</field>
+        <field name="model">real_estate.unit</field>
+        <field name="arch" type="xml">
+            <form string="Property Unit Profile">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Unit Type / Reference"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. 2-Bed Luxury Apt - East Wing"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Inventory &amp; Stock">
+                            <field name="project_id" options="{'no_create': True}"/>
+                            <field name="unit_type"/>
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <div class="o_td_label">
+                                <label for="total_quantity" style="font-weight:bold;"/>
+                            </div>
+                            <div class="o_row">
+                                <field name="total_quantity" class="oe_inline"/> Units
+                            </div>
+                        </group>
+                        <group string="Sales Metrics &amp; Price">
+                            <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="quantity_reserved" decoration-info="quantity_reserved &gt; 0"/>
+                            <field name="quantity_sold" decoration-success="quantity_sold &gt; 0"/>
+                            <field name="quantity_available" decoration-success="quantity_available &gt; 0" decoration-danger="quantity_available == 0"/>
+                            <field name="size"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_real_estate_units" model="ir.actions.act_window">
+        <field name="name">Property Assets</field>
+        <field name="res_model">real_estate.unit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

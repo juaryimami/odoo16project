@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_inspection_tree" model="ir.ui.view">
+        <field name="name">construction.inspection.tree</field>
+        <field name="model">construction.inspection</field>
+        <field name="arch" type="xml">
+            <tree string="Quality Inspections">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="milestone_id"/>
+                <field name="inspector_id"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_inspection_form" model="ir.ui.view">
+        <field name="name">construction.inspection.form</field>
+        <field name="model">construction.inspection</field>
+        <field name="arch" type="xml">
+            <form string="Quality Inspection">
+                <header>
+                    <button name="action_generate_ncr" string="Generate NCR" type="object" states="failed" class="btn-danger"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,passed,failed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_view_ncrs" type="object" icon="fa-exclamation-triangle" attrs="{'invisible': [('ncr_count', '=', 0)]}">
+                            <field name="ncr_count" widget="statinfo" string="NCRs"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Inspection Reference (e.g., INS-001)"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="milestone_id"/>
+                            <field name="job_order_id" readonly="1"/>
+                            <field name="project_id" readonly="1"/>
+                            <field name="task_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="inspector_id"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="QA Checklist">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="name" placeholder="e.g. Concrete thickness verified"/>
+                                    <field name="is_checked" widget="boolean_toggle"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Overall Remarks">
+                            <field name="notes" placeholder="Detailed inspection notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_inspection" model="ir.actions.act_window">
+        <field name="name">Quality Inspections</field>
+        <field name="res_model">construction.inspection</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_inspections"
+              name="Inspections"
+              parent="menu_construction_operations"
+              action="action_construction_inspection"
+              sequence="30"/>
+</odoo>

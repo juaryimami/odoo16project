@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_variation_order_form" model="ir.ui.view">
+        <field name="name">construction.variation.order.form</field>
+        <field name="model">construction.variation.order</field>
+        <field name="arch" type="xml">
+            <form string="Variation Order (V.O.)">
+                <header>
+                    <button name="action_submit" string="Submit for Approval" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_approve" string="Approve Variation" type="object" states="submitted" class="btn-success" groups="project.group_project_manager" confirm="This will inject adjustment lines into the Master Project Budget. Proceed?"/>
+                    <button name="action_reject" string="Reject" type="object" states="submitted" class="btn-secondary" groups="project.group_project_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="V.O. Reference"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="variation_header">
+                            <field name="project_id"/>
+                            <field name="estimate_id" string="Reference BOQ"/>
+                            <field name="date"/>
+                        </group>
+                        <group name="financial_summary">
+                            <field name="total_amount" decoration-bf="1" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group name="reason_group" string="Variation Rationale">
+                        <field name="reason" nolabel="1" placeholder="Describe the reason for the scope change (e.g., Client change request, Site conditions)..."/>
+                    </group>
+                    <notebook>
+                        <page string="Variation Lines" name="lines">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="cost_type"/>
+                                    <field name="phase_id"/>
+                                    <field name="product_id"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="cost_unit"/>
+                                    <field name="subtotal" sum="Total Adjustment"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_variation_order_tree" model="ir.ui.view">
+        <field name="name">construction.variation.order.tree</field>
+        <field name="model">construction.variation.order</field>
+        <field name="arch" type="xml">
+            <tree string="Variation Orders" decoration-info="state == 'submitted'" decoration-success="state == 'approved'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="total_amount" sum="Total Impact"/>
+                <field name="state" widget="badge" decoration-info="state == 'submitted'" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_variation_order_search" model="ir.ui.view">
+        <field name="name">construction.variation.order.search</field>
+        <field name="model">construction.variation.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Variations">
+                <field name="name"/>
+                <field name="project_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_construction_variation_order" model="ir.actions.act_window">
+        <field name="name">Variation Orders</field>
+        <field name="res_model">construction.variation.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage Project Scope Changes (Variations)
+            </p>
+            <p>
+                Track approved additive and deductive scope changes. Approved variations update the Master Project Budget.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_construction_variation"
+              name="Variation Orders"
+              parent="menu_construction_commercials"
+              action="action_construction_variation_order"
+              sequence="20"/>
+</odoo>

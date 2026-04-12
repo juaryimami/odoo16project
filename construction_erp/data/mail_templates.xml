@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Mail Template: Subcontractor Assignment -->
+        <record id="email_template_subcontractor_assignment" model="mail.template">
+            <field name="name">Construction: Subcontractor Task Assignment</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="subject">New Construction Task Assignment: {{ object.name }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-family: 'Inter', Helvetica, Arial, sans-serif;">
+                    <p style="margin: 0px; padding: 0px; font-size: 14px;">
+                        Hello <t t-out="object.partner_id.name or 'Subcontractor'"/>,<br/><br/>
+                        You have been officially assigned to a new operational task phase under project <strong><t t-out="object.project_id.name"/></strong>.
+                        <br/><br/>
+                        <strong>Task / Phase:</strong> <t t-out="object.name"/><br/>
+                        <strong>Deadline:</strong> <t t-out="object.date_deadline or 'N/A'"/><br/>
+                        <br/>
+                        Please login to your dedicated Contractor Portal to review the scope of work and accept the job assignment.
+                        <br/><br/>
+                        Thank you,<br/>
+                        Construction Management Team
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Mail Template: Inspection Validation -->
+        <record id="email_template_inspection_passed" model="mail.template">
+            <field name="name">Construction: Inspection Quality Assurance Passed</field>
+            <field name="model_id" ref="construction_erp.model_construction_inspection"/>
+            <field name="subject">Inspection Passed: {{ object.task_id.name }}</field>
+            <field name="partner_to">{{ object.task_id.partner_id.id }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-family: 'Inter', Helvetica, Arial, sans-serif;">
+                    <p style="margin: 0px; padding: 0px; font-size: 14px;">
+                        Congratulations <t t-out="object.task_id.partner_id.name or 'Contractor'"/>,<br/><br/>
+                        The Quality Assurance Inspection for your phase <strong><t t-out="object.task_id.name"/></strong> has been officially validated and approved on <strong><t t-out="object.inspection_date"/></strong>.
+                        <br/><br/>
+                        <strong>Validator:</strong> <t t-out="object.inspector_id.name"/><br/>
+                        <br/>
+                        You are now cleared to openly submit your Vendor Bill for this phase via the Contractor Portal.
+                        <br/><br/>
+                        Thank you,<br/>
+                        QA Department
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Mail Template: Job Order Offer to Contractor -->
+        <record id="email_template_job_order_offer" model="mail.template">
+            <field name="name">Construction: Job Order Offer</field>
+            <field name="model_id" ref="construction_erp.model_construction_job_order"/>
+            <field name="subject">Contract Offer: {{ object.name }} - {{ object.project_id.name }}</field>
+            <field name="partner_to">{{ object.contractor_id.id }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-family: 'Inter', Helvetica, Arial, sans-serif;">
+                    <p style="margin: 0px; padding: 0px; font-size: 14px;">
+                        Hello <t t-out="object.contractor_id.name or 'Contractor'"/>,<br/><br/>
+                        We are pleased to offer you a new Job Order for the following project phase:
+                        <br/><br/>
+                        <strong>Project:</strong> <t t-out="object.project_id.name"/><br/>
+                        <strong>Phase:</strong> <t t-out="object.phase_id.name"/><br/>
+                        <strong>Job Reference:</strong> <t t-out="object.name"/><br/>
+                        <strong>Agreed Rate:</strong> <t t-out="format_amount(object.agreed_rate, object.currency_id)"/><br/>
+                        <br/>
+                        <strong>Scope of Work:</strong><br/>
+                        <t t-out="object.description or 'No specific description provided.'"/>
+                        <br/><br/>
+                        Please review the details and click the button below to officially <strong>Accept</strong> this job offer. 
+                        Once accepted, your status will be updated, and the project manager will be notified.
+                        <br/><br/>
+                        <div style="text-align: center; margin: 32px 0px 32px 0px;">
+                            <a t-att-href="'/job_order/accept/%s' % object.access_token" 
+                               style="background-color: #875A7B; padding: 10px 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;">
+                                Accept Job Offer
+                            </a>
+                        </div>
+                        <br/>
+                        Thank you,<br/>
+                        Construction Management Team
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

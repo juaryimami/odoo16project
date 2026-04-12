@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_lifecycle_tree" model="ir.ui.view">
+        <field name="name">construction.lifecycle.tree</field>
+        <field name="model">construction.lifecycle</field>
+        <field name="arch" type="xml">
+            <tree string="Construction Life Cycles" decoration-success="active == True" decoration-muted="active == False">
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_lifecycle_form" model="ir.ui.view">
+        <field name="name">construction.lifecycle.form</field>
+        <field name="model">construction.lifecycle</field>
+        <field name="arch" type="xml">
+            <form string="Construction Life Cycle">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Cycle Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Standard 5 Cycle"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="lifecycle_config" string="General Configuration">
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group name="lifecycle_stats" string="Quick Metrics">
+                            <!-- Optional stats can go here -->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lifecycle Phases" name="phases">
+                            <field name="phase_ids" context="{'default_lifecycle_id': active_id}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" placeholder="Phase Name (e.g. Excavation)"/>
+                                    <field name="description" placeholder="Short scope..."/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_lifecycle" model="ir.actions.act_window">
+        <field name="name">Construction Life Cycles</field>
+        <field name="res_model">construction.lifecycle</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

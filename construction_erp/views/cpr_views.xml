@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_cpr_tree" model="ir.ui.view">
+        <field name="name">construction.cpr.tree</field>
+        <field name="model">construction.cpr</field>
+        <field name="arch" type="xml">
+            <tree string="Contractor Payment Requests" decoration-info="state == 'draft'" decoration-warning="state == 'verify'" decoration-success="state == 'approved'">
+                <field name="name"/>
+                <field name="date" optional="show"/>
+                <field name="project_id"/>
+                <field name="job_order_id"/>
+                <field name="contractor_id"/>
+                <field name="certified_progress" widget="percentage"/>
+                <field name="net_payable_amount" sum="Total Payable"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'verify'" decoration-success="state in ('approved', 'invoiced', 'paid')"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_cpr_form" model="ir.ui.view">
+        <field name="name">construction.cpr.form</field>
+        <field name="model">construction.cpr</field>
+        <field name="arch" type="xml">
+            <form string="Payment Request">
+                <header>
+                    <button name="action_verify" string="Submit for Verification" type="object" states="draft" class="oe_highlight"/>
+                    <button name="action_approve" string="Certify &amp; Approve" type="object" states="verify" class="oe_highlight" groups="construction_erp.group_construction_manager"/>
+                    <button name="action_create_bill" string="Create Vendor Bill" type="object" states="approved" class="oe_highlight" groups="account.group_account_invoice"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,verify,approved,invoiced,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_bill" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('invoice_id', '=', False)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Vendor Bill</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <span class="o_form_label">Payment Certification</span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Project Context">
+                            <field name="project_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="job_order_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="contractor_id" readonly="1"/>
+                        </group>
+                        <group string="Request Details">
+                            <field name="date" attrs="{'readonly': [('state', 'not in', ('draft', 'verify'))]}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="invoice_id" invisible="1"/>
+                        </group>
+                    </group>
+                    
+                    <separator string="Work Certification (%)"/>
+                    <group>
+                        <group>
+                            <field name="previous_certified_progress" widget="percentage" readonly="1"/>
+                            <field name="current_progress_claim" widget="percentage" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="certified_progress" widget="percentage" class="oe_inline" attrs="{'readonly': [('state', 'not in', ('draft', 'verify'))]}"/>
+                        </group>
+                        <group>
+                            <label for="retention_percent"/>
+                            <div class="o_row">
+                                <field name="retention_percent" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <span>%</span>
+                            </div>
+                        </group>
+                    </group>
+
+                    <separator string="Financial Summary"/>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="contract_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="gross_certified_amount" widget="monetary" options="{'currency_field': 'currency_id'}" style="font-weight: bold;"/>
+                        <field name="previous_certified_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="current_work_certified"/>
+                        </div>
+                        <field name="current_work_certified" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        <field name="retention_amount" widget="monetary" options="{'currency_field': 'currency_id'}" style="color: red;"/>
+                        <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                            <label for="net_payable_amount"/>
+                        </div>
+                        <field name="net_payable_amount" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    </group>
+                    <div class="oe_clear"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_cpr" model="ir.actions.act_window">
+        <field name="name">Payment Requests</field>
+        <field name="res_model">construction.cpr</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Contractor Payment Request.
+            </p><p>
+                Ceritfy work progress and manage retentions.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menus will be added in menu_views.xml or similarly -->
+</odoo>

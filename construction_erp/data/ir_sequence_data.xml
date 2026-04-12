@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_construction_scrap" model="ir.sequence">
+            <field name="name">Construction Scrap Sequence</field>
+            <field name="code">construction.scrap</field>
+            <field name="prefix">SCRAP/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_construction_job_order" model="ir.sequence">
+            <field name="name">Construction Job Order Sequence</field>
+            <field name="code">construction.job.order</field>
+            <field name="prefix">JO/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_construction_cost_sheet" model="ir.sequence">
+            <field name="name">Construction Cost Sheet Sequence</field>
+            <field name="code">construction.cost.sheet</field>
+            <field name="prefix">COST-SHEET/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="seq_construction_cpr" model="ir.sequence">
+            <field name="name">Construction CPR Sequence</field>
+            <field name="code">construction.cpr</field>
+            <field name="prefix">CPR/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_construction_rfi" model="ir.sequence">
+            <field name="name">Construction RFI Sequence</field>
+            <field name="code">construction.rfi</field>
+            <field name="prefix">RFI/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_construction_submittal" model="ir.sequence">
+            <field name="name">Construction Submittal Sequence</field>
+            <field name="code">construction.submittal</field>
+            <field name="prefix">SUB/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

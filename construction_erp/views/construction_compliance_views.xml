@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_compliance_tree" model="ir.ui.view">
+        <field name="name">construction.compliance.tree</field>
+        <field name="model">construction.compliance</field>
+        <field name="arch" type="xml">
+            <tree string="Compliance &amp; Legal Permits" decoration-danger="status == 'expired'" decoration-success="status == 'active'" decoration-info="status == 'pending'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="compliance_type"/>
+                <field name="issuing_authority"/>
+                <field name="expiration_date"/>
+                <field name="status" widget="badge" decoration-danger="status == 'expired'" decoration-success="status == 'active'" decoration-info="status == 'pending'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_compliance_form" model="ir.ui.view">
+        <field name="name">construction.compliance.form</field>
+        <field name="model">construction.compliance</field>
+        <field name="arch" type="xml">
+            <form string="Legal Compliance Document">
+                <header>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,active,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="E.g. Class-A Structural Operations Permit"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="compliance_type"/>
+                            <field name="issuing_authority"/>
+                        </group>
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="expiration_date"/>
+                            <field name="document_file" filename="file_name"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <!-- Central Overlays -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_compliance" model="ir.actions.act_window">
+        <field name="name">Official Compliance Ledger</field>
+        <field name="res_model">construction.compliance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Master Central Menu Item -->
+    <menuitem id="menu_construction_compliance"
+              name="Compliance Logs"
+              parent="menu_construction_configuration"
+              action="action_construction_compliance"
+              sequence="30"/>
+</odoo>

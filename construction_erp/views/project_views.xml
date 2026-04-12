@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_project_form_inherit_construction" model="ir.ui.view">
+        <field name="name">project.project.form.inherit.construction</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_start_project" string="Start Project" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                <button name="action_mark_done" string="Complete Project" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'in_progress'), ('is_final_phase', '=', False)]}"/>
+                <button name="action_cancel_project" string="Cancel Project" type="object" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                <field name="is_final_phase" invisible="1"/>
+            </xpath>
+            <!-- Hide Share Buttons by Context as string-based selectors are not permitted and names are dynamic -->
+            <xpath expr="//header//button[@context=&quot;{'default_access_mode': 'read'}&quot;]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header//button[@context=&quot;{'default_access_mode': 'edit'}&quot;]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="row align-items-center bg-light p-3 mb-3 border rounded shadow-sm" attrs="{'invisible': [('state', '=', 'draft')]}">
+                    <div class="col-md-7">
+                        <strong class="text-muted d-block mb-1"><i class="fa fa-road me-1"/> Construction Roadmap</strong>
+                        <field name="current_phase_id" widget="statusbar" readonly="1" options="{'clickable': '1'}"/>
+                    </div>
+                    <div class="col-md-3 text-center border-start border-end">
+                        <strong class="text-muted d-block mb-1"><i class="fa fa-bolt me-1"/> Phase Actions</strong>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button name="action_advance_phase" string="Complete Phase" type="object" class="btn-primary btn-sm" groups="construction_erp.group_construction_manager" confirm="Advance to next phase? This will check for pending Job Orders." icon="fa-check-circle"/>
+                            <button name="action_create_job_order" string="New Job" type="object" class="btn-secondary btn-sm" icon="fa-plus-circle"/>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <strong class="text-muted d-block mb-1">Overall</strong>
+                        <field name="phase_progress" widget="progressbar" string="Lifecycle Progress"/>
+                    </div>
+                </div>
+                <field name="project_image" widget="image" class="oe_avatar" options='{"preview_image": "project_image", "size": [128, 128]}'/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_open_real_estate_units" type="object" icon="fa-building">
+                    <field name="unit_count" widget="statinfo" string="Total Units"/>
+                </button>
+                <button class="oe_stat_button" name="action_view_project_rfis" type="object" icon="fa-question-circle" attrs="{'invisible': [('rfi_count', '=', 0)]}">
+                    <field name="rfi_count" widget="statinfo" string="Pending RFIs"/>
+                </button>
+                <button class="oe_stat_button" name="action_view_project_submittals" type="object" icon="fa-file-text-o" attrs="{'invisible': [('submittal_count', '=', 0)]}">
+                    <field name="submittal_count" widget="statinfo" string="Pending Submittals"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_compliance" type="object" icon="fa-shield">
+                    <field name="sold_unit_count" widget="statinfo" string="Sold Units"/>
+                </button>
+                <button name="%(construction_erp.action_construction_estimate)d" type="action" class="oe_stat_button" icon="fa-calculator">
+                    <field name="estimate_count" widget="statinfo" string="Estimates"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_job_orders" type="object" icon="fa-tasks">
+                    <field name="job_order_count" widget="statinfo" string="Job Orders"/>
+                </button>
+                <button name="%(construction_erp.action_construction_document)d" type="action" class="oe_stat_button" icon="fa-file-pdf-o">
+                    <field name="document_count" widget="statinfo" string="Documents"/>
+                </button>
+                <button name="action_open_compliance" type="object" class="oe_stat_button" icon="fa-gavel">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="compliance_count"/> /
+                            <field name="expired_compliance_count" class="text-danger"/>
+                        </span>
+                        <span class="o_stat_text">Permits</span>
+                    </div>
+                </button>
+                <button name="%(construction_erp.action_construction_scrap)d" type="action" class="oe_stat_button" icon="fa-trash">
+                    <field name="scrap_count" widget="statinfo" string="Wastage Logs"/>
+                </button>
+                <button name="action_view_variations" type="object" class="oe_stat_button" icon="fa-exchange">
+                    <field name="total_variation_amount" widget="statinfo" string="Variations"/>
+                </button>
+                <button name="action_view_procurement_risks" type="object" class="oe_stat_button" icon="fa-truck" decoration-danger="procurement_risk_count &gt; 0">
+                    <field name="procurement_risk_count" widget="statinfo" string="Sourcing Risks"/>
+                </button>
+                <button class="oe_stat_button" icon="fa-shopping-cart" type="object" name="action_launch_sourcing_wizard">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="total_ordered_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Ordered</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" name="action_open_active_phase_jobs" type="object" icon="fa-tasks">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value"><field name="active_phase_job_count"/></span>
+                        <span class="o_stat_text">Pending Work</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" name="action_open_daily_logs" type="object" icon="fa-list-alt">
+                    <field string="Logs" name="daily_log_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='settings']" position="inside">
+               <div class="row bg-white p-4 border rounded shadow-sm m-2">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-primary m-0"><i class="fa fa-road me-2"/> Progress Roadmap &amp; Phase Weight Configuration</h4>
+                            <button name="action_sync_roadmap" string="Sync Roadmap" type="object" class="btn-primary" icon="fa-refresh" confirm="This will add any missing phases from the project lifecycle and reset weights to defaults. Continue?"/>
+                        </div>
+                        <field name="roadmap_total_weight" invisible="1"/>
+                        <div class="alert alert-danger py-2" role="alert" attrs="{'invisible': [('roadmap_total_weight', '=', 100.0)]}">
+                             <i class="fa fa-exclamation-triangle me-2"/> <strong>Warning:</strong> The total phase weight must be exactly 100% for accurate progress tracking. Currently at <field name="roadmap_total_weight" readonly="1" class="fw-bold"/>.
+                        </div>
+                        <div class="alert alert-secondary py-2" role="alert" attrs="{'invisible': [('roadmap_total_weight', '!=', 100.0)]}">
+                             <i class="fa fa-check-circle me-2 text-success"/> Configure the relative importance of each phase for overall progress calculation.
+                        </div>
+                        <field name="phase_config_ids" context="{'default_project_id': active_id}">
+                            <tree editable="bottom" decoration-muted="weight == 0">
+                                <field name="sequence" widget="handle"/>
+                                <field name="phase_id" options="{'no_create': True}" domain="[('lifecycle_id', '=', parent.lifecycle_id)]"/>
+                                <field name="weight" sum="Total Weight" string="Weight (%)" decoration-danger="parent.roadmap_total_weight != 100" decoration-success="parent.roadmap_total_weight == 100"/>
+                                <field name="total_jobs" readonly="1"/>
+                                <field name="completed_jobs" readonly="1" string="Passed Jobs"/>
+                                <field name="phase_progress_ratio" widget="progressbar" string="Phase Progress"/>
+                                <field name="contribution" sum="Total Progress" string="Contribution (%)" decoration-bf="1"/>
+                            </tree>
+                        </field>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//group" position="after">
+                <group string="Construction General &amp; Financials">
+                    <group string="Project Lifecycle">
+                        <field name="lifecycle_id" options="{'no_create': True}" required="1"/>
+                        <field name="user_id" string="Project Manager" options="{'no_create': True}"/>
+                        <field name="site_manager_id" options="{'no_create': True}"/>
+                    </group>
+                    <group string="Real Estate Sales Indicators">
+                        <field name="total_sold_value" widget="monetary"/>
+                        <field name="total_collected_revenue" widget="monetary" decoration-success="total_collected_revenue &gt; 0"/>
+                        <field name="unsold_unit_count" string="Unsold Unit Count"/>
+                    </group>
+                    <group string="Site Budget &amp; Scope Variance">
+                        <field name="total_estimated_aggregate" string="BOQ Baseline" readonly="1" force_save="1" decoration-info="1"/>
+                        <field name="total_budget" string="Original Contract Sum" decoration-bf="1"/>
+                        <field name="total_variation_amount" string="Approved Variations" decoration-danger="total_variation_amount &gt; 0"/>
+                        <field name="revised_budget_amount" string="Revised Project Ceiling" decoration-bf="1" class="text-primary"/>
+                        <field name="total_committed_allocated" string="Committed Exec (JO)" decoration-warning="total_committed_allocated &gt; revised_budget_amount"/>
+                        <field name="total_expense" string="Actual Site Spent" readonly="1" force_save="1" decoration-danger="total_expense &gt; revised_budget_amount"/>
+                        <field name="profitability" string="Budget vs Actual Variance" readonly="1" force_save="1" decoration-success="profitability &gt;= 0" decoration-danger="profitability &lt; 0"/>
+                    </group>
+                </group>
+               
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Site Dimensions &amp; Geo-Mapping">
+                    <group>
+                        <group string="Physical Blueprint (Meters)">
+                            <field name="site_width" placeholder="e.g. 150.5"/>
+                            <field name="site_length" placeholder="e.g. 300.2"/>
+                            <field name="site_area" readonly="1" force_save="1"/>
+                        </group>
+                        <group string="GPS Coordinates">
+                            <field name="site_latitude" placeholder="e.g. 34.052235"/>
+                            <field name="site_longitude" placeholder="e.g. -118.243683"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Progress Photos">
+                    <field name="progress_image_ids" mode="kanban">
+                        <kanban string="Progress Photos">
+                            <field name="id"/>
+                            <field name="name"/>
+                            <field name="image"/>
+                            <field name="date"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <div class="o_kanban_image w-100 mb-2">
+                                            <img t-att-src="kanban_image('construction.project.image', 'image', record.id.raw_value)" alt="Progress Photo" style="width: 100%; object-fit: cover; max-height: 150px;"/>
+                                        </div>
+                                        <div class="oe_kanban_details">
+                                            <strong><field name="name"/></strong>
+                                            <div class="text-muted"><field name="date"/></div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form string="Progress Photo">
+                            <sheet>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+                <page string="Master Project Plan">
+                    <field name="estimate_line_ids" readonly="1">
+                        <tree>
+                            <field name="estimate_id" string="Phase / Estimate Reference"/>
+                            <field name="product_id"/>
+                            <field name="type"/>
+                            <field name="quantity" sum="Total Estimated Qty"/>
+                            <field name="unit_price"/>
+                            <field name="subtotal" sum="Aggregate Cost" widget="monetary"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Phase Tracking &amp; Job Orders">
+                    <field name="job_order_ids" mode="tree" readonly="1">
+                        <tree string="Job Orders by Phase" decoration-info="state == 'active'" decoration-success="state == 'completed'">
+                            <field name="phase_id"/>
+                            <field name="name"/>
+                            <field name="contractor_id"/>
+                            <field name="agreed_rate"/>
+                            <field name="state" widget="badge" decoration-info="state == 'active'" decoration-success="state == 'completed'"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Real Estate Assets/Units">
+                    <field name="unit_ids" mode="tree">
+                        <tree string="Project Unit Profiles">
+                            <field name="name"/>
+                            <field name="unit_type"/>
+                            <field name="product_id"/>
+                            <field name="total_quantity" sum="Total Aggregate Units"/>
+                            <field name="quantity_sold" sum="Total Sold Units"/>
+                            <field name="quantity_available" sum="Total Available" decoration-danger="quantity_available == 0"/>
+                            <field name="price" widget="monetary"/>
+                            <field name="size"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Kanban Override exposing Legal trackers natively -->
+    <record id="view_project_kanban_inherit_construction_premium" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.construction.premium</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="project_type"/>
+                <field name="lifecycle_id"/>
+                <field name="current_phase_id"/>
+                <field name="phase_progress"/>
+                <field name="compliance_count"/>
+                <field name="expired_compliance_count"/>
+            </xpath>
+            <!-- Aesthetic Overhaul: Premium Full-Width Header Pulse -->
+            <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="before">
+                <div class="o_project_kanban_card_progress w-100 flex-grow-1 border-top pt-2" t-if="record.phase_progress">
+                    <div class="d-flex justify-content-between align-items-center mb-1 px-3">
+                        <span class="o_phase_roadmap_chip">
+                            <i class="fa fa-road text-primary me-1"/> 
+                            <field name="current_phase_id"/>
+                        </span>
+                        <span class="o_progress_percentage_badge">
+                            <t t-esc="Math.round(record.phase_progress.raw_value)"/>%
+                        </span>
+                    </div>
+                    <div class="px-3">
+                        <div class="o_progress_pulse_container">
+                            <div class="o_progress_pulse_bar" 
+                                 t-att-style="'width: ' + record.phase_progress.raw_value + '%'"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="inside">
+                <a class="o_project_kanban_box" name="action_open_compliance" type="object">
+                    <div>
+                        <span class="o_value"><field name="compliance_count"/></span>
+                        <span class="o_label o_text_overflow"> Permits</span>
+                        <t t-if="record.expired_compliance_count.raw_value > 0">
+                            <span class="badge text-bg-danger ms-1" title="Warning: Expired Permits">
+                                <i class="fa fa-exclamation-triangle"></i> <t t-esc="record.expired_compliance_count.raw_value"/>
+                            </span>
+                        </t>
+                    </div>
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Simplified Form for Quick Creation Wizard -->
+    <record id="view_project_project_form_simplified_inherit_construction" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit.construction</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <group string="Personnel &amp; Classification">
+                    <field name="user_id" string="Project Manager" placeholder="Select Manager" required="1" options="{'no_create': True}" domain="[('groups_id', 'in', [%(construction_erp.group_construction_manager)d])]"/>
+                    <field name="site_manager_id" string="Site Supervisor" placeholder="Select Site Supervisor" required="1" options="{'no_create': True}" domain="[('groups_id', 'in', [%(construction_erp.group_construction_supervisor)d])]"/>
+                    <field name="lifecycle_id" string="Construction Cycle" placeholder="Select Lifecycle (e.g. 5 Cycle)" required="1"/>
+                    <field name="project_type" invisible="1" force_save="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Action (linking back to native project app) -->
+    <record id="action_construction_projects" model="ir.actions.act_window">
+        <field name="name">Construction Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('project_type', '=', 'construction')]</field>
+        <field name="context">{'default_project_type': 'construction'}</field>
+    </record>
+
+    <menuitem id="menu_construction_project_list"
+              name="Projects"
+              parent="menu_construction_projects"
+              action="action_construction_projects"
+              sequence="10"/>
+</odoo>

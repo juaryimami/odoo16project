@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_construction_root"
+              name="Construction ERP"
+              sequence="10"/>
+
+    <menuitem id="menu_construction_dashboards"
+              name="Dashboards"
+              parent="menu_construction_root"
+              sequence="5"/>
+
+    <menuitem id="menu_construction_projects"
+              name="Project Management"
+              parent="menu_construction_root"
+              sequence="10"/>
+
+    <menuitem id="menu_construction_commercials"
+              name="Commercial Management"
+              parent="menu_construction_root"
+              sequence="15"/>
+
+    <menuitem id="menu_construction_operations"
+              name="Site Operations"
+              parent="menu_construction_root"
+              sequence="20"/>
+
+    <menuitem id="menu_construction_real_estate"
+              name="Real Estate"
+              parent="menu_construction_root"
+              sequence="30"/>
+
+    <menuitem id="menu_construction_reporting"
+              name="Reporting"
+              parent="menu_construction_root"
+              sequence="25"/>
+
+    <!-- Operational Sub-Menus -->
+    <menuitem id="menu_construction_cpr"
+              name="Contractor Payment Requests"
+              parent="menu_construction_operations"
+              action="action_construction_cpr"
+              sequence="40"/>
+
+    <!-- DASHBOARD ACTIONS -->
+    <menuitem id="menu_owl_dashboard_main"
+              name="Executive Tracking Dashboard"
+              parent="menu_construction_dashboards"
+              action="action_owl_construction_dashboard"
+              sequence="1"/>
+
+    <!-- Reporting Actions -->
+    <record id="action_contractor_spend_report" model="ir.actions.act_window">
+        <field name="name">Contractor Spend Analysis</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">pivot,graph,tree,form</field>
+        <field name="domain">[('move_type', '=', 'in_invoice'), ('job_order_id', '!=', False)]</field>
+        <field name="context">{'search_default_group_by_partner_id': 1, 'default_move_type': 'in_invoice'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No contractor spend data yet!
+            </p>
+            <p>
+                Analyze subcontractor costs across different projects and phases.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_overdue_installment_alerts" model="ir.actions.act_window">
+        <field name="name">Overdue Installment Alerts</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[
+            ('move_type', '=', 'out_invoice'), 
+            ('installment_line_id', '!=', False), 
+            ('state', '=', 'posted'), 
+            ('payment_state', 'in', ['not_paid', 'partial']), 
+            ('invoice_date_due', '&lt;', context_today().strftime('%Y-%m-%d'))
+        ]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Great news! No overdue installments.
+            </p>
+            <p>
+                This view tracks all client installments that have exceeded their due date.
+            </p>
+        </field>
+    </record>
+
+    <!-- Reporting Menu Items -->
+    <menuitem id="menu_report_contractor_spend"
+              name="Contractor Spend"
+              parent="menu_construction_reporting"
+              action="action_contractor_spend_report"
+              sequence="10"/>
+
+    <menuitem id="menu_report_overdue_installments"
+              name="Overdue Installment Alerts"
+              parent="menu_construction_reporting"
+              action="action_overdue_installment_alerts"
+              sequence="20"/>
+
+    <menuitem id="menu_report_project_profitability"
+              name="Project Profitability Dashboard"
+              parent="menu_construction_reporting"
+              action="action_project_profitability_dashboard"
+              sequence="5"/>
+
+    <menuitem id="menu_construction_master_data"
+              name="Master Data"
+              parent="menu_construction_root"
+              sequence="85"/>
+
+    <menuitem id="menu_construction_configuration"
+              name="Configuration"
+              parent="menu_construction_root"
+              sequence="100"/>
+
+    <!-- Configuration Menus -->
+    <menuitem id="menu_construction_lifecycle_config"
+              name="Construction Life Cycles"
+              parent="menu_construction_configuration"
+              action="action_construction_lifecycle"
+              sequence="15"/>
+
+    <menuitem id="menu_construction_phases_config"
+              name="Phases &amp; Stages"
+              parent="menu_construction_configuration"
+              action="action_construction_phase"
+              sequence="20"/>
+
+    <record id="action_construction_email_templates" model="ir.actions.act_window">
+        <field name="name">Construction Email Templates</field>
+        <field name="res_model">mail.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('model_id.model', 'in', ['construction.job.order', 'construction.inspection', 'project.task'])]</field>
+        <field name="context">{'default_model_id': 'construction.job.order'}</field>
+    </record>
+
+    <menuitem id="menu_construction_email_templates"
+              name="Email Templates"
+              parent="menu_construction_configuration"
+              action="action_construction_email_templates"
+              sequence="50"/>
+</odoo>

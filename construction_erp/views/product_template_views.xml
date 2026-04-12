@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Expose Boolean dynamically inside native product UI -->
+    <record id="view_product_template_form_inherit_construction" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.construction.material</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <div>
+                    <field name="is_construction_material"/>
+                    <label for="is_construction_material"/>
+                </div>
+                <div>
+                    <field name="is_real_estate_asset"/>
+                    <label for="is_real_estate_asset"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_project_pools" type="object" class="oe_stat_button" icon="fa-building" attrs="{'invisible': [('is_real_estate_asset', '=', False)]}">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="project_available_qty"/> / <field name="project_sold_qty" class="text-muted"/>
+                        </span>
+                        <span class="o_stat_text">Project Assets</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Isolate the physical views tracking specifically Materials -->
+    <record id="action_construction_materials" model="ir.actions.act_window">
+        <field name="name">Construction Materials</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_construction_material', '=', True)]</field>
+        <field name="context">{
+            'default_is_construction_material': True, 
+            'default_type': 'product', 
+            'search_default_filter_to_sell': 0, 
+            'search_default_filter_to_purchase': 1
+        }</field>
+    </record>
+    <!-- Menu Item -->
+    <menuitem id="menu_construction_materials"
+              name="Materials"
+              parent="menu_construction_master_data"
+              action="action_construction_materials"
+              sequence="10"/>
+</odoo>

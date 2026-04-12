@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_construction" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.construction</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_contractor"/>
+                <field name="is_client"/>
+                <field name="receipt_upload_pin" attrs="{'invisible': [('is_client', '=', False)]}" password="True"/>
+                <field name="telegram_chat_id" attrs="{'invisible': [('is_client', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu for Contractors -->
+    <record id="action_construction_contractors" model="ir.actions.act_window">
+        <field name="name">Contractors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_contractor', '=', True)]</field>
+        <field name="context">{'default_is_contractor': True}</field>
+    </record>
+
+    <menuitem id="menu_construction_contractors"
+              name="Contractors"
+              parent="menu_construction_projects"
+              action="action_construction_contractors"
+              sequence="20"/>
+    <!-- Menu for Clients -->
+    <record id="action_construction_clients" model="ir.actions.act_window">
+        <field name="name">Clients</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_client', '=', True)]</field>
+        <field name="context">{'default_is_client': True}</field>
+    </record>
+
+    <menuitem id="menu_construction_clients"
+              name="Clients"
+              parent="menu_construction_real_estate"
+              action="action_construction_clients"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_construction" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.construction</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="project_id" readonly="1"/>
+                <field name="phase_id" readonly="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+                <field name="job_order_id" readonly="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="after">
+                <field name="project_id" invisible="1"/>
+                <field name="phase_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_inherit_construction" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.construction</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="project_id" readonly="1"/>
+                <field name="phase_id" readonly="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+                <field name="job_order_id" readonly="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                <field name="project_id" invisible="1"/>
+                <field name="phase_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_consumption_tree" model="ir.ui.view">
+        <field name="name">construction.consumption.tree</field>
+        <field name="model">construction.consumption</field>
+        <field name="arch" type="xml">
+            <tree string="Daily Consumption Logs">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="user_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_consumption_form" model="ir.ui.view">
+        <field name="name">construction.consumption.form</field>
+        <field name="model">construction.consumption</field>
+        <field name="arch" type="xml">
+            <form string="Consumption Log">
+                <header>
+                    <button name="action_validate" string="Validate Consumption" type="object" states="draft" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                            <field name="date" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                        </group>
+                        <group>
+                            <field name="user_id" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Materials Consumed">
+                            <field name="line_ids" attrs="{'readonly': [('state', '=', 'validated')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_consumption" model="ir.actions.act_window">
+        <field name="name">Material Consumption Logs</field>
+        <field name="res_model">construction.consumption</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_consumption"
+              name="Material Consumptions"
+              parent="menu_construction_operations"
+              action="action_construction_consumption"
+              sequence="25"/>
+</odoo>

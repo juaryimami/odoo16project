@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="seq_emp_id_info1" model="ir.sequence">
+            <field name="name">Employee Reference ID</field>
+            <field name="code">hr.employee</field>
+            <field name="prefix">PEN</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

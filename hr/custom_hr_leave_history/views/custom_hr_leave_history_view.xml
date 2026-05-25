@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="custom_hr_employee__leave_balance_inherit_id" model="ir.ui.view">
+        <field name="name">Hr Employee Leave balance</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+             <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="return_to_leave_list"
+                        icon="fa-calendar">
+                          <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                           <field name="last_year_leave_balance" widget="statinfo" invisible= "last_year_leave_balance == 0.0"/>
+                        </span>
+                          <span>
+                             <field name="this_year_leave_balance" widget="statinfo"  invisible ="this_year_leave_balance ==0.0"/>
+                          </span>
+                        <span class="o_stat_text" invisible="this_year_leave_balance == 0.0 and last_year_leave_balance == 0.0">
+                            Time Off Detail
+                        </span>
+                    </div>
+
+                    </button>
+                </div>
+        </field>
+    </record>
+</odoo>

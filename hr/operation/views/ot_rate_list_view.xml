@@ -1,0 +1,48 @@
+<odoo>
+    <!-- Tree view for Locations -->
+    <record id="view_ot_rate_list_tree_id" model="ir.ui.view">
+        <field name="name">ot.rate.list.tree</field>
+        <field name="model">ot.rate.list</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="rate"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view for Locations -->
+    <record id="view_ot_rate_list_form_id" model="ir.ui.view">
+        <field name="name">agent.tax.region.form</field>
+        <field name="model">ot.rate.list</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+                        <group>
+                          <field name="rate"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Locations -->
+    <record id="action_ot_rate_list_id" model="ir.actions.act_window">
+        <field name="name">piece rate uom form</field>
+        <field name="res_model">ot.rate.list</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new tax region.
+            </p>
+        </field>
+    </record>
+</odoo>

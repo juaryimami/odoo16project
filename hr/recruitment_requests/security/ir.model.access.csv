@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access.recruitment.request,access_recruitment_request,recruitment_requests.model_recruitment_request,base.group_user,1,1,1,1
+access.education_type.recruitment,access_education_type_recruitment,recruitment_requests.model_education_type_recruitment,base.group_user,1,1,1,1
+access.experience_level.recruitment,access_experience_level_recruitment,recruitment_requests.model_experience_level_recruitment,base.group_user,1,1,1,1
+access.recruitment.requirement.line,access_recruitment_requirement_line,recruitment_requests.model_recruitment_requirement_line,base.group_user,1,1,1,1
+access.education_level.recruitment,access_education_level_recruitment,recruitment_requests.model_education_level_recruitment,base.group_user,1,1,1,1
+access.skill.requirement.line,access_skill_requirement_line,recruitment_requests.model_skill_requirement_line,base.group_user,1,1,1,1
+access.qualification.requirement.line,access_qualification_requirement_line,recruitment_requests.model_qualification_requirement_line,base.group_user,1,1,1,1
+
+
+

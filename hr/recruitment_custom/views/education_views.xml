@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_applicanteducation_tree" model="ir.ui.view">
+        <field name="name">applicant.education.tree</field>
+        <field name="model">applicant.education</field>
+        <field name="arch" type="xml">
+            <tree string="Education Background">
+                <field name="school_name"/>
+                <field name="specialization" />
+<!--                <field name="location" />-->
+                <field name="degree_id"/>
+                <field name="start_date"/>
+                <field name="end_date" string="Graduation date"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

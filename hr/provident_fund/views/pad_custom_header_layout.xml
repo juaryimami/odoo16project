@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--header Template -->
+        <template id="pad_custom_header_layout">
+            <t t-set="company" t-value="user.company_id"/>
+            <div class="header">
+                <style>
+                        p.ex1 { 
+                        padding:1px;
+                        }
+                        
+                            table#mytable,
+                            table#mytable tr
+                            {
+                                width: 100%;
+                                border: 0 !important;
+                                margin-bottom: 5px;
+                            }
+                        
+                </style>
+                
+                    <table id="mytable">
+                   
+                       <tr>
+                      
+                        <td>
+
+                          <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="align-items:left; height: 75px; width: 75px;"
+                             alt="Logo"/> 
+
+                        </td>
+                        
+                        <td>
+                      
+<!--                        <center ><p style="color: #940B92; font-weight:bold; border:none;">-->
+<!--                                <span style=" font-size: 30px;">Royal Family Group (Transport Division)</span> <br/> -->
+<!--                                <span style=" font-size: 25px;">ሮያል ፋሚሊ ግሩፕ(ትራንስፖርት ክፍል)</span> <br/> -->
+<!--                                <span style=" font-size: 17px;">አዲስ አበባ ኢትዮጵያ ሳር ቤት አዳምስ ህንጻ 1ኛ ፎቅ ቢሮ ቁጥር F18</span> <br/> -->
+<!--                                <span style=" font-size: 17px;">ስልክ ቁጥር +251 01113809220 ቀን: <span id="date"/></span>-->
+<!--                                -->
+<!--                                </p>-->
+<!--                        </center>-->
+                       
+                   
+<!--                            <script>-->
+<!--                        var d = new Date();-->
+<!--                        var c =  d.getDate()+"-"+(d.getMonth()+1)+"-"+d.getFullYear();-->
+<!--                        document.getElementById("date").innerHTML = c;-->
+<!--                            </script>-->
+
+                        </td>
+                  </tr>
+                       
+                        
+                       
+                    </table>
+                        
+                       
+
+                     
+            </div>
+            
+            <div class="footer">
+                <div class="row" style="font-family: 'Trebuchet MS', sans-serif;">
+                    <div style="align-items: center">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)"
+                             style="max-height: 75px;max-width: 75px;"
+                             alt="Logo" align="left"/> 
+                        <p align="right" style="font-size: 20px; color: #940B92; font-weight:bold;">PAD Ethiopia</p>
+
+                    </div>
+                </div>
+            </div>
+            
+        </template>
+
+    </data>
+
+
+</odoo>

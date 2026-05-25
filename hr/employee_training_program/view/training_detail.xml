@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+        <record id="training_detail_action" model="ir.actions.act_window">
+        <field name="name">Trainings</field>
+        <field name="res_model">training.detail</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new program
+            </p>
+
+        </field>
+    </record>
+
+         <record id="training_detail_view_form" model="ir.ui.view">
+        <field name="name">Trainings</field>
+        <field name="model">training.detail</field>
+        <field name="arch" type="xml">
+            <form string="Program">
+            <header>
+                      <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible=" state not in ['draft']"/>
+                     <button name="action_validate" type="object" string="Validate" class="oe_highlight" invisible=" state not in ['approve','draft']"/>
+                     <button name="action_reject" type="object" string="Reject" class="oe_highlight"  invisible=" state not in ['approve']"/>
+                      <button name="action_progress" type="object" string="Progress" class="oe_highlight"  invisible=" state not in ['approve','validate']"/>
+                     <button name="action_complete" type="object" string="Complete" class="oe_highlight"  invisible=" state not in ['progress']"/>
+                <field name="state" widget="statusbar" options="{'clickable': False}"/>
+            </header>
+                <sheet>
+
+                   <group>
+                        <group>
+                        <field name="name"/>
+                          <field name="institute_id" />
+                            <field name="trainer_id" />
+                            <field name="program_id"/>
+                            <field name="training_type" />
+                         <field name="start_date"/>
+                            <field name="end_date"/>
+                       </group>
+
+
+                        <group>
+
+                        <field name="trainee_ids" widget="many2many_tags"/>
+                         <field name="requested_by" />
+                        <field name="department_id"/>
+                        <field name="reason"/>
+                       </group>
+                   </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="training_detail_view_tree" model="ir.ui.view">
+        <field name="name">Trainings</field>
+        <field name="model">training.detail</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                <field name="institute_id" />
+                <field name="trainer_id" />
+                <field name="requested_by" />
+                <field name="department_id"/>
+                 <field name="program_id"/>
+                 <field name="trainee_ids" widget="many2many_tags"/>
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+
+
+    </data>
+</odoo>

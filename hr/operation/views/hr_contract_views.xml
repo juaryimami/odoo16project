@@ -1,0 +1,173 @@
+<odoo>
+    <record id="view_hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Add the project and location fields before department_id -->
+            <xpath expr="//field[@name='department_id']" position="before">
+                <field name="project_id"/>
+                <field name="location_id"/>
+            </xpath>
+
+           <xpath expr="//group[@name='allowances']" position="after">
+               <div class="row">
+                        <div class="col-lg-6">
+                            <label for="hra"/>
+                            <field name="hra" nolabel="1"/>
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="hra_type"/>
+                            <field name="hra_type"/>
+                        </div>
+                        <div class="col-lg-2">
+                            <span> / month </span>
+                        </div>
+                    </div>
+
+                     <div class="row">
+                         <div class="col-lg-6">
+                        <label for="da"/>
+                        <field name="da" nolabel="1"/>
+                     </div>
+                     <div class="col-lg-4">
+                        <label for="da_type"/>
+                        <field name="da_type"/>
+                     </div>
+                     <div class="col-lg-2">
+                         <span> / month </span>
+                     </div>
+                    </div>
+                     <div class="row">
+                         <div class="col-lg-6">
+                        <label for="travel_allowance"/>
+                        <field name="travel_allowance" nolabel="1"/>
+                     </div>
+                     <div class="col-lg-4">
+                        <label for="travel_allowance_type"/>
+                        <field name="travel_allowance_type"/>
+                     </div>
+                     <div class="col-lg-2">
+                         <span> / month </span>
+                     </div>
+                    </div>
+
+                      <div class="row">
+                         <div class="col-lg-6">
+                        <label for="project_transport_allowance"/>
+                        <field name="project_transport_allowance" nolabel="1"/>
+                     </div>
+                     <div class="col-lg-4">
+                        <label for="project_transport_allowance_type"/>
+                        <field name="project_transport_allowance_type"/>
+                     </div>
+                     <div class="col-lg-2">
+                         <span> / month </span>
+                     </div>
+                    </div>
+
+                      <div class="row">
+                         <div class="col-lg-6">
+                        <label for="project_coordination_allowance"/>
+                        <field name="project_coordination_allowance" nolabel="1"/>
+                     </div>
+                     <div class="col-lg-4">
+                        <label for="project_coordination_allowance_type"/>
+                        <field name="project_coordination_allowance_type"/>
+                     </div>
+                     <div class="col-lg-2">
+                         <span> / month </span>
+                     </div>
+                    </div>
+                   <div class="row">
+                         <div class="col-lg-6">
+                        <label for="communication_allowance"/>
+                        <field name="communication_allowance" nolabel="1"/>
+                     </div>
+                     <div class="col-lg-4">
+                        <label for="communication_allowance_type"/>
+                        <field name="communication_allowance_type"/>
+                         </div>
+                     <div class="col-lg-2">
+                         <span> / month </span>
+                     </div>
+                    </div>
+
+                 <div class="row">
+                   <div class="col-lg-6">
+                    <label for="additional_duty_allowance"/>
+                    <field name="additional_duty_allowance" nolabel="1"/>
+                 </div>
+                 <div class="col-lg-4">
+                    <label for="additional_duty_allowance_type"/>
+                    <field name="additional_duty_allowance_type"/>
+                     </div>
+                 <div class="col-lg-2">
+                     <span> / month </span>
+                 </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                         <label for="desert_allowance"/>
+                         <field name="desert_allowance" nolabel="1"/>
+                    </div>
+                    <div class="col-lg-4">
+                         <field name="is_desert_area" invisible="1"/>
+                        <label for="desert_allowance_rate"/>
+                         <field name="desert_allowance_rate" nolabel="1" readonly="is_desert_area == False"/>
+
+                    </div>
+                    <div class="col-lg-2">
+                         <span>/ month</span>
+                    </div>
+
+
+
+                </div>
+                 <div class="row">
+                  <div class="col-lg-6">
+                    <label for="other_allowance"/>
+                    <field name="other_allowance" nolabel="1"/>
+                 </div>
+                 <div class="col-lg-4">
+                      <label for="other_allowance_type"/>
+                      <field name="other_allowance_type"/>
+                     </div>
+                 <div class="col-lg-2">
+                     <span> / month </span>
+                 </div>
+                </div>
+               <div class="row">
+                  <div class="col-lg-6">
+                    <label for="meal_allowance"/>
+                    <field name="meal_allowance" nolabel="1"/>
+                 </div>
+                 <div class="col-lg-4">
+                      <label for="meal_allowance_type"/>
+                      <field name="meal_allowance_type"/>
+                     </div>
+                 <div class="col-lg-2">
+                     <span> / month </span>
+                 </div>
+                </div>
+               <div class="row">
+                  <div class="col-lg-6">
+                    <label for="provision_for_leave"/>
+                    <field name="provision_for_leave" nolabel="1"/>
+                 </div>
+                 <div class="col-lg-4">
+                      <label for="provision_for_leave_type"/>
+                      <field name="provision_for_leave_type"/>
+                     </div>
+                 <div class="col-lg-2">
+                     <span> / month </span>
+                 </div>
+                </div>
+
+           </xpath>
+        </field>
+    </record>
+</odoo>
+
+

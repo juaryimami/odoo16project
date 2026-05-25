@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="my_categoiry" name="category">
+        <t t-if="len(departments) > 1">
+            <h6>Choose Department</h6>
+                <t t-foreach="departments" t-as="d">
+                    <a class="text-primary-link" t-attf-href="/category/{{d.id}}"><t t-esc="d.name" /></a>,
+                </t>
+             <br/>
+        </t>
+    </template>
+        <template id="employment_type" name="Employment type">
+            <t t-if="len(contracts) > 1">
+                   <h6> Choose Employment Type:</h6>
+                    <t t-foreach="contracts" t-as="c">
+                            <a  class="text-primary-link" t-attf-href="/employment/{{c.id}}"><t t-esc="c.name" /></a>,
+                    </t>
+                <br/>
+            </t>
+    </template>
+</odoo>

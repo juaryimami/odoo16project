@@ -1,0 +1,25 @@
+<odoo>
+    <record id="update_stage_form_id" model="ir.ui.view">
+        <field name="name">Update Stage</field>
+        <field name="model">update.stage.form</field>
+        <field name="arch" type="xml">
+            <form string="Update Stage">
+                <group>
+                    <field name="applicant_ids"/>
+                    <field name="stage_id"/>
+                </group>
+
+                <footer>
+                     <button name="update_applicant_stage_form" type="object" string="Update Stage" class="btn-primary"/>
+                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="update_stage_action_id" model="ir.actions.act_window">
+        <field name="name">Update Stage</field>
+        <field name="res_model">update.stage.form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

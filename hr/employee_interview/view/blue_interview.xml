@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="blue_interview_form_action" model="ir.actions.act_window">
+        <field name="name">Blue Interview</field>
+        <field name="res_model">blue.interview</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new Blue interview
+            </p>
+        </field>
+    </record>
+    <record id="blue_interview_form_form" model="ir.ui.view">
+        <field name="name">Blue interview</field>
+        <field name="model">blue.interview</field>
+        <field name="arch" type="xml">
+            <form string="Blue Interview">
+                <sheet>
+
+                    <group>
+                        <field name="name" string="Reference" />
+                    </group>
+                    <group>
+
+                        <group>
+                            <field name="subject_id" />
+                            <!-- <field name="job_id" /> -->
+                            <field name="position" />
+                            <field name="interview_date" />
+                        </group>
+
+                        <group>
+                            <field name="completed_by"/>
+                            <field name="interviewed_by" widget="many2many_tags" />
+                            <field name="rate" />
+                        </group>
+                    </group>
+
+                      <notebook>
+                        <page name="Interview_Questions" string="Interview Questions">
+                            <field name="blue_line_ids">
+                                <tree editable="bottom">
+                                    <field name="question_id"/>
+                                    <field name="remark" />
+
+                                    <field name="ns" />
+                                    <field name="satisfatory" />
+                                    <field name="vs" />
+                                    <field name="na" />
+                                    <field name="remark" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                    <group>
+                        <group>
+                            <field name="strength" />
+                        </group>
+
+                        <group>
+                            <field name="weakness" />
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="comment" />
+                    </group>
+                    <group>
+                       <group>
+                            <field name="current_salary_information" />
+                           <field name="location" />
+                       </group>
+
+                        <group>
+
+                            <field name="expected_salary" />
+                            <field name="available" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="blue_interview_form_tree" model="ir.ui.view">
+        <field name="name">Blue interview</field>
+        <field name="model">blue.interview</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="subject_id"/>
+                <field name="position" />
+            </tree>
+        </field>
+    </record>
+
+          <menuitem
+            id="employee_interview_form_menu_root"
+            name="Interview"
+            parent="hr_recruitment.menu_hr_recruitment_root" />
+
+         <menuitem
+            id="blue_employee_interview_form_menu"
+            name="Blue Scholar Interview"
+            action="blue_interview_form_action"
+            parent="employee_interview_form_menu_root"/>
+
+</odoo>

@@ -1,0 +1,20 @@
+<odoo>
+    <!-- Inherited Purchase Order Form View -->
+    <record id="view_purchase_order_form_inherit_project" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.project</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Project field next to Vendor Reference in the form view -->
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="project_id"/>
+                <field name="location_id"/>
+            </xpath>
+
+            <!-- Add Cost Plus field next to Unit Price in the Products page under Purchase Order Lines -->
+            <xpath expr="//page[@name='products']//field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+                <field name="cost_plus"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

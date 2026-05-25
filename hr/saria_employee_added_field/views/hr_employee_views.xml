@@ -1,0 +1,65 @@
+<odoo>
+    <record id="view_hr_employee_form_extension" model="ir.ui.view">
+        <field name="name">hr.employee.form.extension</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='department_id']" position="before">
+                <field name="identification_id" string="PEN" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='visa_no']" position="before">
+                <field name="work_permit_status" />
+            </xpath>
+
+            <!-- Replacing attrs and states with modifiers and invisible -->
+            <xpath expr="//field[@name='permit_no']" position="after">
+                <field name="work_permit_status" invisible="1"/>
+                <field name="work_permit_issued_by" invisible="1" modifiers="{'invisible': [('work_permit_status', '!=', 'yes')]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='work_permit_issued_by']" position="after">
+                <field name="work_permit_date_of_issuance" invisible="1" modifiers="{'invisible': [('work_permit_status', '!=', 'yes')]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='passport_id']" position="after">
+                <field name="passport_issued_by" />
+            </xpath>
+
+            <xpath expr="//field[@name='passport_issued_by']" position="after">
+                <field name="passport_date_of_issuance" />
+            </xpath>
+
+            <xpath expr="//field[@name='passport_date_of_issuance']" position="after">
+                <field name="passport_date_of_expire"/>
+            </xpath>
+
+            <xpath expr="//field[@name='coach_id']" position="after">
+               <field name="supervisor_name"/>
+           </xpath>
+
+            <xpath expr="//page[@name='personal_information']/group" position="after">
+                <group>
+                    <group string="Driving License">
+                        <field name="driving_license_id"/>
+                        <field name="driving_license_issued_by"/>
+                        <field name="driving_license_date_of_issuance" />
+                        <field name="driving_license_date_of_expire" />
+                        <field name="driving_license_attachment" filename="driving_license_attachment_name"/>
+                    </group>
+
+                    <group string="Professional License">
+                        <field name="professional_license_status"/>
+                        <!-- Replacing attrs and states with modifiers and invisible -->
+                        <field name="professional_license" invisible="1" modifiers="{'invisible': [('professional_license_status', '!=', 'yes')]}"/>
+                        <field name="professional_license_issued_by" invisible="1" modifiers="{'invisible': [('professional_license_status', '!=', 'yes')]}"/>
+                        <field name="professional_license_date_of_issuance" invisible="1" modifiers="{'invisible': [('professional_license_status', '!=', 'yes')]}"/>
+                        <field name="professional_license_date_of_expire" invisible="1" modifiers="{'invisible': [('professional_license_status', '!=', 'yes')]}"/>
+                        <field name="professional_license_attachment" filename="professional_license_attachment_name" invisible="1" modifiers="{'invisible': [('professional_license_status', '!=', 'yes')]}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

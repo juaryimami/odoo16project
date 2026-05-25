@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--
+      Copyright 2018 Brainbean Apps (https://brainbeanapps.com)
+      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+    -->
+
+
+    <record id="view_employee_resume_line_attachment" model="ir.ui.view">
+        <field name="name">hr.resume.line.attachemnt</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <group string="Resume">
+                    <field name="resume_attachment" filename="resume_filename" widget="binary"/>
+                    <field name="resume_filename" invisible="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_language_tree" model="ir.ui.view">
+        <field name="name">hr.language.tree</field>
+        <field name="model">hr.language</field>
+        <field name="arch" type="xml">
+            <tree string="Languages">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for hr.language -->
+    <record id="view_hr_institution_form" model="ir.ui.view">
+        <field name="name">hr.institution.form</field>
+        <field name="model">hr.institutions</field>
+        <field name="arch" type="xml">
+            <form string="Institution">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_hr_institutions" model="ir.actions.act_window">
+        <field name="name">Institutions</field>
+        <field name="res_model">hr.institutions</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item for hr.language under HR Configuration -->
+    <menuitem id="menu_hr_institution" name="Institutions" action="action_hr_institutions" parent="hr.menu_human_resources_configuration" sequence="11"/>
+
+
+    <record id="view_hr_unit_form" model="ir.ui.view">
+        <field name="name">hr.unit.form</field>
+        <field name="model">hr.unit</field>
+        <field name="arch" type="xml">
+            <form string="Unit">
+                <sheet>
+                    <group>
+                        <field name="unit"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_hr_unit" model="ir.actions.act_window">
+        <field name="name">Unit</field>
+        <field name="res_model">hr.unit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="view_hr_unit_tree" model="ir.ui.view">
+        <field name="name">hr.unit.tree</field>
+        <field name="model">hr.unit</field>
+        <field name="arch" type="xml">
+            <tree string="Unit">
+                <field name="unit"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Menu item for hr.language under HR Configuration -->
+    <menuitem id="menu_hr_unit" name="Units" action="action_hr_unit" parent="hr.menu_human_resources_configuration" sequence="11"/>
+
+
+    <record id="view_hr_language_tree" model="ir.ui.view">
+        <field name="name">hr.language.tree</field>
+        <field name="model">hr.language</field>
+        <field name="arch" type="xml">
+            <tree string="Languages">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for hr.language -->
+    <record id="view_hr_language_form" model="ir.ui.view">
+        <field name="name">hr.language.form</field>
+        <field name="model">hr.language</field>
+        <field name="arch" type="xml">
+            <form string="Language">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_language" model="ir.actions.act_window">
+        <field name="name">Languages</field>
+        <field name="res_model">hr.language</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item for hr.language under HR Configuration -->
+    <menuitem id="menu_hr_language" name="Languages" action="action_hr_language" parent="hr.menu_human_resources_configuration" sequence="10"/>
+
+    <record id="view_employee_form_inherit_approvers" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.leave.approver</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_holidays.view_employee_form_leave_inherit"/> <!-- Ensure this is correct -->
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='managers']/field[@name='leave_manager_id']" position="replace">
+                <field name="leave_manager_ids" widget="many2many_tags"/>
+            </xpath>
+       </field>
+    </record>
+    <record id="view_employee_form_inherit_leave_approvers" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.attendance.approver</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/> <!-- Ensure this is correct -->
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='managers']/field[@name='attendance_manager_id']" position="replace">
+                <field name="attendance_manager_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_employee_form_inherit_expense_approvers" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.expense.approver</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_expense.hr_employee_view_form_inherit_expense"/> <!-- Ensure this is correct -->
+        <field name="arch" type="xml">
+           <xpath expr="//group[@name='managers']/field[@name='expense_manager_id']" position="replace">
+                <field name="expense_manager_ids" widget="many2many_tags"/>
+
+          </xpath>
+        </field>
+    </record>
+    <record id="view_employee_form_inherit_contract_updates" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit.expense.approver</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/> <!-- Ensure this is correct -->
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='date_start']" position="attributes">
+                <attribute name="string">Employment Start Date </attribute>
+          </xpath>
+          <label for="wage" position="attributes">
+            <attribute name="string">Basic Salary</attribute>
+          </label>
+          
+          <xpath expr="/form/sheet/group[@name='top_info']/group[@name='top_info_right']/field[@name='contract_type_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+          </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="view_employee_form_inherit_details_chang" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.resume</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="/form/sheet/group/group/field[@name='department_id']" position="before">
+                <field name="staff_card_no" string=" Staff Card No"/>
+                <field name="unit_id" string="Business Unit"/>
+            </xpath>
+            <xpath expr="//field[@name='identification_id']" position="attributes">
+                <attribute name="string"> National ID</attribute>
+            </xpath>
+
+               <xpath expr="//field[@name='private_street']" positon="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+                <xpath expr="//field[@name='private_street2']" positon="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+               <xpath expr="//field[@name='private_city']" positon="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+            <xpath expr="//field[@name='private_state_id']" positon="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+            <xpath expr="//field[@name='private_zip']" positon="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+            <xpath expr="//field[@name='private_country_id']" positon="attributes">
+                   <attribute name="invisible">1</attribute>
+               </xpath>
+                <xpath expr="//field[@name='pin']" position="attributes">
+                    <attribute name="string">National ID</attribute>
+                </xpath>
+            <xpath expr="//field[@name='lang']" position="replace">
+                    <field name="language" widget="many2many_tags"/>
+                </xpath>
+                <xpath expr="//div[contains(@class, 'o_address_format')]" positon="replace">
+                    <div class="o_address_format">
+                        <field name="private_country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                        <field name="private_city" placeholder="City" class="o_address_city"/>
+                        <field name="private_street" string="Kebele" placeholder="Kebele" class="o_address_street"/>
+                        <field name="private_zip" string="House No" placeholder="House NO" class="o_address_zip"/>
+
+                    </div>
+                </xpath>
+
+
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="user_id" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='bank_account_id']" position="after">
+                    <field name="tin_no"/>
+                </xpath>
+                <xpath expr="//field[@name='private_phone']" position="after">
+                    <field name="pension_no"/>
+                </xpath>
+            <xpath expr="//field[@name='study_school']" position="replace">
+                <field name="institutions" widget="many2many_tags" string="School/University"/>
+            </xpath>
+            <xpath expr="//field[@name='ssnid']" position="replace">
+                <field name="ssnid" string="Membership"/>
+                <field name="membership_documents" widget="many2many_binary"/>
+            </xpath>
+            <xpath expr="//field[@name='coach_id']" position="replace">
+                <field name="coach_id" string="Chief" widget="many2one_avatar_user"/>
+            </xpath>
+            <xpath expr="//field[@name='place_of_birth']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='private_car_plate']" position="attributes">
+                <attribute name="string">Company Car Plate</attribute>
+            </xpath>
+        </field>
+    </record>
+
+<!--    <field name="pin" string="PIN Code"/>-->
+
+    <record id="hr_employee_view_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.document</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    icon="fa-book"
+                    name="action_get_attachment_tree_view"
+                    type="object"
+                    groups="hr.group_hr_user"
+                >
+                    <field name="document_count" widget="statinfo" string="Documents" />
+                </button>
+            </div>
+            <xpath expr="//div[hasclass('oe_chatter')]" position="before">
+                <div class="o_attachment_preview" />
+            </xpath>
+        </field>
+    </record>
+    <record id="ir_attachment_view_search" model="ir.ui.view">
+        <field name="name">ir.attachment.search.inherit.employee</field>
+        <field name="model">ir.attachment</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="base.view_attachment_search" />
+        <field name="arch" type="xml">
+            <field name="create_date" position="after">
+                <field name="index_content" string="Content" />
+            </field>
+            <xpath expr="//filter[@name='my_documents_filter']" position="attributes">
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='url_filter']" position="attributes">
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='binary_filter']" position="attributes">
+                <attribute name='invisible'>1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

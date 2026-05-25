@@ -1,0 +1,578 @@
+<odoo>
+    <!-- Form view for Locations -->
+    <record id="view_piece_rate_activity_form_id" model="ir.ui.view">
+        <field name="name">piece.rate.activity.rate.form</field>
+        <field name="model">piece.rate.activity.rate</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="service_id"/>
+                            <field name="region_id"/>
+                            <field name="location_id"/>
+                            <field name="activity_id"/>
+                            <field name="uom_id"/>
+
+
+
+                        </group>
+                        <group>
+                          <field name="employee_rate"/>
+                          <field name="edomias_rate"/>
+                            <field name="pension_rate"/>
+                            <field name="calculate_profit_margin" invisible="1"/>
+<!--                            <field name="admin_cost"/>-->
+<!--                            <field name="profit_margin"/>-->
+<!--                            <field name="provident_fund"/>-->
+                            <field name="employee_cost" invisible="calculate_profit_margin == 'given_employee_cost'"/>
+                            <field name="employee_cost1" invisible="calculate_profit_margin != 'given_employee_cost'"/>
+                        </group>
+                    </group>
+                      <notebook>
+                         <page string="Allowances">
+                               <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="hra"/>
+                                    <field name="hra" nolabel="1"/>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label for="hra_type"/>
+                                    <field name="hra_type"/>
+                                </div>
+                                <div class="col-lg-2">
+                                    <span> / month </span>
+                                </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="da"/>
+                                <field name="da" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="da_type"/>
+                                <field name="da_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="pension_rate"/>
+                                <field name="pension_rate" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="pension_rate_type"/>
+                                <field name="pension_rate_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="travel_allowance"/>
+                                <field name="travel_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="travel_allowance_type"/>
+                                <field name="travel_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+
+                              <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="project_transport_allowance"/>
+                                <field name="project_transport_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="project_transport_allowance_type"/>
+                                <field name="project_transport_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                              <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="project_coordination_allowance"/>
+                                <field name="project_coordination_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="project_coordination_allowance_type"/>
+                                <field name="project_coordination_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                              <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="provision_for_severance_pay"/>
+                                <field name="provision_for_severance_pay" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="provision_for_severance_pay_type"/>
+                                <field name="provision_for_severance_pay_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="meal_allowance"/>
+                                <field name="meal_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="meal_allowance_type"/>
+                                <field name="meal_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="medical_allowance"/>
+                                <field name="medical_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="medical_allowance_type"/>
+                                <field name="medical_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="accident_allowance"/>
+                                <field name="accident_allowance" nolabel="1"/>
+                              </div>
+                             <div class="col-lg-4">
+                                <label for="accident_allowance_type"/>
+                                <field name="accident_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                             <div class="col-lg-6">
+                                <label for="uniform_allowance"/>
+                                <field name="uniform_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="uniform_allowance_type"/>
+                                <field name="uniform_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                               <div class="row">
+                                   <group>
+                                       <label for="desert_allowance_rate"/>
+                                       <field name="desert_allowance_rate" nolabel="1"/>
+                                   </group>
+                                </div>
+                           <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="communication_allowance"/>
+                                <field name="communication_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="communication_allowance_type"/>
+                                <field name="communication_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="additional_duty_allowance"/>
+                                <field name="additional_duty_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="additional_duty_allowance_type"/>
+                                <field name="additional_duty_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="other_allowance"/>
+                                <field name="other_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="other_allowance_type"/>
+                                 <field name="other_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                              <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="material_cost"/>
+                                <field name="material_cost" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="material_cost_type"/>
+                                 <field name="material_cost_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="fidelity_insurance"/>
+                                <field name="fidelity_insurance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="fidelity_insurance_type"/>
+                                 <field name="fidelity_insurance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="provision_for_leave"/>
+                                <field name="provision_for_leave" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="provision_for_leave_type"/>
+                                 <field name="provision_for_leave_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                         </page>
+                   </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Locations -->
+    <record id="action_piece_rate_activity_rate_id" model="ir.actions.act_window">
+        <field name="name">Tax Region</field>
+        <field name="res_model">piece.rate.activity.rate</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new tax region.
+            </p>
+        </field>
+    </record>
+
+
+    <record id="view_edomias_agent_form_id" model="ir.ui.view">
+        <field name="name">Resource form</field>
+        <field name="model">edomias.agent</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                    <group>
+
+                         <field name="project_id"/>
+                         <field name="service_id"/>
+                         <field name="region_id" string="Region"/>
+                         <field name="location_id" string="Location"/>
+                         <field name="job_id" string="Job Position"/>
+
+                    </group>
+                    <group>
+                        <field name="edomias_rate" required="1"/>
+                        <field name="employee_rate" required="1"/>
+                        <field name="Number_of_Man_Power" string="Number of Man Power"/>
+                        <field name="calculate_profit_margin" invisible="1"/>
+                        <field name="employee_cost" invisible="calculate_profit_margin == 'given_employee_cost'"/>
+                        <field name="employee_cost1" invisible ="calculate_profit_margin != 'given_employee_cost'"/>
+<!--                        <field name="provident_fund"/>-->
+                    </group>
+                    </group>
+                    <notebook>
+                         <page string="Allowances">
+                             <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="hra"/>
+                                    <field name="hra" nolabel="1"/>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label for="hra_type"/>
+                                    <field name="hra_type"/>
+                                </div>
+                                <div class="col-lg-2">
+                                    <span> / month </span>
+                                </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="da"/>
+                                <field name="da" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="da_type"/>
+                                <field name="da_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="pension_rate"/>
+                                <field name="pension_rate" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="pension_rate_type"/>
+                                <field name="pension_rate_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="travel_allowance"/>
+                                <field name="travel_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="travel_allowance_type"/>
+                                <field name="travel_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                              <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="project_transport_allowance"/>
+                                <field name="project_transport_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="project_transport_allowance_type"/>
+                                <field name="project_transport_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                              <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="project_coordination_allowance"/>
+                                <field name="project_coordination_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="project_coordination_allowance_type"/>
+                                <field name="project_coordination_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                              <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="provision_for_severance_pay"/>
+                                <field name="provision_for_severance_pay" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="provision_for_severance_pay_type"/>
+                                <field name="provision_for_severance_pay_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="meal_allowance"/>
+                                <field name="meal_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="meal_allowance_type"/>
+                                <field name="meal_allowance_type"/>
+                             </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="medical_allowance"/>
+                                <field name="medical_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="medical_allowance_type"/>
+                                <field name="medical_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="accident_allowance"/>
+                                <field name="accident_allowance" nolabel="1"/>
+                              </div>
+                             <div class="col-lg-4">
+                                <label for="accident_allowance_type"/>
+                                <field name="accident_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                             <div class="col-lg-6">
+                                <label for="uniform_allowance"/>
+                                <field name="uniform_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="uniform_allowance_type"/>
+                                <field name="uniform_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                               <div class="row">
+                                   <group>
+                                       <label for="desert_allowance_rate"/>
+                                       <field name="desert_allowance_rate" nolabel="1"/>
+                                   </group>
+                                </div>
+                           <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="communication_allowance"/>
+                                <field name="communication_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="communication_allowance_type"/>
+                                <field name="communication_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="additional_duty_allowance"/>
+                                <field name="additional_duty_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                <label for="additional_duty_allowance_type"/>
+                                <field name="additional_duty_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="other_allowance"/>
+                                <field name="other_allowance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="other_allowance_type"/>
+                                 <field name="other_allowance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="material_cost"/>
+                                <field name="material_cost" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="material_cost_type"/>
+                                 <field name="material_cost_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="fidelity_insurance"/>
+                                <field name="fidelity_insurance" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="fidelity_insurance_type"/>
+                                 <field name="fidelity_insurance_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                             <div class="row">
+                                 <div class="col-lg-6">
+                                <label for="provision_for_leave"/>
+                                <field name="provision_for_leave" nolabel="1"/>
+                             </div>
+                             <div class="col-lg-4">
+                                  <label for="provision_for_leave_type"/>
+                                 <field name="provision_for_leave_type"/>
+                                 </div>
+                             <div class="col-lg-2">
+                                 <span> / month </span>
+                             </div>
+                            </div>
+                         </page>
+                   </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Locations -->
+    <record id="action_edomias_agent_id" model="ir.actions.act_window">
+        <field name="name">Resource</field>
+        <field name="res_model">edomias.agent</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new tax region.
+            </p>
+        </field>
+    </record>
+</odoo>

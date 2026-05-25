@@ -1,0 +1,80 @@
+<odoo>
+    <!-- Tree view for Edomias Agents -->
+    <record id="view_agent_tree" model="ir.ui.view">
+        <field name="name">edomias.agent.tree</field>
+        <field name="model">edomias.agent</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="project_id"/>
+                <field name="location_id"/>
+                <field name="job_id"/>
+                <field name="edomias_rate"/>
+                <field name="employee_rate"/>
+                <field name="Number_of_Man_Power"/>
+                <field name="total_edomias_rate"/>
+                <field name="total_employee_rate"/>
+                 <!-- New allowance fields -->
+                <field name="hra"/>
+                <field name="da"/>
+                <field name="travel_allowance"/>
+                <field name="meal_allowance"/>
+                <field name="medical_allowance"/>
+                <field name="other_allowance"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view for Edomias Agents -->
+    <record id="view_agent_form" model="ir.ui.view">
+        <field name="name">edomias.agent.form</field>
+        <field name="model">edomias.agent</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="project_id"/>
+                        <field name="location_id"/>
+                        <field name="job_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Rates">
+                            <group>
+                                <field name="edomias_rate"/>
+                                <field name="employee_rate"/>
+                                <field name="Number_of_Man_Power"/>
+                            </group>
+                        </page>
+                        <page string="Total Rates">
+                            <group>
+                                <field name="total_edomias_rate" readonly="1"/>
+                                <field name="total_employee_rate" readonly="1"/>
+                                 <!-- New allowance fields -->
+                <field name="hra"/>
+                <field name="da"/>
+                <field name="travel_allowance"/>
+                <field name="meal_allowance"/>
+                <field name="medical_allowance"/>
+                <field name="other_allowance"/>
+
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Edomias Agents -->
+    <record id="action_agent" model="ir.actions.act_window">
+        <field name="name">Edomias Agents</field>
+        <field name="res_model">edomias.agent</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new agent record.
+            </p>
+        </field>
+    </record>
+</odoo>

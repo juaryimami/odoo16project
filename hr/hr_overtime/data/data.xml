@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="hr_salary_rule_overtime_request" model="hr.salary.rule">
+            <field name="name">Overtime</field>
+            <field name="code">OT100</field>
+            <field name="sequence" eval="100"/>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.OT100</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.OT100.amount</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+
+        <record id="hr_rule_input_OT" model="hr.rule.input">
+            <field name="code">OT100</field>
+            <field name="name">Overtime</field>
+            <field name="input_id" ref="hr_salary_rule_overtime_request"/>
+        </record>
+<!--        <record id="om_hr_payroll.structure_base" model="hr.payroll.structure">-->
+<!--            <field eval="[(4, ref('hr_salary_rule_overtime_request'))]"-->
+<!--                   name="rule_ids"/>-->
+<!--        </record>-->
+    </data>
+</odoo>

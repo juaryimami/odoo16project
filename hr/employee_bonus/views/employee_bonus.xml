@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="employee_bonus_action" model="ir.actions.act_window">
+        <field name="name">Employee Bonus</field>
+        <field name="res_model">employee.bonus</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new employee bonus
+            </p>
+
+        </field>
+    </record>
+
+    <record id="employee_bonus_view_form" model="ir.ui.view">
+        <field name="name">Employee Bonus</field>
+        <field name="model">employee.bonus</field>
+        <field name="arch" type="xml">
+            <form string="Employee Bonus">
+                <header>
+                    <!-- Replace attrs with invisible -->
+                    <button name="compute_value" string="Mark As Paid" type="object" class="oe_highlight"
+                        groups="base.group_user" invisible="[(state, '!=', 'validate')]"/>
+                    <button name="action_submit" string="Submit" type="object" class="oe_highlight"
+                        invisible="[(state, '!=', 'draft')]"/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                        invisible="[(state, 'not in', ['submit', 'draft'])]"/>
+                    <button name="action_reject" string="Reject" type="object" class="oe_highlight"
+                        invisible="[(state, '!=', 'submit')]"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,reject,validate" />
+                </header>
+                        
+                <sheet>
+                    <widget name="web_ribbon" title="In Payment" bg_color="bg-success" invisible="[(state, '!=', 'in_payment')]"/>
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" invisible="[(state, '!=', 'paid')]"/>
+
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="employee_id"/>
+                            <field name="approved_by"/>
+                            <field name="approved_date"/>
+                        </group>
+                        <group>
+                            <field name="bonus_type"/>
+                            <field name="percent_amount" invisible="[(bonus_type, '=', 'fixed')]"/>
+                            <field name="fixed_amount" invisible="[(bonus_type, '=', 'percent')]"/>
+                            <field name="value"/>
+                            <field name="currency_id"/>
+                            <field name="type_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Reason" string="Description">
+                            <field name="reason"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+         <record id="employee_bonus_view_tree" model="ir.ui.view">
+        <field name="name">Empoyee Bonus</field>
+        <field name="model">employee.bonus</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                <field name="type_id"/>
+                <field name="employee_id"/>
+                <field name="bonus_type" />
+                <field name="value" sum="Sum of Value"/>
+                <field name="approved_date" />
+                <field name="state" />
+
+
+            </tree>
+        </field>
+    </record>
+
+         <menuitem
+            id="hr_employee_bonus"
+            name="Employee Bonus"
+            action="employee_bonus_action"
+            parent="om_hr_payroll.menu_hr_payroll_root"/>
+
+
+        <record id="bonus_type_action" model="ir.actions.act_window">
+        <field name="name">Bonus Type</field>
+        <field name="res_model">bonus.type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new bonus type
+            </p>
+
+        </field>
+    </record>
+
+          <record id="bonus_type_view_form" model="ir.ui.view">
+        <field name="name">Bonus Type</field>
+        <field name="model">bonus.type</field>
+        <field name="arch" type="xml">
+            <form string="Bonus type">
+
+                <sheet>
+
+
+                                 <field name="name"/>
+
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+         <record id="bonus_type_view_tree" model="ir.ui.view">
+        <field name="name">Bonus Type</field>
+        <field name="model">bonus.type</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+         <menuitem
+            id="hr_employee_bonus_type"
+            name="Bonus type"
+            action="bonus_type_action"
+            parent="om_hr_payroll.menu_hr_payroll_configuration"/>
+    </data>
+</odoo>

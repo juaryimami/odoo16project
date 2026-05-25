@@ -1,0 +1,5 @@
+
+/* Target Odoo error pop-ups and notifications */
+ .o_dialog_warning{
+    color: red !important;
+}

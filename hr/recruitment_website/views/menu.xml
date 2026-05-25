@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <menuitem id="career_page_menu"
+    name="Career Page"
+    parent="hr_recruitment.menu_hr_recruitment_root"
+    action="website.website_preview"
+    />
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Extend HR Employee Form -->
+        <record id="view_hr_employee_form_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='history']" position="inside">
+
+<!--                    <label for="promotion_ids" string="Promotions"/>-->
+                    <br />
+                    <br />
+                    <span>Promotions</span>
+                    <field name="promotion_ids" mode="tree,kanban">
+                        <tree string="Employee Promotions" editable="bottom">
+                            <field name="employee_id"/>
+                            <field name="promotion_date"/>
+                            <field name="old_designation"/>
+                            <field name="new_job_id"/>
+<!--                            <field name="promotion_type"/>-->
+                            <field name="old_wage"/>
+                            <field name="new_salary"/>
+                        </tree>
+                    </field>
+                </xpath>
+                <xpath expr="//page[@name='history']" position="inside">
+                     <br />
+                    <br />
+                   <span>Demotions</span>
+                    <field name="demotion_ids" mode="tree,kanban">
+                        <tree string="Employee Demotion" editable="bottom">
+                            <field name="employee_id"/>
+                            <field name="demotion_date"/>
+                            <field name="old_job"/>
+                            <field name="new_job"/>
+<!--                            <field name="demotion_type"/>-->
+                            <field name="old_salary"/>
+                            <field name="new_wage"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

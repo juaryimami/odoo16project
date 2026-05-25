@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+
+    <template id="job_list" name="Job List">
+
+
+        <t t-call="website.layout">
+
+            <div class="oe_structure"/>
+            <div class="oe_structure">
+                <div style="margin-top:6px; margin-left:6%;margin-right:4%;">
+                    <div>
+                      <h3 style="color: #233835; margin-bottom:0px; text-align: center;">
+                        <t t-if="jobs and jobs[0].open_job_count > 0">
+                            <div class="text-muted" style="color: #233835;">
+                                (<t t-esc="jobs[0].open_job_count"/>) open jobs
+                            </div>
+                        </t>
+                        </h3>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <t t-call="recruitment_website.my_categoiry" t-set="departments"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <t t-call="recruitment_website.employment_type" t-set="contracts"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <t t-foreach="jobs" t-as="job">
+                                    <div class="col-lg-6 p-1">
+                                        <div class="card m-auto">
+                                            <div class="card-body">
+<!--                                                 style="color: #233835;"-->
+                                                <h5 class="card-subtitle mb-2 text-primary"><t t-esc="job.name"/></h5>
+                                                <p class="card-text">
+                                                    <h6 class="card-subtitle mb-2 text-muted">
+                                                        <i class="fa fa-map-marker"> <t t-esc="job.location"/></i>
+                                                    </h6>
+                                                </p>
+                                                <a t-attf-href="/job/detail/{{job.id}}" class="card-link text-primary" >Read more</a>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                    <div class="row" style="text-align: center;  background-color: #F1F1F1;margin-top:3%;margin-bottom:1%; padding-top:2%;">
+                        <h4 style="color: #233835" class="">Submit your Application</h4>
+                        <p class="">​We are always looking for bright minds and enthusiastic people from diverse backgrounds, who want to be part of an outstanding team.<br/>Even if you don’t find a suitable position below, please do not hesitate to drop us your resume.
+                        <br/><a class="btn btn-success" t-attf-href="/apply/default/" style="background-color: $o-brand-odoo !important">Apply</a>
+                        </p>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </t>
+    </template>
+
+
+    <template id="job_list_by_department" name="Job List by department">
+
+
+        <t t-call="website.layout">
+            <title style="color: #233835;">
+                Job List by department
+            </title>
+
+            <div class="oe_structure"/>
+
+            <div class="oe_structure">
+                <div style="margin-left:6%;margin-right:4%;">
+                     <div>
+                      <h3 style="color: #233835; margin-bottom:0px; text-align: center;">
+                        <t t-if="jobs and jobs[0].open_job_count > 0">
+                            <div class="text-muted" style="color: #233835;">
+                                (<t t-esc="jobs[0].open_job_count"/>) open jobs
+                            </div>
+                        </t>
+                        </h3>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <t t-call="recruitment_website.my_categoiry" t-set="departments"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <t t-call="recruitment_website.employment_type" t-set="contracts"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <t t-foreach="bydepartment" t-as="job">
+                                    <div class="col-lg-6 p-1">
+                                        <div class="card m-auto">
+                                            <div class="card-body">
+                                                  <h5 class="card-subtitle mb-2 text-primary"  ><t t-esc="job.name"/></h5>
+                                                    <p class="card-text">
+                                                        <h6 class="card-subtitle mb-2 text-muted">
+                                                            <i class="fa fa-map-marker"> <t t-esc="job.location"/></i>
+                                                        </h6>
+                                                    </p>
+                                                <a t-attf-href="/job/detail/{{job.id}}" class="card-link text-primary" >Read more</a>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                     <div class="row" style="text-align: center;  background-color: #F1F1F1;margin-top:3%;margin-bottom:1%; padding-top:2%;">
+                        <h4 style="color: #233835" class="">Submit your Application</h4>
+                        <p class="">​We are always looking for bright minds and enthusiastic people from diverse backgrounds, who want to be part of an outstanding team.<br/>Even if you don’t find a suitable position below, please do not hesitate to drop us your resume.
+                        <br/><a class="btn btn-success" t-attf-href="/apply/default/" style="background-color: $o-brand-odoo !important">Apply</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="job_list_employment_type" name="Job List by employment">
+        <t t-call="website.layout">
+            <title style="color: #233835;">
+                Job List by employment
+            </title>
+            <div class="oe_structure"/>
+            <div class="oe_structure">
+                <div style="margin-left:6%;margin-right:4%;">
+                     <div>
+                      <h3 style="color: #233835; margin-bottom:0px; text-align: center;">
+                        <t t-if="jobs and jobs[0].open_job_count > 0">
+                            <div class="text-muted" style="color: #233835;">
+                                (<t t-esc="jobs[0].open_job_count"/>) open jobs
+                            </div>
+                        </t>
+                        </h3>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <t t-call="recruitment_website.my_categoiry" t-set="departments"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <t t-call="recruitment_website.employment_type" t-set="contracts"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="row">
+<!--                                <h3 style="color: #233835;">-->
+<!--                                    <t t-esc="emptype_id"/>-->
+<!--                                    Job List-->
+<!--                                </h3>-->
+                                <t t-foreach="byemployment" t-as="job">
+                                    <div class="col-lg-6 p-1">
+                                        <div class="card m-auto">
+                                            <div class="card-body">
+                                                  <h5 class="card-subtitle mb-2 text-primary"><t t-esc="job.name"/></h5>
+                                                    <p class="card-text">
+                                                        <h6 class="card-subtitle mb-2 text-muted">
+                                                            <i class="fa fa-map-marker"> <t t-esc="job.location"/></i>
+                                                        </h6>
+                                                    </p>
+                                                <a t-attf-href="/job/detail/{{job.id}}" class="card-link text-primary" >Read more</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <br/>
+                    </div>
+                     <div class="row" style="text-align: center;  background-color: #F1F1F1;margin-top:3%; margin-bottom:1%; padding-top:2%;">
+                        <h4 style="color: #233835" class="">Submit your Application</h4>
+                        <p class="">​We are always looking for bright minds and enthusiastic people from diverse backgrounds, who want to be part of an outstanding team.<br/>Even if you don’t find a suitable position below, please do not hesitate to drop us your resume.
+                        <br/><a class="btn btn-success" t-attf-href="/apply/default/" style="background-color: $o-brand-odoo !important">Apply</a>
+                        </p>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </t>
+    </template>
+
+
+    <template id="job_detail" name="Job Detail">
+        <t t-call="website.layout">
+            <title style="color: #233835;">
+                job detail
+            </title>
+            <div class="oe_structure"/>
+
+            <div class="oe_structure">
+                <div style="margin-left:6%;margin-right:4%;">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card p-2">
+
+                                <h3  class="text-primary">
+                                    Job Position: <t t-esc="job.name"/>
+                                </h3>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <p>
+                                            <b>Employment type:</b>
+                                            <t t-esc="job.employment_type.name"/>
+                                        </p>
+                                        <p>
+                                            <b>Posted date:</b>
+                                            <t t-esc="job.write_date.date()"/>
+                                        </p>
+                                        <p>
+                                            <b>Deadline date:</b>
+                                            <t t-esc="job.deadline_date"/>
+                                        </p>
+                                        <p>
+                                            <b>Recruiter:</b>
+                                            <t t-esc="job.company_name.name"/>
+                                        </p>
+
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <p>
+                                            <b>Job Location:</b>
+                                            <t t-esc="job.location"/>
+                                        </p>
+                                        <p>
+                                            <b>Category:</b>
+                                            <t t-esc="job.department_id.name"/>
+                                        </p>
+                                        <p>
+                                            <b>Current Salary:</b>
+                                            <t t-esc="job.salary"/>
+                                            <t t-esc="job.currency_id.name"/>
+                                        </p>
+                                        <p>
+                                            <b>Career Level:</b>
+                                            <t t-esc="job.level_label"/>
+                                        </p>
+
+                                    </div>
+                                </div>
+
+                                <t t-if="job.purpose">
+                                    <b>Job Summary:</b>
+                                    <p>
+                                        <t t-esc="job.purpose"/>
+                                    </p>
+                                </t>
+                                <t t-if="job.description != Null">
+                                    <b>Duties and Responsibilities</b>
+                                    <p>
+                                        <t t-esc="job.description" widget="html"/>
+                                    </p>
+                                </t>
+<!--                                <t t-if="job.qualification or job.skill != Null">-->
+<!--                                    <b>Requirement:</b>-->
+<!--                                    <p>-->
+<!--                                        <t t-esc="job.qualification" widget="html"/>-->
+<!--                                    </p>-->
+<!--                                    <p>-->
+<!--                                        <t t-esc="job.skill" widget="html"/>-->
+<!--                                    </p>-->
+<!--                                </t>-->
+                                <a class="btn btn-success" t-attf-href="/apply/{{slug(job)}}" style="background-color: $o-brand-odoo !important">Apply</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ShareThis BEGIN -->
+<!--            <div class="sharethis-inline-share-buttons">-->
+<!--                <h1>Test</h1>-->
+<!--            </div>-->
+            <!-- ShareThis END -->
+        </t>
+    </template>
+
+
+    <template id="job_apply" name="Job Application">
+
+        <t t-call="website.layout">
+
+            <title style="color: #233835;">
+                Apply
+            </title>
+
+            <div class="oe_structure"/>
+
+            <div class="oe_structure">
+
+                <div class="container p-2">
+
+
+                    <h3 style="color: #233835;">Application Form</h3>
+                    <h5 class="text-primary">Job Position:
+                        <t t-esc="job.name"/>
+                    </h5>
+                    <div class="card p-2">
+                        <form id="application_form" role="form" action="/apply/job_position" method="POST"
+                              enctype="multipart/form-data">
+                            <p class="text-danger">(*) = Mandatory field</p>
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="form-group">
+                                <!--            <label for="applicantname">Apply For <t t-esc="job.name" /> </label>-->
+
+                                <input type="hidden" t-attf-class="form-control" name="department_id"
+                                       t-att-value="job.category"/>
+                                <input type="hidden" t-attf-class="form-control" name="recruitment_job_id"
+                                       t-att-value="job.id"/>
+                                <input type="hidden" t-attf-class="form-control" name="job_name"
+                                       t-att-value="job.name"/>
+                                <!--                     <input type="hidden"  t-attf-class="form-control" name="company_id" t-att-value="job.company_name.id" />-->
+                                <input type="hidden" t-attf-class="form-control" name="stage_id" value="1"/>
+                                <!--            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
+                            </div>
+
+                            <h5 style="color:#233835;">
+                                1,  Basic Information Section
+                            </h5>
+                            <div class="row rounded border border-dark p-1">
+
+
+                                <div class="col-lg-6">
+                                    <div class="form-group py-1">
+                                        <label>Full Name(*)</label>
+                                        <input type="text" t-attf-class="form-control" name="applicant_name"
+                                               id="applicant_name" required="True" placeholder="Full Name"/>
+                                    </div>
+                                    <div class="form-group py-2">
+                                        <label>Email(*)</label>
+                                        <input type="text" t-attf-class="form-control" name="email" id="email"
+                                               required="True" placeholder="Email"/>
+                                    </div>
+
+                                    <div class="form-group py-1">
+                                        <label for="language">Select language skill(*)</label>
+                                        <br/>
+                                        <select class="selectpicker col-12" id="language" name="language"
+                                                required="True" multiple="multiple" data-live-search="true">
+
+                                            <t t-foreach="language_list" t-as="language">
+
+                                                <option t-att-value="language.id">
+                                                    <t t-esc="language.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+
+                                        <p class="px-1 py-2">If you want to add other language that you can speak, write
+                                            and listen please write here
+                                        </p>
+                                        <input type="text" class="form-control" name="other_language"
+                                               placeholder="Other Languages"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group py-2">
+                                        <label for="education">Gender(*)</label>
+                                        <select class="form-control" name="gender" required="True">
+                                            <option value="">Select Your Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+
+
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group py-2">
+                                        <label>Phone No:(*)</label>
+                                        <input type="text" t-attf-class="form-control" name="phone" id="phone"
+                                               required="True" placeholder="Phone Number"/>
+                                    </div>
+
+                                    <div class="form-group py-2">
+                                        <label>Second Phone No.</label>
+                                        <input type="number" t-attf-class="form-control" name="phone_two" id="phone_two"
+                                               placeholder="Second Phone Number "/>
+                                    </div>
+
+                                    <div class="form-group py-2">
+                                        <label>Living Address(*)</label>
+                                        <input type="text" t-attf-class="form-control" name="living_address"
+                                               id="living_address" placeholder="e.g. bole: Addis Ababa: Ethiopia"
+                                               required="True"/>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <br/>
+<!--                             <h5 style="color: #233835;"> 2,  Experience Section </h5>-->
+
+<!--                            <div class="row border border-dark p-2">-->
+
+
+
+
+<!--                                <p>Please fill the field if you have directly related experience for the position</p>-->
+
+<!--                                <div id="experiences_container">-->
+
+<!--                                    <div id="experiences_list"></div>-->
+<!--                                    <button type="button" id="add_experience_button" class="btn btn-secondary" style="color:#ffffff; border:none; background-color: #FEBC11">Add-->
+<!--                                        Experience-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+
+<!--                            <br/>-->
+<!--                            <h5 style="color:#233835;">3, Education Background Section</h5>-->
+<!--                            <div class="row border border-dark p-1">-->
+
+<!--                                <p>Please fill your education background</p>-->
+
+<!--                                <div id="education_container">-->
+
+<!--                                    <div id="education_list"></div>-->
+<!--                                    <button type="button" id="add_education_button" class="btn btn-secondary" style="color:#ffffff; border:none; background-color: #FEBC11">Add-->
+<!--                                        Education-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+                            <br/>
+
+                           <h5 style="color:#233835;">2, Application Information</h5>
+                            <div class="row border  p-2">
+
+
+                                <div class="col-lg-6">
+                                    <div class="form-group py-2">
+                                        <label for="reason">Select reason for seeking the job(*)</label>
+                                        <select class="form-control" name="reason" required="True"
+                                                data-live-search="true">
+                                            <option value="">Select the reason</option>
+
+                                            <t t-foreach="reasons" t-as="reason">
+                                                <option t-att-value="reason.id">
+                                                    <t t-esc="reason.name"/>
+                                                </option>
+                                            </t>
+
+
+                                        </select>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group py-2">
+                                        <label for="education">Availability Within(*)</label>
+                                        <select class="form-control" name="availability" data-live-search="true">
+                                            <option value="">Select Your Availability</option>
+                                            <t t-foreach="availabilities" t-as="availability">
+                                                <option t-att-value="availability.id">
+                                                    <t t-esc="availability.name"/>
+                                                </option>
+                                            </t>
+
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-8">
+                                    <div class="form-group py-3">
+                                        <label for="coverletter">Cover Letter</label>
+                                        <textarea class="form-control" name="application_summary"
+                                                  id="application_summary" rows="3"></textarea>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-group py-2">
+                                        <label>Resume file(*)
+                                            <p>CV Format is PDF or WORD file format</p>
+                                        </label>
+
+                                        <input class="form-control btn-primary" type="file" name="att"
+                                               multiple="true" accept=".docx,.pdf" data-show-upload="true"
+                                               data-show-caption="true" data-show-preview="true"
+                                               style="color:#ffffff; border:none; background-color: $o-brand-odoo !important"
+                                               required="True"/>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-6">
+                                    <div class="form-group py-2">
+                                        <label>Expected salary package(ETB)(*)</label>
+                                        <select class="form-control" id="expected_salary" name="expected_salary"
+                                                required="True" data-live-search="true">
+                                            <option value="">Select salary package</option>
+                                            <t t-foreach="salaries" t-as="salary">
+                                                <option t-att-value="salary.id">
+                                                    <t t-esc="salary.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <p>If you select hourly rate please fill the hourly amount</p>
+
+
+                                        <input type="Number" id="hourly_rate_amount" name="hourly_rate_amount"
+                                               class="form-control" placeholder="Hourly Rate Amount"/>
+
+                                    </div>
+
+                                </div>
+                                  <div class="form-group col-lg-6">
+                                    <label for="education">Total Year of Experience( Start From Recent)</label>
+                                    <select class="form-control" name="experience_year" required="True"
+                                            data-live-search="true">
+                                        <option value="">Select Year of experience</option>
+
+                                        <t t-foreach="experiences" t-as="experience">
+                                            <option t-att-value="experience.id">
+                                                <t t-esc="experience.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group py-1">
+                                        <label>Expected benefit(*)</label>
+                                        <select class="selectpicker col-12" id="expected_benefit"
+                                                name="expected_benefit" required="True" multiple="multiple"
+                                                data-live-search="true">
+
+                                            <t t-foreach="benefits" t-as="benefit">
+                                                <option t-att-value="benefit.id">
+                                                    <t t-esc="benefit.name"/>
+                                                </option>
+                                            </t>
+                                        </select>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                            <br/>
+                            <input type="hidden" id="experiences" name="experiences"/>
+                            <input type="hidden" id="educations" name="educations"/>
+                            <button type="submit"  class="btn btn-success"  style="color:#ffffff; border:none; background-color: $o-brand-odoo !important">Apply</button>
+                        </form>
+                        <br/>
+                        <br/>
+                        <br/>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                $('select').selectpicker();
+                document.addEventListener('DOMContentLoaded', function () {
+                const experiencesList = document.getElementById('experiences_list');
+                const addExperienceButton = document.getElementById('add_experience_button');
+                const experiencesInput = document.getElementById('experiences');
+                let experiences = JSON.parse(localStorage.getItem('experiences')) || [];
+                <!--                    calculateTotalExperience();-->
+
+
+                const educationList = document.getElementById('education_list');
+                const addEducationButton = document.getElementById('add_education_button');
+                const educationsInput = document.getElementById('educations');
+                let educations = JSON.parse(localStorage.getItem('educations')) || [];
+
+                function renderExperiences() {
+                experiencesList.innerHTML = '';
+                experiences.forEach((experience, index) => {
+                const experienceDiv = document.createElement('div');
+                experienceDiv.classList.add('experience-item');
+                experienceDiv.innerHTML = `
+                <!--                                <div class="form-group">-->
+                <!--                                    <label>Company Name</label>-->
+                <!--                                    <input type="text" class="form-control" value="${experience.company_name}" data-index="${index}" data-field="company_name"/>-->
+                <!--                                </div>-->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Company Name</label>
+                            <input type="text" class="form-control" value="${experience.comp_name}"
+                                   data-index="${index}" data-field="comp_name"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Job Title</label>
+                            <input type="text" class="form-control" value="${experience.exp_position_name}"
+                                   data-index="${index}" data-field="exp_position_name"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" class="form-control" value="${experience.comp_location}"
+                                   data-index="${index}" data-field="comp_location"/>
+                        </div>
+
+                        <div class="form-group py-2">
+                            <label for="frequency">Select Payment Frequency</label>
+                            <select class="form-control" id="payment_frequency" name="payment_frequency"
+                                    data-index="${index}" data-field="payment_frequency">
+                                <option value="">Select payment frequency</option>
+                                <option value="hour">Hour</option>
+                                <option value="day">Day</option>
+                                <option value="week">Week</option>
+                                <option value="month">Month</option>
+                                <option value="year">Year</option>
+
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Hired Date</label>
+                            <input type="date" class="form-control" value="${experience.exp_start_date}"
+                                   data-index="${index}" data-field="exp_start_date"/>
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Current Salary</label>
+                            <input type="text" class="form-control" value="${experience.exp_salary}"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, '')"
+                                   data-index="${index}" data-field="exp_salary"/>
+                        </div>
+
+
+                        <div class="form-group py-2">
+                            <label>Current Benefit</label>
+                            <input type="text" class="form-control" name="emp_benefit" placeholder="Benefit"
+                                   data-index="${index}" data-field="emp_benefit"/>
+
+                        </div>
+
+
+                        <div class="form-group py-2">
+                            <label for="currency">Select Currency Type</label>
+                            <select class="form-control" name="exp_currency" data-index="${index}"
+                                    data-field="exp_currency" data-live-search="true">
+                                <option value="">Select Currency</option>
+                                <t t-foreach="currencies" t-as="currency">
+                                    <option t-att-value="currency.id">
+                                        <t t-esc="currency.name"/>
+                                    </option>
+                                </t>
+
+                            </select>
+                        </div>
+
+
+                        <div class="form-group py-2">
+                            <label for="industry">Select Industry Type</label>
+                            <select class="form-control" name="industry_id" data-index="${index}"
+                                    data-field="industry_id" data-live-search="true">
+                                <option value="">Select Industry</option>
+                                <t t-foreach="industries" t-as="ind">
+                                    <option t-att-value="ind.id">
+                                        <t t-esc="ind.name"/>
+                                    </option>
+
+                                </t>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group rounded border border-dark p-3">
+                            <p>Currently, If you are not working here, please add end date</p>
+                            <label>End Date</label>
+                            <input type="date" class="form-control" value="${experience.end_date}" data-index="${index}"
+                                   data-field="end_date"/>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+                <!--                              <div class="row">-->
+                <!--                                  <input type="checkbox" id="working_here" name="working_here" class="form-control"/>-->
+                <!--                              </div>-->
+
+                <div class="form-group">
+                    <label>Summary of Roles and Responsibilities</label>
+                    <textarea class="form-control" data-index="${index}" data-field="exp_summary">
+                        ${experience.exp_summary}
+                    </textarea>
+                </div>
+
+
+                <div class="form-group py-3">
+                    <button type="button" class="btn btn-danger remove-experience" data-index="${index}">Remove</button>
+                </div>
+                `;
+                experiencesList.appendChild(experienceDiv);
+                });
+                }
+
+                function renderEducations() {
+                educationList.innerHTML = '';
+                educations.forEach((education, index) => {
+                const educationDiv = document.createElement('div');
+                educationDiv.classList.add('education-item');
+                educationDiv.innerHTML = `
+
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="form-group py-2">
+                            <label for="education">College/University Name(*)</label>
+                            <select class="form-control" name="school_name" data-index="${index}"
+                                    data-field="school_name" data-live-search="true">
+                                <option value="">Select School Name</option>
+                                <t t-foreach="univers" t-as="u">
+                                    <option t-att-value="u.id">
+                                        <t t-esc="u.name"/>
+                                    </option>
+                                </t>
+
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>GPA</label>
+                            <input type="text" class="form-control" value="${education.gpa}"
+                                   data-index="${index}"
+                                   data-field="gpa"
+                                   step="0.01"
+                                   oninput="this.value = this.value.replace(/[^0-9.]/g, ''); if (parseFloat(this.value) > 4) this.value = 0.0;"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" class="form-control" value="${education.start_date}"
+                                   data-index="${index}" data-field="start_date"/>
+                        </div>
+
+
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label>Major Specialization</label>
+                            <input type="text" class="form-control" value="${education.major_specialization}"
+                                   data-index="${index}" data-field="major_specialization"/>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label>Minor Specialization</label>
+                            <input type="text" class="form-control" value="${education.minor_specialization}"
+                                   data-index="${index}" data-field="minor_specialization"/>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="degree_id">Select Education Level</label>
+                            <select class="form-control" id="degree_id" name="degree_id" data-index="${index}"
+                                    data-field="degree_id" data-live-search="true">
+                                <option value="">Select Education Level</option>
+                                <t t-foreach="degrees" t-as="degree">
+                                    <option t-att-value="degree.id">
+                                        <t t-esc="degree.name"/>
+                                    </option>
+                                </t>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Graduation Date</label>
+                            <input type="date" class="form-control" value="${education.end_date}" data-index="${index}"
+                                   data-field="end_date"/>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label>More Description</label>
+                    <textarea class="form-control" data-index="${index}" data-field="description">
+                        ${education.description}
+                    </textarea>
+                </div>
+                <div class="form-group py-2">
+
+
+                    <button type="button" class="btn btn-danger remove-education" data-index="${index}">Remove</button>
+                </div>
+                `;
+                educationList.appendChild(educationDiv);
+                });
+                }
+
+                function updateExperience(event) {
+                const index = event.target.getAttribute('data-index');
+                const field = event.target.getAttribute('data-field');
+                experiences[index][field] = event.target.value;
+                localStorage.setItem('experiences', JSON.stringify(experiences));
+                }
+
+                function updateEducation(event) {
+                const index = event.target.getAttribute('data-index');
+                const field = event.target.getAttribute('data-field');
+                educations[index][field] = event.target.value;
+                localStorage.setItem('educations', JSON.stringify(educations));
+                }
+
+                function addExperience() {
+
+
+                experiences.push({
+                industry_id: '',
+                exp_position_name: '',
+                exp_salary:'',
+                <!--                            working_here:''-->
+                comp_location:'',
+                comp_name:'',
+                emp_benefit:'',
+                exp_currency:'',
+                payment_frequency:'',
+                exp_start_date: '',
+                end_date: '',
+                exp_summary: ''
+                });
+                localStorage.setItem('experiences', JSON.stringify(experiences));
+                renderExperiences();
+
+                }
+
+                function addEducation() {
+                educations.push({
+                school_name: '',
+                major_specialization:'',
+                minor_specialization:'',
+                gpa: '',
+                degree_id: '',
+                start_date: '',
+                end_date: '',
+                description: ''
+                });
+                localStorage.setItem('educations', JSON.stringify(educations));
+                renderEducations();
+                }
+
+                function removeExperience(event) {
+                const index = event.target.getAttribute('data-index');
+                experiences.splice(index, 1);
+                localStorage.setItem('experiences', JSON.stringify(experiences));
+                renderExperiences();
+                <!--                        calculateTotalExperience();-->
+                }
+
+                <!--                   function calculateTotalExperience() {-->
+                <!--                        let experiences = JSON.parse(localStorage.getItem('experiences')) || [];-->
+                <!--                        let totalYears = 0;-->
+
+                <!--                        experiences.forEach((experience) => {-->
+                <!--                            let startDate = new Date(experience.exp_start_date);-->
+                <!--                            let endDate = new Date(experience.end_date);-->
+                <!--                            let diffYears = (endDate - startDate) / (1000 * 60 * 60 * 24 * 365.25);-->
+                <!--                            totalYears += diffYears;-->
+                <!--                        });-->
+
+                <!--                        document.getElementById('total_experience_years').textContent = `Total Years of Experience: ${totalYears.toFixed(2)}`;-->
+                <!--                    }-->
+
+                <!--                    document.addEventListener('DOMContentLoaded', (event) => {-->
+                <!--                        renderExperienceList();-->
+                <!--                        calculateTotalExperience();-->
+                <!--                  });-->
+
+                function removeEducation(event) {
+                const index = event.target.getAttribute('data-index');
+                educations.splice(index, 1);
+                localStorage.setItem('educations', JSON.stringify(educations));
+                renderEducations();
+                }
+
+                addExperienceButton.addEventListener('click', addExperience);
+                experiencesList.addEventListener('input', updateExperience);
+                experiencesList.addEventListener('click', function (event) {
+                if (event.target.classList.contains('remove-experience')) {
+                removeExperience(event);
+                }
+                });
+
+                addEducationButton.addEventListener('click', addEducation);
+                educationList.addEventListener('input', updateEducation);
+                educationList.addEventListener('click', function (event) {
+                if (event.target.classList.contains('remove-education')) {
+                removeEducation(event);
+                }
+                });
+
+                renderExperiences();
+                renderEducations();
+
+                document.getElementById('application_form').addEventListener('submit', function () {
+                experiencesInput.value = JSON.stringify(experiences);
+                educationsInput.value = JSON.stringify(educations);
+
+                localStorage.removeItem('experiences');
+                localStorage.removeItem('educations');
+                });
+                });
+            </script>
+        </t>
+    </template>
+
+    <template id="thanks" name="thanks">
+        <t t-call="website.layout">
+            <title>
+                thanks
+            </title>
+            <div class="oe_structure"/>
+
+            <div class="oe_structure">
+                <div class="container">
+                    <br/>
+                    <div class="alert alert-success" role="alert">
+                        <h3>Thank you! Your Application is Successfully Submitted</h3>
+
+                    </div>
+                </div>
+            </div>
+
+        </t>
+    </template>
+    <template id="error" name="error">
+        <t t-call="website.layout">
+            <title>
+                Error
+            </title>
+            <div class="oe_structure"/>
+
+            <div class="oe_structure">
+                <div class="container">
+                    <br/>
+                    <div class="alert alert-danger" role="alert">
+                        <h3>Sorry something wrong, please check your data carefully</h3>
+
+                    </div>
+                </div>
+            </div>
+
+        </t>
+    </template>
+</odoo>

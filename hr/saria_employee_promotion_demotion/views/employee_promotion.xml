@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Employee Promotion Form View -->
+        <record id="view_employee_promotion_form" model="ir.ui.view">
+            <field name="name">employee.promotion.form</field>
+            <field name="model">employee.promotion</field>
+            <field name="arch" type="xml">
+                <form string="Employee Promotion">
+                     <header>
+<!--                    <button name="compute_increment" states="validate" string="Increase" type="object" class="oe_highlight"/>-->
+                    <button name="action_submit" state="draft" string="Submit" type="object" class="oe_highlight"/>
+                     <button name="action_approve" state="submit,draft" string="Approve" type="object" class="oe_highlight"/>
+<!--                     <button name="action_reject" states="submit" string="Reject" type="object" class="oe_highlight"/>-->
+<!--                     <button name="action_validate" states="submit,approve" string="Validate" type="object" class="oe_highlight"/>-->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve" />z
+               </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="employee_id"/>
+                                <field name="Type"/>
+                                <field name="old_currency_id"/>
+                                <field name="old_designation" readonly="1"/>
+                                <field name="old_wage" readonly="1"/>
+                                <field name="old_hra" readonly="1"/>
+                                <field name="old_da" readonly="1"/>
+                                <field name="old_travel_allowance" readonly="1"/>
+                                <field name="old_meal_allowance" readonly="1"/>
+                                <field name="old_medical_allowance" readonly="1"/>
+                                <field name="old_other_allowance" readonly="1"/>
+                                <field name="old_inflation_adjustment" readonly="1"/>
+                                <field name="old_communication_allowance" readonly="1"/>
+                                <field name="old_internet_allowance" readonly="1"/>
+                                <field name="old_fuel_allowance" readonly="1"/>
+                                <field name="old_unused_leave_payment" readonly="1"/>
+                                <field name="old_severance_pay_compensation" readonly="1"/>
+                                <field name="old_training_development" readonly="1"/>
+                                <field name="old_position_allowance" readonly="1"/>
+                                <field name="old_desert_allowance" readonly="1"/>
+                                <field name="old_representation_allowance" readonly="1"/>
+                                <field name="old_transportation_allowance" readonly="1"/>
+
+                            </group>
+                            <group>
+                                <field name="promotion_date"/>
+                                <field name="new_currency_id"/>
+                                <field name="new_job_id"/>
+                                <field name="new_salary"/>
+                                 <field name="new_hra"/>
+                                <field name="new_da"/>
+                                <field name="new_travel_allowance"/>
+                                <field name="new_meal_allowance"/>
+                                <field name="new_medical_allowance"/>
+                                <field name="new_other_allowance" />
+                                <field name="new_inflation_adjustment" />
+                                <field name="new_communication_allowance" />
+                                <field name="new_internet_allowance" />
+                                <field name="new_fuel_allowance" />
+                                <field name="new_unused_leave_payment" />
+                                <field name="new_severance_pay_compensation" />
+                                <field name="new_training_development" />
+                                <field name="new_position_allowance" />
+                                <field name="new_desert_allowance" />
+                                <field name="new_representation_allowance"/>
+                                <field name="new_transportation_allowance"/>
+                            </group>
+
+                        </group>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Employee Promotion Tree View -->
+        <record id="view_employee_promotion_tree" model="ir.ui.view">
+            <field name="name">employee.promotion.tree</field>
+            <field name="model">employee.promotion</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Promotions">
+                    <field name="employee_id"/>
+                    <field name="promotion_date"/>
+                    <field name="Type"/>
+<!--                    <field name="promotion_type"/>-->
+                    <field name="new_job_id"/>
+                    <field name="old_wage"/>
+                    <field name="new_salary"/>
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action for Employee Promotion -->
+        <record id="action_employee_promotion" model="ir.actions.act_window">
+            <field name="name">Employee Promotions</field>
+            <field name="res_model">employee.promotion</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_employee_promotion_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new employee promotion.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu item for Employee Promotion under HR Root Menu -->
+        <menuitem id="menu_employee_promotion_root"
+                  name="Promotions and Demotion"
+                  parent="hr.menu_hr_root"/>
+
+        <menuitem id="menu_employee_promotion"
+                  name="Employee Promotions"
+                  parent="menu_employee_promotion_root"
+                  action="action_employee_promotion"
+                  sequence="1"/>
+
+    </data>
+</odoo>

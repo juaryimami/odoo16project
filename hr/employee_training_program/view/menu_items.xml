@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <menuitem
+           id="employee_training_program_root_menu"
+            name="Employee Training"
+            sequence="105">
+
+
+         <menuitem
+            id="training_detail_menu"
+            name="Trainings"
+            action="training_detail_action"
+            sequence="1"/>
+
+
+          <menuitem
+            id="training_program_configuration"
+            name="Configuration"
+            sequence="2">
+
+              <menuitem
+            id="trainer_institute_menu"
+            name="Institute"
+            action="trainer_institute_action"
+            sequence="1" />
+
+
+            <menuitem
+            id="training_program_menu"
+            name="Program"
+            action="training_program_action"
+            sequence="2" />
+
+           </menuitem>
+
+         </menuitem>
+</odoo>

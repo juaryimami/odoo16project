@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+    <record id="applicant_expected_salary_action" model="ir.actions.act_window">
+        <field name="name">Expected Salary</field>
+        <field name="res_model">expected.salary</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new expected salary
+            </p>
+
+        </field>
+    </record>
+    <record id="applicant_expected_salary_view_form" model="ir.ui.view">
+        <field name="name">Expected Salary</field>
+        <field name="model">expected.salary</field>
+        <field name="arch" type="xml">
+            <form string="Expected Salary">
+
+                <sheet>
+                    <group>
+                        <group>
+
+                        <field name="name"/>
+
+
+                        </group>
+
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="applicant_expected_salary_view_tree" model="ir.ui.view">
+        <field name="name">Expected Salary</field>
+        <field name="model">expected.salary</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                     <field name="name"/>
+
+            </tree>
+        </field>
+    </record>
+
+
+    <menuitem
+            id="menu_expected_salary"
+            name="Expected Salary"
+            parent="hr_recruitment.menu_hr_recruitment_configuration"
+            action="applicant_expected_salary_action"/>
+</data>
+
+
+
+</odoo>

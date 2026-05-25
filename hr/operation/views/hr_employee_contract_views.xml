@@ -1,0 +1,40 @@
+<!--<odoo>-->
+<!--    &lt;!&ndash; Inherit the HR Contract Form View &ndash;&gt;-->
+<!--    <record id="view_hr_contract_form_inherit" model="ir.ui.view">-->
+<!--        <field name="name">hr.contract.form.inherit</field>-->
+<!--        <field name="model">hr.contract</field>-->
+<!--        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            &lt;!&ndash; Add contract_start_date and allowance fields below the Salary section &ndash;&gt;-->
+<!--            <xpath expr="//page[@name='information']/group[@name='salary_info']" position="after">-->
+<!--                <group name="contract_additional_info">-->
+<!--                    <field name="contract_start_date"/>-->
+<!--                    <field name="contract_end_date"/>-->
+<!--                    <field name="allowance"/>-->
+<!--                </group>-->
+<!--            </xpath>-->
+
+<!--            &lt;!&ndash; Add Edomias Agent Information in a new notebook page in form view format &ndash;&gt;-->
+<!--            <xpath expr="//notebook" position="inside">-->
+<!--                <page name="edomias_agent_info" string="Edomias Agent Info">-->
+<!--                    <group>-->
+<!--                       <group> &lt;!&ndash; Project field (single selection) &ndash;&gt;-->
+<!--                        <field name="project_id" string="Project"/>-->
+<!--                        &lt;!&ndash; Location field in form view (Many2many widget handled like form input) &ndash;&gt;-->
+<!--                        <field name="location_ids"  string="Locations"/>-->
+<!--                        &lt;!&ndash; Position field in form view (Many2many widget handled like form input) &ndash;&gt;-->
+<!--                        <field name="job_id" string="Positions"/>-->
+<!--                        &lt;!&ndash; The rest of the fields as required &ndash;&gt;-->
+<!--                        <field name="edomias_agent_id" string="Edomias Agent"/>-->
+<!--                        <field name="employee_rate" string="Employee Rate"/>-->
+<!--                        <field name="edomias_rate" string="Edomias Rate"/>-->
+<!--                        <field name="quantity" string="Quantity"/></group>-->
+<!--                        <group><field name="total_edomias_rate" string="Total Edomias Rate"/>-->
+<!--                        <field name="total_employee_rate" string="Total Employee Rate"/>-->
+<!--                        <field name="net_profit" string="Net Profit"/></group>-->
+<!--                    </group>-->
+<!--                </page>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+<!--</odoo>-->

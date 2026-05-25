@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+    <record id="applicant_total_experience_action" model="ir.actions.act_window">
+        <field name="name">Total Experience</field>
+        <field name="res_model">total.experience</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new total experience
+            </p>
+
+        </field>
+    </record>
+    <record id="applicant_total_experience_view_form" model="ir.ui.view">
+        <field name="name">Total Experience</field>
+        <field name="model">total.experience</field>
+        <field name="arch" type="xml">
+            <form string="Expected Salary">
+
+                <sheet>
+                    <group>
+                        <group>
+
+                        <field name="name"/>
+
+
+                        </group>
+
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="applicant_total_experience_view_tree" model="ir.ui.view">
+        <field name="name">Total Experience</field>
+        <field name="model">total.experience</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                     <field name="name"/>
+
+            </tree>
+        </field>
+    </record>
+
+
+    <menuitem
+            id="menu_total_experience"
+            name="Total Year Experience"
+            parent="hr_recruitment.menu_hr_recruitment_configuration"
+            action="applicant_total_experience_action"/>
+</data>
+
+
+
+</odoo>

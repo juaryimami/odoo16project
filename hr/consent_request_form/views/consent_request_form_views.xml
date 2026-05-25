@@ -1,0 +1,107 @@
+<!-- views/consent_request_form_views.xml -->
+
+<odoo>
+    <data>
+        <!-- Form view definition -->
+        <record id="view_consent_request_form_form" model="ir.ui.view">
+            <field name="name">Employee Consent Form</field>
+            <field name="name">consent.request.form.form</field>
+            <field name="model">consent.request.form</field>
+            <field name="arch" type="xml">
+                <form string="Consent Request Form">
+                    <field name="state" widget="statusbar"/>
+                    <header>
+                         <button string="Submit" type="object" name="action_submit" invisible="state != 'draft'" class="oe_highlight"
+                        groups="consent_request_form.consent_form_group_submit"/>
+                        <button string="Review" type="object" name="action_review" invisible="state !='submitted'"
+                                groups="consent_request_form.consent_form_group_under_review"
+                                class="oe_highlight"/>
+                        <button string="Approve" type="object" name="action_approve" invisible="state !='review'"
+                                groups="consent_request_form.consent_form_group_approve"
+                                class="oe_highlight"/>
+                        <button string="Rejected" type="object" name="action_reject" invisible="state !='review'"
+                                groups="consent_request_form.consent_form_group_expired"
+                                class="oe_highlight"/>
+                        <!--                        <button string="Print" type="action" name="print_report_consent_request_form"-->
+                        <!--                                class="oe_highlight"/>-->
+
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="employee_id"/>
+                                <field name="department_id"/>
+                                <field name="requested_to"/>
+
+
+                            </group>
+                            <group>
+                                <field name="contribute_percent"/>
+                                <field name="company_name"/>
+                                <field name="designation"/>
+                                <field name="location"/>
+                                <field name="attachment" widget="binary" filename="attachment_name"/>
+
+                            </group>
+
+
+                            <!-- Display computed field -->
+                            <!--                            <field name="formal_request_letter" widget="text" readonly="1"/>-->
+
+                            <!-- Other fields -->
+
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_consent_request_form_tree" model="ir.ui.view">
+            <field name="name">Employee Consent Tree</field>
+            <field name="model">consent.request.form</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="requested_to"/>
+                    <field name="contribute_percent"/>
+                    <field name="company_name"/>
+                    <field name="designation"/>
+                    <field name="location"/>
+                    <field name="attachment" widget="binary" filename="attachment_name"/>
+                    <!--                <field name="performance_line_ids" />-->
+
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- Action to open the form view -->
+        <record id="action_consent_request_form" model="ir.actions.act_window">
+            <field name="name">Consent Request Forms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">consent.request.form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu item to access the form -->
+        <menuitem id="menu_consent_root_workspace"
+                  name="PF Consent Form"
+                  parent="hr.menu_hr_root"/>
+
+
+        <menuitem id="menu_consent_letter_employee_workspace"
+                  name="PF Consent Form"
+                  parent="menu_consent_root_workspace"
+                  action="action_consent_request_form"/>
+
+
+    </data>
+</odoo>

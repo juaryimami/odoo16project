@@ -1,0 +1,32 @@
+<odoo>
+   <data>
+        <!-- Email template for new project creation -->
+        <record id="email_template_project_created" model="mail.template">
+            <field name="name">Project Creation Notification</field>
+            <field name="model_id" ref="model_agent_project"/>
+            <field name="subject">New Project Created: {{object.name}}</field>
+            <field name="email_to">gebbygebby118@gmail.com</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html">
+                <![CDATA[
+                    <p>Dear HR Manager,</p>
+                    <p>A new project has been created: ${object.name}.</p>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Email template for project end date approaching -->
+        <record id="email_template_contract_ending" model="mail.template">
+            <field name="name">Project End Date Approaching</field>
+            <field name="model_id" ref="model_agent_project"/>
+            <field name="subject">Project End Date Approaching: {{object.name}}</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="body_html">
+                <![CDATA[
+                    <p>Dear HR Manager,</p>
+                    <p>The project ${object.name} is nearing its end date of ${object.end_date}.</p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

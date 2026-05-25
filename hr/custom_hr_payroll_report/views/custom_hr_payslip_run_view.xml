@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="custom_hr_pyslip_employees_id" model="ir.ui.view">
+        <field name="name">Custom hr payslip employees</field>
+        <field name="model">hr.payslip.employees</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_by_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='alert alert-info mb-0']" position="after">
+            <label for="project_id" class="oe_edit_only"/>
+            <field name="project_id"/>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_form_add_project" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='department_id']" position="before">
+                   <field name="project_id"/>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="inherit_hr_employee_search_add_project_panal" model="ir.ui.view">
+            <field name="name">hr.employee.search.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//searchpanel/field[@name='department_id']" position="replace">
+                    <field name="project_id" icon="fa-tasks" enable_counters="1"/>
+                </xpath>
+            </field>
+        </record>
+
+
+</odoo>

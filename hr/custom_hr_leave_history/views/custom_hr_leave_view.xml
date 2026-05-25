@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="custom_hr_leave_report_tree_view" model="ir.ui.view">
+        <field name="name">custom.hr.leave</field>
+        <field name="model">custom.hr.leave</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="last_year"/>
+                <field name="current_year_entitlement"/>
+                <field name="current_balance"/>
+                <field name="taken_days"/>
+                <!--                    <field name="this_year"/>-->
+<!--                <field name="total"/>-->
+                <field name="total_balance"/>
+                <field name="total_remaining"/>
+            </tree>
+        </field>
+    </record>
+    <!--     <record  id="custom_hr_leave_report_form_view" model="ir.ui.view">-->
+    <!--           <field name="name">custom.hr.leave </field>-->
+    <!--           <field name="model">custom.hr.leave</field>-->
+    <!--           <field name="arch" type="xml">-->
+    <!--               <form>-->
+    <!--                    <field name="employee_id"/>-->
+    <!--                    <field name="last_year"/>-->
+    <!--                    <field name="this_year"/>-->
+    <!--                    <field name="total"/>-->
+    <!--               </form>-->
+    <!--           </field>-->
+    <!--       </record>-->
+
+
+    <record id="custom_hr_leave_report_action_id" model="ir.actions.act_window">
+        <field name="name">Custom Employee leave Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.hr.leave</field>
+        <field name="view_mode">tree</field>
+        <!--           <field name="domain">[('employee_id', '=', uid)]</field>-->
+        <field name="type">ir.actions.act_window</field>
+    </record>
+
+    <record id="custom_hr_leave_report_action_id_self" model="ir.actions.act_window">
+        <field name="name">Custom Employee leave Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.hr.leave</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="type">ir.actions.act_window</field>
+    </record>
+    <menuitem id="custom_hr_leave_report_submenu_id"
+              name="Allocated Leaves"
+              parent="hr_holidays.menu_hr_holidays_root"
+              action="custom_hr_leave_report_action_id"
+              sequence="0"/>
+<!--    <menuitem id="custom_hr_leave_report_submenu_id_self"-->
+<!--              name="Allocated Leaves"-->
+<!--              parent="de_hr_workspace_timeoff.menu_my_timeoff"-->
+<!--              action="custom_hr_leave_report_action_id_self"-->
+<!--              sequence="0"/>-->
+</odoo>

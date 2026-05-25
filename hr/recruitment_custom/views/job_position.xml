@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+         <record id="job_post_inherit_form" model="ir.ui.view">
+            <field name="name">job_post_inherit_form</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+
+                  <xpath expr="//field[@name='user_id']" position="after">
+                     <field name="salary"/>
+                      <field name="currency_id" />
+                      <field name="purpose" />
+                 </xpath>
+
+
+
+            </field>
+         </record>
+
+
+</odoo>

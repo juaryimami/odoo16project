@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="custom_hr_payroll_report_tree_view" model="ir.ui.view">
+        <field name="name">custom.hr.payroll.report</field>
+        <field name="model">custom.hr.payroll.report</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="status in ('done')" decoration-muted="status == 'cancel'">
+                <header>
+                    <button name="confirm_payslip_status" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="print_pdf_report" string="Print Bank Letter" type="object" class="oe_highlight"/>
+                </header>
+                <field name="employee" optional="show"/>
+                <field name="department_id" optional="hide"/>
+                <field name="monthly_basic_salary" optional="hide" sum="Total"/>
+                <field name="total_working_days" optional="hide" sum="Total"/>
+                <field name="total_day_worked" optional="hide" sum="Total"/>
+                <field name="bank_account_id" optional="show"/>
+                <field name="structure" optional="hide"/>
+                <field name="payslip_run_name" optional="hide"/>
+                <field name="payslip_name" optional="hide"/>
+                <field name="period" optional="hide"/>
+                <field name="basic" optional="show" sum="Total"/>
+<!--                <field name="basic_etb" optional="hide"/>-->
+                <field name="travel_allowance" optional="hide" sum="Total"/>
+                <field name="travel_allowance_notax" optional="hide" sum="Total"/>
+                <field name="desert_allowance" optional="hide" sum="Total"/>
+                <field name="da" optional="hide" sum="Total"/>
+                
+<!--                <field name="currency_rate"/>-->
+<!--                <field name="converted_net"/>-->
+                <field name="hra" optional="hide"/>
+                
+                <field name="meal_allowance" optional="hide" sum="Total"/>
+                <field name="medical_allowance" optional="hide" sum="Total"/>
+                <field name="communication_allowance" optional="hide" sum="Total"/>
+                <field name="internet_allowance" optional="hide" sum="Total"/>
+                <field name="fuel_allowance" optional="hide" sum="Total"/>
+                <field name="unused_leave_payment" optional="hide" sum="Total"/>
+                <field name="severance_pay_compensation" optional="hide" sum="Total"/>
+                <field name="training_development" optional="hide" sum="Total"/>
+<!--                <field name="position_allowance" optional="hide"/>-->
+                
+<!--                <field name="representation_allowance" optional="hide"/>-->
+                <field name="total_payment" optional="hide" sum="Total"/>
+                <field name="total_adjusted_payout" optional="hide" sum="Total"/>
+                <field name="overtime" optional="hide" sum="Total"/>
+                <field name="expense" optional="hide" sum="Total"/>
+                <field name="loan" optional="hide" sum="Total"/>
+                <field name="advance_salary" optional="hide" sum="Total"/>
+                <field name="bonus" optional="hide" sum="Total"/>
+                <field name="provident_employee" optional="hide" sum="Total"/>
+                <field name="provident_employer" optional="hide" sum="Total"/>
+                <field name="total_provident" optional="hide" sum="Total"/>
+
+                <!-- <field name="overtime" optional="show"/> -->
+                
+                <field name="gross" optional="show" sum="Total"/>
+                <field name="taxable_salary" optional="hide" sum="Total"/>
+                <field name="tax" optional="show" sum="Total"/>
+                <field name="pension" optional="hide" sum="Total"/>
+                <field name="pension_comp" optional="hide" sum="Total"/>
+                <field name ="total_deduction" optional="hide" sum="Total"/>
+                
+                <field name="net" optional="show" sum="Total"/>
+                <field name="updated_on" invisible="1"/>
+                <field name="status" invisible="1"/>
+                <button type="object" name="return_payslip_detail" string="Open" icon="fa-edit"/>
+            </tree>
+        </field>
+    </record>
+    <!--    <record id="custom_hr_payroll_form_view" model="ir.ui.view">-->
+    <!--        <field name="name">Custom Hr Payroll Form View</field>-->
+    <!--        <field name="model">custom.hr.payroll.report</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <form>-->
+    <!--                <sheet>-->
+    <!--                    <group>-->
+    <!--                     <field name="employee"/>-->
+    <!--                     <field name="structure"/>-->
+    <!--                     <field name="payslip_name"/>-->
+    <!--                    </group>-->
+    <!--                </sheet>-->
+    <!--            </form>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <record id="custom_hr_payroll_report_search_view" model="ir.ui.view">
+        <field name="name">Search</field>
+        <field name="model">custom.hr.payroll.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter name="posted" string="Posted Payroll" domain="[('status', '=', 'done')]"/>
+                <filter name="draft" string="Draft Payroll" domain="[('status', '=', 'draft')]"/>
+                <separator/>
+
+                <separator/>
+                <filter name="today_report" string="Today's Report"
+                        domain="[('updated_on','>',(context_today() + datetime.timedelta(-1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="this_week_report" string="This Week Report"
+                        domain="[('updated_on','>',(context_today() + datetime.timedelta(-7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="this_month_report" string="This Month Report"
+                        domain="[('updated_on','>',(context_today()+ datetime.timedelta(-30)).strftime('%Y-%m-%d'))]"/>
+            </search>
+        </field>
+    </record>
+    <record id="custom_hr_payroll_report_action_id" model="ir.actions.act_window">
+        <field name="name">Custom Employee Payroll Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">custom.hr.payroll.report</field>
+        <field name="view_mode">tree</field>
+        <field name="type">ir.actions.act_window</field>
+    </record>
+   <menuitem id="custom_hr_report_menu_id"
+             name="Report"
+             parent="om_hr_payroll.menu_hr_payroll_root"
+             sequence="18"/>
+      <menuitem id="custom_hr_report_submenu_id"
+             name="Last Report"
+             parent="custom_hr_report_menu_id"
+             action="custom_hr_payroll_report_action_id"
+             sequence="1"/>
+</odoo>

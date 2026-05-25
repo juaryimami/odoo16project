@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<menuitem  id="custom_hr_report_menu_id"
+           name="Hr Payroll"
+           sequence="21"
+ />
+</odoo>
+<!--           parent="sale.sale_menu_root"-->

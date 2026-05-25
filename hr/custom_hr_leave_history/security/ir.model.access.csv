@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+custom_hr_leave_history.custom_hr_payroll_report,access_custom_hr_leave,custom_hr_leave_history.model_custom_hr_leave,base.group_system,1,1,1,1

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="seq_request_recruitment_info" model="ir.sequence">
+            <field name="name">Recruitment Request</field>
+            <field name="code">recruitment.request</field>
+            <field name="prefix">RR/</field>
+             <field name="suffix">/%(year)s</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+
+
+</odoo>

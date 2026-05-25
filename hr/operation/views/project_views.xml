@@ -1,0 +1,338 @@
+<odoo>
+    <!-- Tree view for Projects -->
+    <record id="view_project_tree" model="ir.ui.view">
+        <field name="name">agent.project.tree</field>
+        <field name="model">agent.project</field>
+        <field name="arch" type="xml">
+           <tree>
+                <field name="client_id"/>
+                <field name="name"/>
+               <field name="modality"/>
+                <field name="admin_cost" optional="show"/>
+                <field name="profit_margin_percentage" optional="show"/>
+                <field name="profit_margin_type" optional="show"/>
+<!--                <field name="renewal_date"/>-->
+<!--                <field name="is_cost_plus" optional="show"/>-->
+                <field name="start_date" widget="date" optional="show"/>
+                <field name="end_date" widget="date" optional="show" />
+            </tree>
+        </field>
+    </record>
+
+
+   <record id="view_project_form" model="ir.ui.view">
+    <field name="name">agent.project.form</field>
+    <field name="model">agent.project</field>
+    <field name="arch" type="xml">
+        <form>
+     <header>
+                    <!-- Button to open the form view for creating a new renewal -->
+                    <button name="%(action_renewal_form_modal)d" string="New Renewal" type="action" class="btn-primary" icon="fa-calendar"/>
+                </header>
+
+            <sheet>
+                <div name="button_box" position="inside">
+                     <button name="employee_list_action" type="object" string="Employees" class="oe_stat_button">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <!-- Replace 'related_count' with the field holding the count of related records -->
+                            <field name="project_employee_count"/>
+                        </span>
+                        <span class="o_stat_text">Employees</span>
+                    </div>
+                     </button>
+
+                     <button name="renewal_list_action" type="object" string="Renewals" class="oe_stat_button">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="renewal_count"/>
+                        </span>
+                        <span class="o_stat_text">Renewals</span>
+                    </div>
+                     </button>
+<!--                    <button name="%(action_renewal_tree_modal)d" type="object" string="Renewal List" class="oe_stat_button">-->
+<!--                    <div class="o_field_widget o_stat_info">-->
+<!--                        <span class="o_stat_value">-->
+<!--                            &lt;!&ndash; Replace 'related_count' with the field holding the count of related records &ndash;&gt;-->
+<!--                            <field name="renewal_count"/>-->
+<!--                        </span>-->
+<!--                        <span class="o_stat_text">Renewals</span>-->
+<!--                    </div>-->
+<!--                    </button>-->
+                    </div>
+                <group>
+                    <group>
+                         <field name="client_id"/>
+                        <field name="name" required="1"/>
+<!--                        <field name="start_date"/>-->
+<!--                        <field name="end_date"/>-->
+
+                        <field name="modality" />
+
+<!--                          attrs="{'invisible': [('is_cost_plus', '=', False)]}"-->
+                        <field name="profit_margin_type"/>
+                        <field name="admin_cost"/>
+                        <field name="profit_margin_percentage"/>
+                    </group>
+                    <group>
+                            <field name="contract_name"/>
+                            <field name="is_cost_plus" invisible="1"/>
+<!--                            <field name="cost_plus_type" attrs="{'invisible': [('is_cost_plus', '=', False)]}"/>-->
+<!--                            <field name="cost_plus_rate" attrs="{'invisible': [('is_cost_plus', '=', False)]}"/>-->
+                            <label for="start_date" string="Contract Period"/>
+                            <div name="dates" class="o_row">
+                                <field name="start_date"/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow"
+                                   invisible ="start_date == False and end_date == False"/>
+                                <field name="end_date"/>
+                            </div>
+                            <field name="renewal_date"/>
+                            <field name="calculate_profit_margin"/>
+<!--                            <field name="admin_cost_type"/>-->
+                            <field name="agreement"/>
+                        </group>
+                </group>
+             <notebook>
+                 <!-- Tree view for Edomias Agents -->
+                 <page string="Resources" invisible ="modality == 'piece_rate'">
+
+                    <field name="agent_ids" widget="many2many_list">
+
+                        <tree editable="bottom">
+                             <control>
+                                    <create name="add_line" string="Add line"/>
+                                    <button name="return_line_form" string="Add on Form" type="object"/>
+                             </control>
+                            <!-- These fields will be shown by default -->
+                            <field name="service_id"/>
+                            <field name="region_id"/>
+                            <field name="location_id"/>
+                            <field name="job_id"/>
+                            <field name="edomias_rate" required="1"/>
+                            <field name="employee_rate" required="1"/>
+                            <field name="Number_of_Man_Power"/>
+
+                            <!-- Optional Allowance fields -->
+                            <field name="hra"  optional="hide"/>
+                            <field name="da" optional="hide"/>
+                            <field name="travel_allowance" optional="hide"/>
+                            <field name="meal_allowance" optional="hide"/>
+                            <field name="medical_allowance"  optional="hide"/>
+                            <field name="accident_allowance"  optional="hide"/>
+                            <field name="uniform_allowance"  optional="hide"/>
+                            <field name="desert_allowance_rate"  optional="hide"/>
+                            <field name="other_allowance" optional="hide"/>
+                            <field name="provident_fund" optional="hide"/>
+                            <field name="employee_cost" optional="hide"/>
+                            <button
+                                string="Detail"
+                                type="object"
+                                name="return_line_detail"
+                                context="{'default_active_id': active_id}"
+                                >
+                            </button>
+
+                        </tree>
+                    </field>
+                </page>
+                  <page string="Activities" invisible ="modality == 'piece_rate'">
+                    <field name="activity_ids" widget="many2many_list">
+                        <tree editable="bottom">
+                            <control>
+                                    <create name="add_line" string="Add line"/>
+                                    <button name="return_line_form" string="Add on Form" type="object"/>
+                             </control>
+                            <!-- These fields will be shown by default -->
+<!--                            <field name="project_id" optional="hide"/>-->
+                            <field name="service_id"/>
+                            <field name="region_id" optional="hide"/>
+                            <field name="location_id" optional="hide"/>
+                            <field name="activity_id"/>
+                            <field name="uom_id"/>
+                            <field name="employee_rate"/>
+                            <field name="edomias_rate"/>
+                            <field name="pension_rate" optional="hide"/>
+<!--                            <field name="admin_cost"/>-->
+<!--                            <field name="profit_margin"/>-->
+                            <field name="hra"  optional="hide"/>
+                            <field name="da" optional="hide"/>
+                            <field name="travel_allowance" optional="hide"/>
+                            <field name="meal_allowance" optional="hide"/>
+                            <field name="medical_allowance"  optional="hide"/>
+                            <field name="accident_allowance"  optional="hide"/>
+                            <field name="uniform_allowance"  optional="hide"/>
+                            <field name="desert_allowance_rate"  optional="hide"/>
+                            <field name="other_allowance" optional="hide"/>
+                            <field name="provident_fund" optional="hide"/>
+                            <field name="employee_cost" optional="hide"/>
+                             <button
+                                string="Detail"
+                                type="object"
+                                name="return_line_detail"
+                                context="{'default_active_id': active_id}"
+                                >
+                            </button>
+<!--                            <field name="edomias_rate" required="1" string="Edomias Rate"/>-->
+<!--                            <field name="employee_rate" required="1" string="Employee Rate"/>-->
+<!--                            <field name="Number_of_Man_Power" string="Number of Man Power"/>-->
+
+<!--                            &lt;!&ndash; Optional Allowance fields &ndash;&gt;-->
+<!--                            <field name="hra"  optional="hide"/>-->
+<!--                            <field name="da" optional="hide"/>-->
+<!--                            <field name="travel_allowance" optional="hide"/>-->
+<!--                            <field name="meal_allowance" optional="hide"/>-->
+<!--                            <field name="medical_allowance"  optional="hide"/>-->
+<!--                            <field name="accident_allowance"  optional="hide"/>-->
+<!--                            <field name="uniform_allowance"  optional="hide"/>-->
+<!--                            <field name="other_allowance" optional="hide"/>-->
+
+                        </tree>
+                    </field>
+                </page>
+                 <page string="Description">
+                 <field name="description"/>
+             </page>
+             </notebook>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+ <record id="view_project_kanban" model="ir.ui.view">
+    <field name="name">agent.project.kanban</field>
+    <field name="model">agent.project</field>
+    <field name="arch" type="xml">
+        <kanban class="o_kanban_small_column">
+            <field name="name"/>
+            <field name="description"/>
+            <field name="start_date"/>
+            <field name="end_date"/>
+
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_kanban_record">
+                            <div class="o_kanban_primary_upper">
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div>
+                                <span><b>Description:</b> <field name="description"/></span>
+                            </div>
+                            <div>
+                                <span><b>Start Date:</b> <field name="start_date"/></span>
+                            </div>
+                            <div>
+                                <span><b>End Date:</b> <field name="end_date"/></span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+
+    <!-- Action for Projects -->
+    <record id="action_project" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">agent.project</field>
+        <field name="view_mode">tree,form,kanban</field>
+         <!-- Order by created date in descending order -->
+    <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="view_id" ref="view_project_tree"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new project.
+            </p>
+        </field>
+    </record>
+
+    <!-- Kanban view for Locations -->
+    <record id="view_location_kanban" model="ir.ui.view">
+        <field name="name">agent.location.kanban</field>
+        <field name="model">agent.location</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="description"/>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Kanban view for Positions -->
+<!--    <record id="view_position_kanban" model="ir.ui.view">-->
+<!--        <field name="name">edomias.position.kanban</field>-->
+<!--        <field name="model">edomias.position</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <kanban>-->
+<!--                <field name="name"/>-->
+<!--                <field name="description"/>-->
+<!--            </kanban>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <!-- Kanban view for Agents -->
+    <record id="view_agent_kanban" model="ir.ui.view">
+        <field name="name">edomias.agent.kanban</field>
+        <field name="model">edomias.agent</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="project_id"/>
+                <field name="location_id"/>
+                <field name="job_id"/>
+                <field name="edomias_rate"/>
+                <field name="employee_rate"/>
+                <field name="Number_of_Man_Power"/>
+                <field name="total_edomias_rate"/>
+                <field name="total_employee_rate"/>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- Action for Locations -->
+    <record id="action_location" model="ir.actions.act_window">
+        <field name="name">Locations</field>
+        <field name="res_model">agent.location</field>
+        <field name="view_mode">tree,form,kanban</field>
+<!--        <field name="view_id" ref="view_location_tree"/>-->
+        <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new location.
+            </p>
+        </field>
+    </record>
+
+<!--    &lt;!&ndash; Action for Positions &ndash;&gt;-->
+<!--    <record id="action_position" model="ir.actions.act_window">-->
+<!--        <field name="name">Positions</field>-->
+<!--        <field name="res_model">edomias.position</field>-->
+<!--        <field name="view_mode">tree,form,kanban</field>-->
+<!--&lt;!&ndash;        <field name="view_id" ref="view_position_tree"/>&ndash;&gt;-->
+<!--        <field name="context">{'search_default_order': 'create_date desc'}</field>-->
+<!--        <field name="help" type="html">-->
+<!--            <p class="oe_view_nocontent_create">-->
+<!--                Click to create a new position.-->
+<!--            </p>-->
+<!--        </field>-->
+<!--    </record>-->
+
+       <!-- Action for Agents -->
+    <record id="action_agent" model="ir.actions.act_window">
+        <field name="name">Edomias Agents</field>
+        <field name="res_model">edomias.agent</field>
+        <field name="view_mode">tree,form,kanban</field>
+<!--        <field name="view_id" ref="view_agent_tree"/>-->
+        <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new agent record.
+            </p>
+        </field>
+    </record>
+
+</odoo>

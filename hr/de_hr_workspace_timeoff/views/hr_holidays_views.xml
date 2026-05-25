@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <record id="my_leave_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.leave</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="widget">statusbar</attribute>
+                <attribute name="statusbar_visible">draft,confirm,review,validate,refuse</attribute>
+            </xpath>
+            <xpath expr="//header/field[@name='state']" position="after">
+                  <button name="review_leave_request" string="Review" type="object" class="btn-primary"
+                  invisible="{'invisible': [('state', 'not in', ['confirm'])]}"
+                  groups="de_hr_workspace_timeoff.leave_management_group_review"/>
+             </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="attributes">
+                    <attribute name="groups">de_hr_workspace_timeoff.leave_management_group_Submit</attribute>
+                    <attribute name="string">Submit</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_draft']" position="attributes">
+                    <attribute name="groups">de_hr_workspace_timeoff.leave_management_group_make_draft</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_approve']" position="attributes">
+                    <attribute name="invisible">{'invisible': ['|', '|', '|', ('id', '=', False), ('active', '=', False), ('can_approve', '=', False), ('state', '!=', 'review')]}</attribute>
+                    <attribute name="groups">de_hr_workspace_timeoff.leave_management_group_approve</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_refuse']" position="attributes">
+                   <attribute name="groups">de_hr_workspace_timeoff.leave_management_group_reject</attribute>
+                    <attribute name="invisible">{'invisible': [ ('state', 'not in', ('confirm','validate1','validate','review'))]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="groups">de_hr_workspace_timeoff.leave_management_group_cancel</attribute>
+                <attribute name="invisible">{'invisible': [('state', 'not in', ['draft'])]}</attribute>
+            </xpath> 
+        </field>
+    </record>
+
+   <record id="view_employee_form_subordinate_list" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                   <field name="subordinate_custom_id"  widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_my_leave" model="ir.actions.act_window">
+        <field name="name">My Time Off</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_holidays.hr_leave_view_kanban')})]"/>
+        <field name="domain">[('user_id', '=', uid), ('employee_company_id', 'in', allowed_company_ids)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Keep track of your PTOs.
+            </p><p>
+                A great way to keep track on your time off requests, sick days, and approval status.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_hr_leave_action_new_request" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">hr.leave</field>
+        <field name="view_mode">calendar,tree,form,activity</field>
+        <field name="domain">[('user_id', '=', uid), ('employee_id.company_id', 'in', allowed_company_ids)]</field>
+        <field name="context">{'short_name': 1, 'search_default_active_time_off': 1}</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_my"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Keep track of your PTOs.
+            </p><p>
+
+                A great way to keep track on your time off requests, sick days, and approval status.
+            </p>
+        </field>
+    </record>
+
+    <!-- <menuitem id="menu_my_timeoff" name="My Time Off" parent="de_hr_workspace.menu_my_workspace" sequence="40"/> -->
+
+    <!-- <menuitem id="menu_my_timeoff_leave_request" name="Request Leave" parent="menu_my_timeoff" action="hr_holidays.hr_leave_action_my" sequence="10" /> -->
+        
+    <!-- <menuitem id="menu_my_timeoff_leave" name="My Leaves" parent="menu_my_timeoff" action="action_my_leave" sequence="20" /> -->
+
+<record id="view_leave_request_form_inherit" model="ir.ui.view">
+    <field name="name">hr.leave.form.inherit</field>
+    <field name="model">hr.leave</field>
+    <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager" />
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='date_from']" position="after">
+            <field name="is_half_day_start" invisible="{'invisible': [('request_unit_half', '=', True)]}" />
+        </xpath>
+        <xpath expr="//field[@name='date_to']" position="after">
+            <field name="is_half_day_end" invisible="{'invisible': [('request_unit_half', '=', True)]}" />
+        </xpath>
+    </field>
+   </record>
+
+
+</odoo>

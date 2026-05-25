@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="white_employee_interview_form_action" model="ir.actions.act_window">
+        <field name="name">Employee Interview</field>
+        <field name="res_model">employee.interview</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new employee interview
+            </p>
+
+        </field>
+    </record>
+
+          <record id="employee_interview_form_form" model="ir.ui.view">
+        <field name="name">Employee interview</field>
+        <field name="model">employee.interview</field>
+        <field name="arch" type="xml">
+            <form string="Employee Interview">
+                    <header>
+
+                         <button name="action_approve" invisible=" state not in ['submit']" string="Approve"
+                                 groups="employee_interview.interview_group_approve"
+                                 type="object" class="oe_highlight"/>
+                         <button name="action_reject" invisible=" state not in ['draft','submit']" string="Reject"
+                                  groups="employee_interview.interview_group_reject"
+                                 type="object" class="oe_highlight"/>
+                         <button name="action_submit" invisible=" state not in ['draft']" string="Submit"
+                                  groups="employee_interview.interview_group_submit"
+                                 type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,reject"  />
+                    </header>
+                <sheet>
+
+
+                         <group>
+                            <field name="name" readonly="1"/>
+
+                        </group>
+                    <group>
+                        <group>
+                            <field name="subject_id" />
+<!--                            <field name="applicant_name"/>-->
+                            <field name="age" />
+                            <field name="language_skill" />
+                            <field name="purpose_of_interview" />
+                            <field name="interviewed_by" widget="many2many_tags" />
+                            <field name="completed_by" />
+<!--                            <field name="interview_type" />-->
+                        </group>
+
+                        <group>
+                            <field name="department_id" />
+                            <field name="salary_history" />
+                            <field name="reason" />
+                            <field name="work_experience" />
+                            <field name="availability" />
+                            <field name="bonus" />
+                            <field name="interview_date"/>
+
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Interview_Questions" string="Interview Questions">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="question_id"/>
+                                    <field name="grade_id" />
+                                    <field name="remark" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group>
+                         <field name="total_score" />
+                        </group>
+                        <group>
+                            <field name="average_score" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+         <record id="employee_interview_form_tree" model="ir.ui.view">
+        <field name="name">Employee interview</field>
+        <field name="model">employee.interview</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                <field name="subject_id" />
+                 <field name="interview_date"/>
+<!--                 <field name="applicant_name"/>-->
+                <field name="total_score" />
+                 <field name="average_score" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+
+         <menuitem
+            id="employee_interview_form_menu_root"
+            name="Interview"
+            parent="hr_recruitment.menu_hr_recruitment_root" />
+
+         <menuitem
+            id="white_employee_interview_form_menu"
+            name="White Scholar Interview"
+            action="white_employee_interview_form_action"
+            parent="employee_interview_form_menu_root"/>
+
+
+         <record id="interview_grade_applicant_inherited" model="ir.ui.view">
+            <field name="name">interview_grade_applicant_inherited</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+            <field name="arch" type="xml">
+
+
+
+                    <div name="button_box" position="inside">
+
+                         <button name="blue_interview_form_action"
+                           string="Interview " type="object"  class="oe_stat_button">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                 <field name="blue_interview_count" invisible="0"/>
+                            </span>
+                            <span class="o_stat_text">Blue Scholar Interview</span>
+                        </div>
+                    </button>
+
+                              <button name="white_interview_form_action"
+                           string="Interview " type="object"  class="oe_stat_button">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                 <field name="white_interview_count" invisible="0"/>
+                            </span>
+                            <span class="o_stat_text">White Scholar Interview</span>
+                        </div>
+                    </button>
+                </div>
+
+<!--                </xpath>-->
+
+                <xpath expr="//field[@name='priority']" position="after">
+                        <field name="interview_average" />
+                     <field name="interview_total" />
+
+<!--                        <field name="interview_date" />-->
+                 </xpath>
+
+
+
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

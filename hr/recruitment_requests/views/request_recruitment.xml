@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_request_recruitment" model="ir.actions.act_window">
+            <field name="name">Request Recruitment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">recruitment.request</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No store request Recruitment!
+                </p>
+            </field>
+        </record>
+
+
+        <record id="request_recruitment_view_tree" model="ir.ui.view">
+            <field name="name">recruitment.request.tree</field>
+            <field name="model">recruitment.request</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="order_reference"/>
+                    <field name="wanted_job_position"/>
+                    <field name="number_of_wanted_employees"/>
+                    <field name="request_department"/>
+                    <field name="term_employment"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_recruitment_request_form" model="ir.ui.view">
+            <field name="name">recruitment.request.form</field>
+            <field name="model">recruitment.request</field>
+            <field name="arch" type="xml">
+                <form string="Recruitment Request">
+                    <header>
+                        <field name="state" invisible="1"/>
+                        <button string="Department Approve"
+                                type="object"
+                                name="action_tobe_approve"
+                                invisible="state != 'draft'"
+                                class="btn-primary"/>
+                        <button string="HR Manager Approve"
+                                type="object"
+                                name="action_approve"
+                                 invisible="state != 'tobe_approve'"
+                                class="btn-primary"/>
+                        <button string="GM Approve"
+                                type="object"
+                                name="action_done"
+                                invisible="state != 'approve'"
+                                class="btn-primary"/>
+                        <button name="action_reject"
+                                string="Reject"
+                                type="object"
+                                invisible="state not in ['tobe_approve','approve']"
+                                class="oe_highlight"/>
+                        <button name="action_recruitment_done"
+                                string="Recruitment Done"
+                                type="object"
+                                invisible="state != 'done'"
+                                class="oe_highlight"/>
+
+                        <field name="state" widget="statusbar" nolabel="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="order_reference" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="request_date"/>
+                                <field name="wanted_job_position"/>
+                                <field name="request_department"/>
+                                <field name="accountable_to"/>
+                                <field name="occupational_grad"/>
+                                <field name="reason_to_vacant"/>
+                                <field name="term_employment"/>
+                            </group>
+                            <group>
+                             <label for="date_from" string="Expected Date"/>
+                                 <div name="dates" class="o_row">
+                                    <field name="date_from"/>
+                                    <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                    <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" invisible="date_from == False and date_to == False"/>
+                                    <field name="date_to"/>
+                                </div>
+                                <field name="number_of_wanted_employees"/>
+                                <field name="place_of_work"/>
+                                <label for="age_limit_min" string="Age range"/>
+                                <div name="age_range" class="o_row">
+                                    <field name="age_limit_min"/>
+                                    <field name="age_limit_max"/>
+                                </div>
+                                <label for="salary_start" string="Salary range"/>
+                                <div name="salary_range" class="o_row">
+                                    <field name="salary_start"/>
+                                    <field name="salary_end"/>
+                                </div>
+                                 <label for="contract_to" string="Contract Period"/>
+                                 <div name="dates" class="o_row">
+                                    <field name="contract_from"/>
+                                    <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
+                                    <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" invisible="date_from == False and date_to == False"/>
+                                    <field name="contract_to"/>
+                                </div>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Duties">
+                                <field name="brief_outline_of_duties"/>
+                            </page>
+                            <page string="Education Requirements">
+                                <field name="requirement_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="education_level_id"/>
+                                        <field name="experience_year"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Qualification Requirements">
+                                <field name="qualification_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Skill">
+                                <field name="skill_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
+        <menuitem id="menu_recruitment_requests"
+                  web_icon="recruitment_requests,static/description/icon.png"
+                  name="Recruitment Requests"/>
+        <menuitem id="menu_recruitment_request"
+                  name="Recruitment Requests"
+                  parent="menu_recruitment_requests"
+                  action="action_request_recruitment"/>
+        <menuitem id="menu_recruitment_request_conf"
+                  name="Configuration"
+                  parent="menu_recruitment_requests"
+        />
+
+    </data>
+</odoo>

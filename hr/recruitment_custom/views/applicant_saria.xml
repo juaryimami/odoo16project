@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_applicant_information_inherited" model="ir.ui.view">
+            <field name="name">view_applicant_information_inherited"</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='archive_applicant']" position="replace">
+
+                </xpath>
+                    <xpath expr="//field[@name='partner_phone']" position="after">
+                        <field name="gender" />
+                    </xpath>
+                 <xpath expr="//field[@name='type_id']" position="attributes">
+                     <attribute name="invisible"> 1</attribute>
+                    </xpath>
+                 <xpath expr="//field[@name='type_id']" position="attributes">
+                     <attribute name="invisible"> 1</attribute>
+                    </xpath>
+                <xpath expr="//field[@name='job_id']" position="before">
+
+                 <field name="year_experience"/>
+
+                 </xpath>
+
+                 <xpath expr="//field[@name='job_id']" position="before">
+
+                 <field name="recruitment_job_id" string="Applied Job Position"/>
+                     <field name="add_to_job" widget="many2many_tags"/>
+
+
+                 </xpath>
+                 <xpath expr="//field[@name='job_id']" position="replace">
+                     <field name="job_id" string="Current Job Position" />
+                    </xpath>
+                <xpath expr="//field[@name='salary_expected']" position="attributes">
+
+                    <attribute name="invisible">1</attribute>
+                    </xpath>
+
+                 <xpath expr="//field[@name='salary_expected_extra']" position="attributes">
+
+                    <attribute name="invisible">1</attribute>
+                    </xpath>
+
+                 <xpath expr="//field[@name='salary_proposed']" position="attributes">
+
+                    <attribute name="invisible">1</attribute>
+                    </xpath>
+
+                 <xpath expr="//field[@name='salary_proposed_extra']" position="attributes">
+
+                     <attribute name="invisible">1</attribute>
+
+                    </xpath>
+
+                <xpath expr="//field[@name='gender']" position="after">
+
+                        <field name="applicant_address" />
+<!--                        <field name="address_id" string="Current Living Address"/>-->
+<!--                        <field name="state_id_new" domain="[('country_id', '=', address_id)]"/>-->
+                    </xpath>
+
+                <xpath expr="//field[@name='email_from']" position="before">
+
+                        <field name="applied_datetime" />
+
+                    </xpath>
+
+                  <xpath expr="//field[@name='applicant_address']" position="after">
+
+                        <field name="interview_manual_entry_result" string="Interview Grade(Out of five)"/>
+                        <field name="interview_date_manual" />
+                        <field name="reject_reason" widget="many2many_tags"/>
+                        <field name="drop_reason" widget="many2many_tags"/>
+                        <field name="remark_comment" placeholder="Remark Comment"/>
+                    </xpath>
+
+                <!-- <xpath expr="//field[@name='priority']" position="after">
+
+                        
+
+                    </xpath> -->
+
+                 <xpath expr="//field[@name='user_id']" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                 </xpath>
+
+                 <xpath expr="//field[@name='experience_id']" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                 </xpath>
+
+                 <xpath expr="//field[@name='availability']" position="attributes">
+                     <attribute name="invisible">1</attribute>
+                 </xpath>
+
+                 <xpath expr="//field[@name='user_id']" position="before">
+                        <field name="company_id" />
+                      <field name="availability_id" />
+                 </xpath>
+
+
+                <!-- <xpath expr="//field[@name='medium_id']" position="after">
+              
+
+                    
+
+                </xpath> -->
+
+
+
+                <xpath expr="//field[@name='email_cc']" position="attributes">
+
+                    <attribute name="invisible">1</attribute>
+
+                    </xpath>
+
+
+                <xpath expr="//field[@name='partner_phone']" position="after">
+                        <field name="phone_two" />
+                 </xpath>
+
+                 <xpath expr="//field[@name='partner_mobile']" position="attributes">
+
+                    <attribute name="invisible">1</attribute>
+
+                    </xpath>
+
+                 <xpath expr="//field[@name='categ_ids']" position="after">
+
+                        <field name="approver_id"/>
+
+                    </xpath>
+
+                 <xpath expr="//field[@name='linkedin_profile']" position="attributes">
+
+                     <attribute name="invisible">1</attribute>
+
+                    </xpath>
+
+                <xpath expr="//field[@name='source_id']" position="attributes">
+
+                     <attribute name="invisible">1</attribute>
+
+                    </xpath>
+
+                 <xpath expr="//field[@name='medium_id']" position="attributes">
+
+                     <attribute name="invisible">1</attribute>
+
+                    </xpath>
+
+                <xpath expr="//page[1]" position="inside">
+                            <group>
+                                <field name="language" widget="many2many_tags" />
+                            </group>
+
+                            <group>
+                                <field name="other_language" />
+                            </group>
+
+                </xpath>
+                 <xpath expr="//page[2]" position="replace">
+
+                   <page name="experience_detail" string="Experience Summary">
+
+
+                        <field name="experience_ids">
+                            <tree>
+                                <field name="comp_name"/>
+
+                                <field name="comp_location" />
+                                <field name="industry_id" />
+                                <field name="exp_position_name"/>
+                                <field name="exp_salary"/>
+                                <field name="emp_benefit"/>
+                                <field name="exp_currency" optional="hide" />
+                                <field name="payment_frequency" optional="hide"/>
+                                <field name="exp_start_date"/>
+                                <field name="end_date"/>
+<!--                                 <field name="working_here"/>-->
+                                <field name="exp_summary" optional="hide"/>
+
+                            </tree>
+                        </field>
+
+
+                     </page>
+
+                    </xpath>
+
+                 <notebook position="inside">
+                         <page name="education_summary" string="Education Summary">
+                                  <field name="education_ids">
+                            <tree>
+                                <field name="school_name"/>
+                                <field name="major_specialization" />
+                                 <field name="minor_specialization" />
+                                <field name="gpa" />
+                                <field name="degree_id"/>
+                                <field name="start_date" string="Start date"/>
+                                <field name="end_date" string="End date"/>
+                                <field name="description" optional="hide"/>
+                            </tree>
+                        </field>
+
+                         </page>
+                 </notebook>
+
+
+                  <notebook position="inside">
+                         <page name="resume_summary" string="View Resume">
+                             <group>
+                                 <group>
+                                 <field name="resume_name" placeholder="Enter resume name"/>
+<!--                                      <field name="resume_grade" />-->
+                                 </group>
+
+                                 <group>
+                                       <field name="reason"/>
+                                 </group>
+                                 <field name="resume" filename="resume_name" widget="pdf_viewer"/>
+                             </group>
+                         </page>
+
+                  </notebook>
+                 <notebook position="inside">
+                         <page name="salary_benefit" string="Salary and benefit">
+                                    <group>
+                                        <group>
+                                        <field name="expected_salary"/>
+                                      <field name="benefit" widget="many2many_tags"/>
+                                            <field name="hourly_rate_amount" />
+                                        </group>
+                                    </group>
+                         </page>
+                 </notebook>
+            </field>
+        </record>
+
+
+     <record id="view_applicant_information_tree_inherited" model="ir.ui.view">
+            <field name="name">view_applicant_information_tree_inherited"</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_name']" position="after">
+                 <field name="applied_date"/>
+                </xpath>
+                 <xpath expr="//field[@name='partner_name']" position="after">
+                 <field name="interview_manual_entry_result"/>
+                </xpath>
+                <xpath expr="//field[@name='job_id']" position="replace">
+                         <field name="job_id" string="Current job position" />
+                    </xpath>
+                 <xpath expr="//field[@name='salary_expected']" position="replace">
+                         <field name="expected_salary" string="Expected Salary" />
+                    </xpath>
+                     <xpath expr="//field[@name='expected_salary']" position="after">
+                         <field name="industry_list"/>
+                    </xpath>
+
+<!--                 <xpath expr="//tree" position="inside">-->
+                     <xpath expr="//tree" position="inside">
+                         <field name="applicant_dup_count" invisible="applicant_dup_count == 1"/>
+                        <button name="return_duplicated_applicants_list" string="View Duplications" type="object"  invisible="applicant_dup_count == 1"/>
+                    </xpath>
+<!--                      <button name="return_duplicated_applicants_list" type="object">-->
+<!--                         <field name="applicant_dup_count"/> Duplications-->
+<!--                      </button>-->
+<!--                    </xpath>-->
+            </field>
+     </record>
+     <record model="ir.actions.server" id="action_update_stage_id">
+        <field name="name">Send to Sent</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="binding_model_id" ref="model_hr_applicant"/>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.update_applicants_stage()
+        </field>
+     </record>
+
+    <record model="ir.actions.server" id="action_applicant_project_id">
+        <field name="name">Update Company</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="binding_model_id" ref="model_hr_applicant"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.update_applicant_project()
+        </field>
+    </record>
+
+     <record id="action_send_email_project_contact_id" model="ir.actions.server">
+        <field name="name">Send Email To Contact</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_send_email_project_contact()</field>
+    </record>
+</odoo>

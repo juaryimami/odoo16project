@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_provident_fund,account.provident.fund,model_provident_fund,base.group_user,1,1,1,1
+access_hr_payslip_line,account.hr.payslip.line,model_hr_payslip_line,base.group_user,1,1,1,1
+access_hr_provident_initial,account.provident.inital,model_provident_initial,base.group_user,1,1,1,1

@@ -1,0 +1,32 @@
+<odoo>
+    <template id="report_invoice_customized" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@class='row']" position="attributes">
+            <attribute name="style">display: none;</attribute>
+        </xpath>
+     <xpath expr="//div[@class='row']" position="after">
+              <div>
+                <b>Date: <span t-field="o.invoice_date"/></b><br/>
+                <b>Ref: <span t-field="o.name"/></b>
+            </div>
+         <br/>
+            <div>
+<!--                <h5><span t-field="o.partner_id.name"/></h5>-->
+                <u><span t-field="o.location"/></u>
+            </div>
+         <br/>
+            <div>
+                <u><h5>Subject: Payment Request</h5></u>
+            </div>
+           <p style="font-size: 14px;">This is to request payment of  <b><span t-field="o.amount_total"/> ( <span t-field="o.amount_in_word"/> )</b>
+               after VAT for the <b><span t-field="o.service"/></b> Service for the month of
+               <b><span t-esc="o.formatted_invoice_date"/></b> as per of our agreement.
+           </p>
+        </xpath>
+          <xpath expr="//div[@id='informations']" position="attributes">
+                <attribute name="style">display: none;</attribute> <!-- This will hide the div -->
+            </xpath>
+            <xpath expr="//h2" position="attributes">
+                <attribute name="style">display: none;</attribute> <!-- This will hide the h2 tag -->
+            </xpath>
+</template>
+</odoo>

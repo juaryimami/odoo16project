@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_consent_form_id2">
+            <t t-call="web.external_layout">
+                <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="doc">
+                        <style>
+                            .page {
+                            background-image: url('/consent_request_form/static/src/img/logo2.jpg');
+                            background-repeat: no-repeat;
+                            background-position: center center;
+                            background-size: cover; /* Adjust as needed */
+                            padding: 20px; /* Adjust page padding */
+                            }
+                            .content {
+                            padding: 20px;
+                            }
+                            .text-header {
+                            font-size: 18px;
+                            font-weight: bold;
+                            text-align: center; /* Align text to the left */
+                            margin-bottom: 5px;
+                            text-decoration: underline;
+                            }
+                            .bold-label {
+                            font-weight: bold;
+                            }
+                            /* Add other custom styles as needed */
+                        </style>
+                        <div class="page">
+                            <div class="text-header">
+                                <strong>PROVIDENT FUND CONTRIBUTION CONSENT DECLARATION FORM</strong>
+                            </div>
+                            <div class="content">
+<!--                                <div class="text-header">-->
+<!--                                    <strong>PROVIDENT FUND CONTRIBUTION CONSENT DECLARATION FORM</strong>-->
+<!--                                </div>-->
+                                <div class="employee-date">
+                                    <p>Date:
+                                        <span t-field="doc.date"/>
+                                    </p>
+                                </div>
+                                <div class="employee-to">
+                                    <p>To:
+                                        <span t-field="doc.requested_to"/>
+                                    </p>
+                                </div>
+                                <div class="employee-company">
+                                    <p>Company Name:
+                                        <span t-field="doc.company_name"/>
+                                    </p>
+                                </div>
+                                <br/>
+
+                                <p>I hereby give my free consent to contribute  <span t-field="doc.contribute_percent"/>%  provident fund on my full Basic Salary and not on any other allowances.
+                                </p>
+                                <p>I understand that you will also contribute the employer share (4%) in my name on my
+                                    said basic salary, excluding all other allowances.
+                                </p>
+                                <p>I also undertake to abide by the rules framed to administer the provident fund and
+                                    any amendments made from time to time.
+                                </p>
+                                <p>Kindly accept my above declaration.</p>
+                                <br/>
+                                <p>Yours sincerely,</p>
+                                <br/>
+                                <div class="employee-section">
+                                    <div class="employee-info">
+                                        <p>Employee:
+                                            <span t-field="doc.employee_id"/>
+                                        </p>
+                                    </div>
+                                    <div class="employee-info">
+                                        <p>Signature: ___________________</p>
+                                    </div>
+                                </div>
+                                <div class="employee-designation">
+                                    <p>Designation:
+                                        <span t-field="doc.designation"/>
+                                    </p>
+                                </div>
+                                <div class="employee-department">
+                                    <p>Department:
+                                        <span t-field="doc.department_id"/>
+                                    </p>
+                                </div>
+                                <div class="employee-location">
+                                    <p>Location:
+                                        <span t-field="doc.location"/>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

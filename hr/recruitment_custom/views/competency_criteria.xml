@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+ <record id="competency_criteria_action" model="ir.actions.act_window">
+        <field name="name">Competency Criteria</field>
+        <field name="res_model">competency.criteria</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Competency Criteria
+            </p>
+
+        </field>
+    </record>
+    <record id="competency_criteria_view_form" model="ir.ui.view">
+        <field name="name">Competency Criteria</field>
+        <field name="model">competency.criteria</field>
+        <field name="arch" type="xml">
+            <form string="Competency Criteria">
+
+                <sheet>
+
+                        <group>
+                               <field name="name"/>
+                               <field name="remark"/>
+
+                        </group>
+
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="competency_criteria_view_tree" model="ir.ui.view">
+        <field name="name">Competency Criteria</field>
+        <field name="model">competency.criteria</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="remark"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <menuitem
+            id="menu_competency_criteria"
+            name="Competency Criteria"
+            parent="employee_performance_configuration_menu"
+            action="competency_criteria_action"/>
+
+
+</odoo>

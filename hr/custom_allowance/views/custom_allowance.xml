@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='allowances']" position="inside">
+
+                <label for="inflation_adjustment"/>
+                <div class="o_row">
+
+                    <field name="inflation_adjustment" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="communication_allowance"/>
+                <div class="o_row">
+
+                    <field name="communication_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+
+                <label for="internet_allowance"/>
+                <div class="o_row">
+
+                    <field name="internet_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+
+                <label for="fuel_allowance"/>
+                <div class="o_row">
+
+                    <field name="fuel_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+
+                <label for="unused_leave_payment"/>
+                <div class="o_row">
+
+                    <field name="unused_leave_payment" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+
+                <label for="severance_pay_compensation"/>
+                <div class="o_row">
+
+                    <field name="severance_pay_compensation" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="training_development"/>
+                <div class="o_row">
+
+                    <field name="training_development" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="acting_allowance"/>
+                <div class="o_row">
+                    <field name="acting_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+
+                 <label for="position_allowance_percentage"/>
+                <div class="o_row">
+
+                    <field name="position_allowance_percentage" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="transportation_allowance"/>
+                <div class="o_row">
+
+                    <field name="transportation_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+                <label for="daily_subsistence_allowance"/>
+                <div class="o_row">
+
+                    <field name="daily_subsistence_allowance" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+
+                 <label for="desert_allowance_percentage"/>
+                <div class="o_row">
+
+                    <field name="desert_allowance_percentage" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+
+                 <label for="representation_allowance_percentage"/>
+                <div class="o_row">
+                    <field name="representation_allowance_percentage" nolabel="1"/>
+                    <span>/ month</span>
+                </div>
+            </xpath>
+
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="employee_appraisal_form_view" model="ir.ui.view">
+        <field name="name">employee appraisal</field>
+        <field name="model">employee.appraisal</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Appraisal" class="form-title">
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="work_location_id"/>
+                            <field name="meeting_date"/>
+                        </group>
+                        <group>
+                            <field name="position_id"/>
+                            <field name="manager_id"/>
+                        </group>
+                    </group>
+                    <group string="Over all score">
+                           <field name="over_all_score_no"/>
+                            <field name="over_all_score" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+                    <notebook>
+                        <page string="Appraisal" name="appraisal_line_ids">
+                            <field name="state" invisible="1"/>
+                            <field name="appraisal_line_ids" widget="section_and_note_one2many" mode="tree,kanban"
+                                   readonly ="state in  ['done','cancel']">
+                                <tree string="Appraisal lines" editable="bottom">
+                                    <field name="kpi_id"/>
+                                    <field name="objective"/>
+                                    <field name="excellent"/>
+                                    <field name="very_good"/>
+                                    <field name="good"/>
+                                    <field name="unsatisfactory"/>
+                                    <field name="poor"/>
+                                    <field name="remark"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Comments" name="comments">
+                            <group>
+                                <field name="manager_comments"/>
+                                 <field name="employee_comments"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_appraisal_tree_view" model="ir.ui.view">
+        <field name="name">employee appraisal</field>
+        <field name="model">employee.appraisal</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="employee_id"/>
+                <field name="work_location_id"/>
+                <field name="meeting_date"/>
+                <field name="position_id"/>
+                <field name="manager_id"/>
+                <field name="over_all_score"/>
+                <field name="over_all_score_no"/>
+            </tree>
+        </field>
+    </record>
+    <record id="employee_appraisal_search_view" model="ir.ui.view">
+        <field name="name">Search</field>
+        <field name="model">employee.appraisal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="employee_appraisal_action_id" model="ir.actions.act_window">
+        <field name="name">Employee Appraisal</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">employee.appraisal</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+    </record>
+    <menuitem
+            id="menu_employee_appraisal"
+            web_icon="ashewa_icons,static/src/img/icons/lunch.png"
+            name="Employee Performance"/>
+    <menuitem
+            id="employee_appraisal_menu"
+            name="Performance"
+            parent="menu_employee_appraisal"
+            sequence="1"/>
+    <menuitem
+            id="employee_appraisal_submenu_id"
+            name="Employee Evaluation"
+            parent="employee_appraisal_menu"
+            action="employee_appraisal_action_id"
+            sequence="2"/>
+
+    <menuitem
+            id="employee_performance_configuration_menu"
+            name="Configuration"
+            parent="menu_employee_appraisal"
+            sequence="5"/>
+    <!--           <menuitem-->
+    <!--            id="employee_performance_sub_menu"-->
+    <!--            name="Template"-->
+    <!--            parent="employee_performance_configuration_menu"-->
+    <!--            action="employee_appraisal_action"-->
+    <!--            sequence="1"/>-->
+</odoo>

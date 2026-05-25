@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_recruitment_jobs,account.recruitment.jobs,model_recruitment_jobs,base.group_user,1,1,1,1
+access_job_category,account.job.category,model_job_category,base.group_user,1,1,1,1
+access_job_status,account.job.status,model_job_status,base.group_user,1,1,1,1

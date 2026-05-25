@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_template_form_inherit_id" model="ir.ui.view">
+        <field name="name">product.template.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='detailed_type']" position="after">
+                <field name="product_number"/>>
+            </xpath>
+        </field>
+    </record>
+
+      <record id="view_product_template_kanban_inherit_id" model="ir.ui.view">
+            <field name="name">product.template.kanban.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <!-- Locate the strong tag containing the field name -->
+                <xpath expr="//div[@class='o_kanban_record_headings']/strong[@class='o_kanban_record_title']" position="inside">
+                     <div name="product_lst_sku" class="mt-1">
+                       Product Number: <field name="product_number"/>
+                     </div>
+                </xpath>
+            </field>
+        </record>
+</odoo>

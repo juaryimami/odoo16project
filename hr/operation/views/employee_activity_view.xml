@@ -1,0 +1,79 @@
+<odoo>
+    <!-- Tree view for Locations -->
+    <record id="view_employee_activities_tree_id" model="ir.ui.view">
+        <field name="name">employee.activities.tree</field>
+        <field name="model">employee.activities</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="employee_id"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="region_id" optional="hide"/>
+                <field name="location_id" optional="hide"/>
+                <field name="activity_id"/>
+                <field name="rate_id"/>
+                <field name="qty"/>
+                <field name="employee_rate"/>
+                <field name="employee_payment"/>
+                <field name="edomias_rate" optional="hide"/>
+                <field name="edomias_payment" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+      <record id="view_employee_activities_pivot_view_id" model="ir.ui.view">
+        <field name="name">employee.activities.pivot</field>
+        <field name="model">employee.activities</field>
+        <field name="arch" type="xml">
+            <pivot string="Employee Activities">
+                <field name="employee_id" type="row"/>
+                <field name="date" type="col"/>
+                <field name="activity_id" type="col"/>
+
+                <field name="qty" type="measure"/>
+                <field name="employee_rate" type="col"/>
+                <field name="employee_payment" type="measure"/>
+
+                <field name="edomias_rate"  type="col"/>
+                <field name="edomias_payment"  type="measure"/>
+          </pivot>
+        </field>
+    </record>
+
+    <!-- Form view for Locations -->
+    <record id="view_employee_activities_form_id" model="ir.ui.view">
+        <field name="name">Piece rate employee activities form</field>
+        <field name="model">employee.activities</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="date"/>
+                            <field name="project_id"/>
+                        </group>
+                        <group>
+                           <field name="activity_id"/>
+                            <field name="qty"/>
+                            <field name="rate_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Locations -->
+    <record id="action_employee_activities_id" model="ir.actions.act_window">
+        <field name="name">piece employee activities form</field>
+        <field name="res_model">employee.activities</field>
+        <field name="view_mode">tree,pivot,form</field>
+        <field name="context">{'search_default_order': 'create_date desc'}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new tax region.
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="hr_payroll_pdf_report_form_view_wizard_id">
+        <field name="name">custom_hr_payroll_report.pdf.report.form.view</field>
+        <field name="model">hr.payroll.report1</field>
+        <field name="arch" type="xml">
+            <form string="PDF Report">
+                <group>
+                    <group>
+                        <field name="bank_id"/>
+                    </group>
+                    <group>
+                        <field name="date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Print" name="action_print_report" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_payroll_pdf_report_wizard_action_id" model="ir.actions.act_window">
+        <field name="name">PDF Report</field>
+        <field name="res_model">hr.payroll.report1</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

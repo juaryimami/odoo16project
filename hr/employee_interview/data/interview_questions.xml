@@ -1,0 +1,29 @@
+<odoo>
+    <record id="interview_question_1" model="interview.question">
+        <field name="name">What are your strengths?</field>
+        <field name="question_type">white_scholar</field>
+        <field name="sequence">10</field>
+        <field name="required">True</field>
+    </record>
+
+    <record id="interview_question_2" model="interview.question">
+        <field name="name">What are your weaknesses?</field>
+        <field name="question_type">white_scholar</field>
+        <field name="sequence">20</field>
+        <field name="required">True</field>
+    </record>
+
+    <record id="interview_question_3" model="interview.question">
+        <field name="name">Why do you want to work here?</field>
+        <field name="question_type">blue_scholar</field>
+        <field name="sequence">30</field>
+        <field name="required">True</field>
+    </record>
+
+    <record id="interview_question_4" model="interview.question">
+        <field name="name">How do you handle stress?</field>
+        <field name="question_type">blue_scholar</field>
+        <field name="sequence">40</field>
+        <field name="required">True</field>
+    </record>
+</odoo>

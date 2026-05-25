@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+          <record model="ir.module.category" id="provident_res_groups_category">
+              <field name="name">Provident Fund</field>
+            <field name="description">Helps you manage your provident fund.</field>
+        </record>
+
+        <record id="provident_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name = "category_id" ref="provident_res_groups_category" />
+        </record>
+        <record id="provident_group_supervisor" model="res.groups">
+            <field name="name">Supervisor</field>
+            <field name = "category_id" ref="provident_res_groups_category" />
+        </record>
+        <record id="provident_group_finance_manager" model="res.groups">
+            <field name="name">Finance Manager</field>
+            <field name = "category_id" ref="provident_res_groups_category" />
+        </record>
+        <record id="provident_group_executive_director" model="res.groups">
+            <field name="name">Executive Director</field>
+            <field name = "category_id" ref="provident_res_groups_category" />
+        </record>
+    </data>
+</odoo>

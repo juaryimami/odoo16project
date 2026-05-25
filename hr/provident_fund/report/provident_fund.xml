@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="provident_fund_print_report" model="ir.actions.report">
+            <field name="name">Print Provident Fund</field>
+            <field name="model">provident.fund</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">provident_fund.report_provident_fund</field>
+            <field name="report_file">provident_fund.report_provident_fund</field>
+            <field name="print_report_name">'Provident fund print report'</field>
+            <field name="binding_model_id" ref="model_provident_fund"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+     <template id="report_provident_fund">
+        <t t-call="web.html_container">
+               <t t-call="web.external_layout">
+                   <t t-call="provident_fund.pad_custom_header_layout"></t>
+                 <t t-foreach="docs" t-as="o">
+
+                            <div class="page" style="height=-5px">
+                                <div class="oe_structure"/>
+                                <p style="text-align:right; font-weight:bold; font-size: 18px;   border: none solid #7D7C7C; 18px;">Date:______________ </p>
+
+                                <h2 style="text-align:left; font-weight:bold; font-size: 20px; border: none solid #7D7C7C; 22px;">1) To Be Filled By Applicant:</h2>
+                                <h5 style="text-align:left; font-weight:bold; font-size: 18px;   border: none solid #7D7C7C; 18px;">
+                                    I request withdrawal of savings from the provident fund account kept in my
+                                    name as per PAD HR Policy. I understand that the amount to be withdrawn cannot exceed 80% of
+                                    the total account balance.
+                                </h5>
+                                   <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                                       Provident Fund Account Balance Accumulated as of today in Birr: <span t-field="o.balance_amount"/>
+                                   </p>
+                                   <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">Total amount requested for withdrawal in Birr:
+                                       <span t-field="o.request_amount"/><p/>
+                                
+                                   </p>
+                                                                  <table style="background-color:white;">
+
+                         <thead style="background-color:white;">
+
+                             <th style="padding: 10px; width: 40%"><span t-field="o.employee_id.name"/></th>
+                            <th style="padding: 10px; width: 40%; align-items: center"><span t-field="o.request_date" /></th>
+                             <th style="padding: 10px; width: 20%">____________________</th>
+                         </thead>
+
+                         <tbody style="background-color:white;">
+
+                             <tr>
+                                 <td style="padding: 10px; width: 40%; background-color: white">Name</td>
+                                  <td style="padding: 10px; width: 40%; background-color: white; align-items: center">Date</td>
+                                 <td style="padding: 10px; width: 20%; background-color: white">Signature</td>
+                             </tr>
+                         </tbody>
+
+                     </table>
+
+
+                                    <h2 style="text-align:left; font-weight:bold; font-size: 20px; border: none solid #7D7C7C; 22px;">
+                                        <br />
+                                        2) To Be Filled by Immediate Supervisor
+                                        (Not Needed if Applicant is Based at Head Office) </h2>
+                                 <br />
+                                <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                                          I confirm that the applicant does not have outstanding liabilities to
+                                          PAD that have fallen overdue.
+                                   </p>
+
+                                  <table style="background-color:white;">
+
+                         <thead style="background-color:white;">
+
+                             <th style="padding: 10px; width: 40%"><span t-field="o.confirm_by.name"/></th>
+                            <th style="padding: 10px; width: 40%; align-items: center"><span t-field="o.confirm_date" /></th>
+                             <th style="padding: 10px; width: 20%">____________________</th>
+                         </thead>
+
+                         <tbody style="background-color:white;">
+
+                             <tr>
+                                 <td style="padding: 10px; width: 40%; background-color: white">Name</td>
+                                  <td style="padding: 10px; width: 40%; background-color: white; align-items: center">Date</td>
+                                 <td style="padding: 10px; width: 20%; background-color: white">Signature</td>
+                             </tr>
+                         </tbody>
+
+                     </table>
+                                   <br />
+                                <h2 style="text-align:left; font-weight:bold; font-size: 20px; border: none solid #7D7C7C; 22px;">  3) To Be Filled By Finance Department:</h2>
+
+                                    <br />
+
+                                <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                                    Pass Book Number: _______________ Account Location (Bank Branch): _____________________ </p>
+                                  <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">  Provident Fund Balance in Birr: ____________________
+                                    Comments from Finance:
+
+                                </p>
+                                 <table style="background-color:white;">
+
+                         <thead style="background-color:white;">
+
+                             <th style="padding: 10px; width: 40%"><span t-field="o.validated_by.name"/></th>
+                            <th style="padding: 10px; width: 40%; align-items: center"><span t-field="o.validated_date" /></th>
+                             <th style="padding: 10px; width: 20%">____________________</th>
+                         </thead>
+
+                         <tbody style="background-color:white;">
+
+                             <tr>
+                                 <td style="padding: 10px; width: 40%; background-color: white">Name</td>
+                                  <td style="padding: 10px; width: 40%; background-color: white; align-items: center">Date</td>
+                                 <td style="padding: 10px; width: 20%; background-color: white">Signature</td>
+                             </tr>
+                         </tbody>
+
+                     </table>
+                                <h2 style="text-align:left; font-weight:bold; font-size: 20px; border: none solid #7D7C7C; 22px;">
+                                    <br />
+                                    4) Final Decision By Executive Director:
+                                </h2>
+                                <p>
+                                    <t t-if="o.state=='approve'" >  Withdrawal is approved </t>			 <t t-if="o.state=='reject'"> Withdrawal is rejected </t>
+                                </p>
+                                <table style="background-color:white;">
+
+                         <thead style="background-color:white;">
+
+                             <th style="padding: 10px; width: 40%"><span t-field="o.approved_by.name"/></th>
+                            <th style="padding: 10px; width: 40%; align-items: center"><span t-field="o.approved_date" /></th>
+                             <th style="padding: 10px; width: 20%">____________________</th>
+                         </thead>
+
+                         <tbody style="background-color:white;">
+
+                             <tr>
+                                 <td style="padding: 10px; width: 40%; background-color: white">Name</td>
+                                  <td style="padding: 10px; width: 40%; background-color: white; align-items: center">Date</td>
+                                 <td style="padding: 10px; width: 20%; background-color: white">Signature</td>
+                             </tr>
+                         </tbody>
+
+                     </table>
+                                <br />
+                                <p>
+                                    Note: Withdrawal of the provident fund Balance in excess of the amount approved above is strictly forbidden
+                                    and shall because for disciplinary action.
+                                </p>
+
+                            </div>
+
+
+<!--                        </t>-->
+                    </t>
+                </t>
+        </t>
+
+    </template>
+
+
+</odoo>

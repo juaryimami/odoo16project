@@ -1,0 +1,60 @@
+<odoo>
+    <!-- Tree view for Renewals -->
+    <record id="view_renewal_tree" model="ir.ui.view">
+        <field name="name">agent.project.renewal.tree</field>
+        <field name="model">agent.project.renewal</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="renewal_start_date"/>
+                <field name="renewal_end_date"/>
+                <field name="updated_price"/>
+                <field name="renewal_number"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view for Renewals -->
+    <record id="view_renewal_form" model="ir.ui.view">
+        <field name="name">agent.project.renewal.form</field>
+        <field name="model">agent.project.renewal</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="project_id" readonly="id != False"/>
+                        <field name="renewal_start_date" required="1"/>
+                        <field name="renewal_end_date" required="1"/>
+<!--                        <field name="updated_price"/>-->
+                    </group>
+                </sheet>
+                 <footer>
+                    <button string="Save" name="renew_project" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Renewals Form View in a Modal -->
+    <record id="action_renewal_form_modal" model="ir.actions.act_window">
+        <field name="name">Create Renewal</field>
+        <field name="res_model">agent.project.renewal</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_renewal_form"/>
+        <field name="target">new</field> <!-- Opens in a modal -->
+        <field name="context">{'default_project_id': active_id}</field> <!-- Pre-fill the project_id -->
+    </record>
+
+    <!-- Action for Renewals Tree View in a Modal -->
+    <record id="action_renewal_tree_modal" model="ir.actions.act_window">
+        <field name="name">Renewals List</field>
+        <field name="res_model">agent.project.renewal</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_renewal_tree"/>
+        <field name="target">new</field> <!-- Opens in a modal -->
+        <field name="context">{'default_project_id': active_id}</field> <!-- Optional: if needed for filtering -->
+        <field name="domain">[('project_id', '=', active_id)]</field> <!-- Filters to the selected project -->
+    </record>
+
+
+</odoo>

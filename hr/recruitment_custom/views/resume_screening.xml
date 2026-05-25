@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+         <record id="resume_screening_form_inherit" model="ir.ui.view">
+            <field name="name">resume.screening.form.inherit</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+            <field name="arch" type="xml">
+                  <notebook position="inside">
+                <page name="screening" string="Screening">
+
+                          <group>
+                               <group>
+                               <field name="resume_screening" string="CV Completnes"/>
+                               <field name="cv_clarity" string="CV Clarity"/>
+                               <field name="career_pattern" />
+                               <field name="work_gap" />
+                               <field name="career_stablity" string="Stability in job"/>
+                           </group>
+                          <group>
+                               <field name="training_skill"  widget="many2many_tags"/>
+                              <field name="education_level" />
+                               <field name="experience_id" />
+                               <field name="experience_grade" />
+                          </group>
+                          </group>
+                </page>
+                  </notebook>
+
+                <xpath expr="//field[@name='priority']" position="after">
+                     <field name="resume_grade" />
+                     <field name="grade" string="Resume Grade Total"/>
+                    <field name="average" string="Resume Grade Average"/>
+                 </xpath>
+
+            </field>
+         </record>
+
+
+
+
+
+    <record id="cv_completeness_action" model="ir.actions.act_window">
+        <field name="name">CV Completness</field>
+        <field name="res_model">cv.completness</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a CV Completeness
+            </p>
+
+        </field>
+    </record>
+    <record id="cv_completeness_view_form" model="ir.ui.view">
+        <field name="name">CV Completeness</field>
+        <field name="model">cv.completness</field>
+        <field name="arch" type="xml">
+            <form string="CV Completeness">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                               <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="cv_completeness_view_tree" model="ir.ui.view">
+        <field name="name">CV Completness</field>
+        <field name="model">cv.completness</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <menuitem id="menu_resume_screening"
+            name="Resume Screen"
+              parent="hr_recruitment.menu_hr_recruitment_configuration"
+            sequence="2"/>
+
+    <menuitem
+            id="menu_cv_completness"
+            name="CV Completness"
+            parent="menu_resume_screening"
+            action="cv_completeness_action"/>
+
+
+
+
+<!--CV Clarity-->
+
+    <record id="cv_clarity_action" model="ir.actions.act_window">
+        <field name="name">CV Clarity</field>
+        <field name="res_model">cv.clarity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a CV Clarity
+            </p>
+
+        </field>
+    </record>
+    <record id="cv_clarity_view_form" model="ir.ui.view">
+        <field name="name">CV Clarity</field>
+        <field name="model">cv.clarity</field>
+        <field name="arch" type="xml">
+            <form string="CV Clarity">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                        <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="cv_clarity_view_tree" model="ir.ui.view">
+        <field name="name">CV Clarity</field>
+        <field name="model">cv.clarity</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+      <menuitem
+            id="menu_cv_clarity"
+            name="CV Clrity"
+            parent="menu_resume_screening"
+            action="cv_clarity_action"/>
+
+
+    <!--Candidate Experience-->
+
+    <record id="resume_experience_action" model="ir.actions.act_window">
+        <field name="name">Candidate Experience</field>
+        <field name="res_model">candidate.experience</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a CV Clarity
+            </p>
+
+        </field>
+    </record>
+    <record id="resume_experience_view_form" model="ir.ui.view">
+        <field name="name">Candidate Experience</field>
+        <field name="model">candidate.experience</field>
+        <field name="arch" type="xml">
+            <form string="Candidate Experience">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                        <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="resume_experience_view_tree" model="ir.ui.view">
+        <field name="name">Candidate Experience</field>
+        <field name="model">candidate.experience</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+      <menuitem
+            id="menu_resume_experience"
+            name="Candidate Experience"
+            parent="menu_resume_screening"
+            action="resume_experience_action"/>
+
+
+     <!--Candidate Experience-->
+
+    <record id="career_pattern_action" model="ir.actions.act_window">
+        <field name="name">Career Pattern</field>
+        <field name="res_model">career.pattern</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Career Pattern
+            </p>
+
+        </field>
+    </record>
+    <record id="career_pattern_view_form" model="ir.ui.view">
+        <field name="name">Career Pattern</field>
+        <field name="model">career.pattern</field>
+        <field name="arch" type="xml">
+            <form string="CV Clarity">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                        <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="career_pattern_view_tree" model="ir.ui.view">
+        <field name="name">Career Pattern</field>
+        <field name="model">career.pattern</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+      <menuitem
+            id="menu_career_pattern"
+            name="Career Pattern"
+            parent="menu_resume_screening"
+            action="career_pattern_action"/>
+
+<!--    Work Gap -->
+
+     <record id="work_gap_action" model="ir.actions.act_window">
+        <field name="name">Work Gap</field>
+        <field name="res_model">work.gap</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a Work Gap
+            </p>
+
+        </field>
+    </record>
+    <record id="work_gap_view_form" model="ir.ui.view">
+        <field name="name">Work Gap</field>
+        <field name="model">work.gap</field>
+        <field name="arch" type="xml">
+            <form string="CV Clarity">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                        <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="work_gap_view_tree" model="ir.ui.view">
+        <field name="name">Work Gap</field>
+        <field name="model">work.gap</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+      <menuitem
+            id="menu_work_gap"
+            name="Work Gap"
+            parent="menu_resume_screening"
+            action="work_gap_action"/>
+
+
+
+    <!--    Stablity in Job -->
+
+     <record id="career_stability_action" model="ir.actions.act_window">
+        <field name="name">Career Stablity</field>
+        <field name="res_model">career.stability</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add A Career Stability
+            </p>
+
+        </field>
+    </record>
+    <record id="career_stability_view_form" model="ir.ui.view">
+        <field name="name">Career Stability</field>
+        <field name="model">career.stability</field>
+        <field name="arch" type="xml">
+            <form string="CV Clarity">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                        <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="career_stability_view_tree" model="ir.ui.view">
+        <field name="name">Career Stability</field>
+        <field name="model">career.stability</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+      <menuitem
+            id="menu_career_stability"
+            name="Career Stability"
+            parent="menu_resume_screening"
+            action="career_stability_action"/>
+
+
+
+     <!--  Training Skill -->
+
+     <record id="training_skill_action" model="ir.actions.act_window">
+        <field name="name">Training Skill</field>
+        <field name="res_model">training.skill</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add A Training Skill
+            </p>
+
+        </field>
+    </record>
+    <record id="training_skill_view_form" model="ir.ui.view">
+        <field name="name">Training Skill</field>
+        <field name="model">training.skill</field>
+        <field name="arch" type="xml">
+            <form string="Training Skill">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                        <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="training_skill_view_tree" model="ir.ui.view">
+        <field name="name">Training Skill</field>
+        <field name="model">training.skill</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+      <menuitem
+            id="menu_training_skill"
+            name="Training Skill"
+            parent="menu_resume_screening"
+            action="training_skill_action"/>
+
+
+      <!--  Education Level -->
+
+     <record id="education_level_action" model="ir.actions.act_window">
+        <field name="name">Education Level</field>
+        <field name="res_model">education.level</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add A Education Level
+            </p>
+
+        </field>
+    </record>
+    <record id="education_level_view_form" model="ir.ui.view">
+        <field name="name">Education Level</field>
+        <field name="model">education.level</field>
+        <field name="arch" type="xml">
+            <form string="Education Level">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                        <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="education_level_view_tree" model="ir.ui.view">
+        <field name="name">Education Level</field>
+        <field name="model">education.level</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                        <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+      <menuitem
+            id="menu_education_level"
+            name="Education Level"
+            parent="menu_resume_screening"
+            action="education_level_action"/>
+
+
+     <record id="experience_grade_action" model="ir.actions.act_window">
+        <field name="name">Experience Grade</field>
+        <field name="res_model">experience.grade</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add Experience Grade
+            </p>
+
+        </field>
+    </record>
+    <record id="experience_grade_view_form" model="ir.ui.view">
+        <field name="name">Experience Grade</field>
+        <field name="model">experience.grade</field>
+        <field name="arch" type="xml">
+            <form string="Experience Grade">
+                <sheet>
+                    <group>
+                        <group>
+                               <field name="name"/>
+                               <field name="weight"/>
+
+                        </group>
+
+                    </group>
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+    <record id="experience_grade_view_tree" model="ir.ui.view">
+        <field name="name">Experience Grade</field>
+        <field name="model">experience.grade</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="name"/>
+                <field name="weight"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <menuitem id="experience_grade_menu"
+            name="Experience grade"
+            parent="menu_resume_screening"
+            action="experience_grade_action"
+            />
+</odoo>

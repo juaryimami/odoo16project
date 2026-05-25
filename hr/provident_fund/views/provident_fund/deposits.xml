@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <record id="open_provident_fund_balance_action" model="ir.actions.act_window">
+        <field name="name">Provident balance</field>
+        <field name="res_model">hr.payslip.line</field>
+        <field name="view_mode">tree,graph,pivot</field>
+
+        <field name="domain">['|',('code', '=', 'EMPR'),('code','=','EPRNT')]</field>
+         <field name="context">{}</field>
+    </record>
+
+        <record id="provident_fund_balance_view_tree" model="ir.ui.view">
+        <field name="name">provident fund balance</field>
+        <field name="model">hr.payslip.line</field>
+            <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_line_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree/field[@name='sequence']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+              <xpath expr="//tree/field[@name='name']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+               <xpath expr="//tree/field[@name='code']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+             <xpath expr="//tree/field[@name='quantity']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+              <xpath expr="//tree/field[@name='rate']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+                 <xpath expr="//tree/field[@name='total']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+              <xpath expr="//tree/field[@name='employee_id']" position="after">
+            <field name="contract_id"/>
+              </xpath>
+
+        </field>
+    </record>
+
+
+
+
+        <menuitem
+            id="provident_fund_balance_menu"
+            name="Deposits"
+            action="open_provident_fund_balance_action"
+             sequence="3"
+            parent="provident_fund_root_menu"/>
+
+
+    </data>
+</odoo>

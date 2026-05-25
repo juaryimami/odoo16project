@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail_activity_provident_approved" model="mail.activity.type">
+            <field name="name">Provident Created</field>
+            <field name="res_model">provident.fund</field>
+        </record>
+
+    </data>
+</odoo>

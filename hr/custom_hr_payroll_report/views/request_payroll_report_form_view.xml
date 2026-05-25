@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_hr_payroll_request_form" model="ir.ui.view">
+        <field name="name">hr payroll request form</field>
+        <field name="model">hr.payroll.request.form</field>
+        <field name="arch" type="xml">
+            <form string="Payroll Report">
+                <group>
+                    <group>
+                       <field name="date_from"/>
+                       <field name="department_id"/>
+                    </group>
+                    <group>
+                       <field name="date_to"/>
+<!--                       <field name="project_id"/>-->
+                    </group>
+                </group>
+                <footer>
+                     <button name="compute_and_open_payroll_report" type="object" string="Generate Report" class="btn-primary"/>
+                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="hr_payroll_request_form_report" model="ir.actions.act_window">
+        <field name="name">Payroll Report Form</field>
+        <field name="res_model">hr.payroll.request.form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+      <menuitem  id="custom_hr_report_form_submenu_id"
+               name="Generate Report"
+               parent="custom_hr_report_menu_id"
+               action="hr_payroll_request_form_report"
+               sequence="3"/>
+</odoo>

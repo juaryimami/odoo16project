@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_applicant_experience_tree" model="ir.ui.view">
+        <field name="name">applicant.experience.tree</field>
+        <field name="model">applicant.experience</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="comp_name"/>
+                <field name="industry_id" />
+                <field name="exp_position_name" string="Position Title"/>
+                <field name="exp_salary" />
+                <field name="payment_frequency" />
+                <field name="exp_currency" />
+                <field name="exp_start_date"/>
+                <field name="end_date"/>
+                <field name="exp_summary"/>
+<!--                 <field name="working_here"/>-->
+            </tree>
+        </field>
+    </record>
+</odoo>

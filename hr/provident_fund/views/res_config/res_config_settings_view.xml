@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_provident_fund_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.provident.fund.settings.view.form</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="90"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <div class="app_settings_block" data-string="Provident Fund" id="provident" string="Provident Fund" data-key="provident_fund">
+                        <h2>Provident Fund</h2>
+                        <div class="row mt16 o_settings_container" id="provident_setting">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Allowed amount for withdrawal in %</span>
+                                    <div class="text-muted content-group mt16">
+                                        <span>Amount </span>
+                                        <field name="allowed_percent" class="text-center" style="width: 10%; min-width: 4rem;" />
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="provident_fund_setting_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module':'provident_fund','bin_size':False}</field>
+        </record>
+
+        <menuitem
+           id="provident_fund_root_menu"
+            name="Provident Fund"
+            sequence="4"/>
+/>
+
+        <menuitem id="provident_fund_configuration_menu"
+                   name="Configuration"
+                   parent="provident_fund.provident_fund_root_menu"/>
+
+        <menuitem id="provident_fund_setting_menu"
+                  name="Settings"
+                  parent="provident_fund_configuration_menu"
+                  action="provident_fund_setting_action"/>
+
+
+    </data>
+</odoo>

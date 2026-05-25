@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_interview_user,account.employee.interview,model_employee_interview,,1,1,1,1
+access_interview_questions_user,account.interview.questions,model_interview_questions,,1,1,1,1
+access_interview_grade_user,account.interview.grade,model_interview_grade,,1,1,1,1
+access_employee_interview_line_user,account.employee.interview.line,model_employee_interview_line,,1,1,1,1
+access_blue_interview,account.blue.interview,model_blue_interview,,1,1,1,1
+access_blue_question,account.blue.question,model_blue_question,,1,1,1,1
+access_blue_scholar_line,account.blue.scholar.line,model_blue_scholar_line,,1,1,1,1

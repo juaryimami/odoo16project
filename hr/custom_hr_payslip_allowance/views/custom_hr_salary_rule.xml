@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_salary_rule_form_view_inherit_id" model="ir.ui.view">
+        <field name="name">hr salary rule inherited</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="om_hr_payroll.hr_salary_rule_form"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='company_id']" position="after">
+                <field name="is_taxable"/>
+<!--                <field name="rate"  attrs="{'invisible': [('is_taxable', '!=', True)]}"/>-->
+                <field name="min_amount"  attrs="{'invisible': [('is_taxable', '!=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

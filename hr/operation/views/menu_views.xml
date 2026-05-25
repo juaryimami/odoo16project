@@ -1,0 +1,15 @@
+<odoo>
+    <!-- Main Menu for Edomias Agent -->
+    <menuitem id="menu_edomias_main" name="Operation" web_icon= "edomias_agent,static/description/icon.png" sequence="1"/>
+
+    <!-- Submenu for Projects -->
+    <menuitem id="menu_project" name="Operations" parent="menu_edomias_main" sequence="1" action="action_project"/>
+    <menuitem id="menu_project_configuration" name="Configurations" parent="menu_edomias_main" sequence="31"/>
+    <menuitem id="menu_project_configuration_location" name="Locations" parent="menu_project_configuration" sequence="12" action="action_location"/>
+    <menuitem id="menu_project_configuration_tax_region" name="Region" parent="menu_project_configuration" sequence="13" action="action_tax_id"/>
+    <menuitem id="menu_project_configuration_desert_allowance" name="Desert Allowance" parent="menu_project_configuration" sequence="14" action="action_operation_desert_id"/>
+    <menuitem id="menu_project_configuration_piece_rate_activity" name="Piece Rate Activity" parent="menu_project_configuration" sequence="15" action="action_piece_rate_activity_id"/>
+    <menuitem id="menu_project_configuration_ot_rate_id" name="OT Rates" parent="menu_project_configuration" sequence="16" action="action_ot_rate_list_id"/>
+    <menuitem id="menu_project_configuration_piece_rate_id" name="Piece Rate UOM" parent="menu_project_configuration" sequence="17" action="action_piece_rate_uom_id"/>
+    <menuitem id="menu_edomias_employee_activity_id" name="Activities" parent="menu_edomias_main" sequence="11" action="action_employee_activities_id"/>
+</odoo>

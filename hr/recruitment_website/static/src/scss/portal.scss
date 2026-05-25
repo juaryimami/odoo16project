@@ -1,0 +1,26 @@
+
+.text-primary {
+    color: $o-brand-odoo !important;
+}
+.text-primary-link {
+    color:#ffffff;
+    background-color:$o-brand-odoo !important;
+    padding:5px;
+    text-align: center;
+    margin:5px;
+    border-radius: 8px;
+}
+.button_primary {
+    color:$o-brand-odoo;
+    border:none;
+    background-color:$o-brand-odoo !important;
+    width:80px;margin: 20px;
+    text-align: center;
+}
+.button_dan {
+    color:#ffffff;
+    border:none;
+    background-color:$o-danger !important;
+    width:80px;margin: 20px;
+    text-align: center;
+}

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+custom_hr_payroll_report.custom_hr_payroll_report,access_custom_hr_payroll_report,custom_hr_payroll_report.model_custom_hr_payroll_report,base.group_system,1,1,1,1
+custom_hr_payroll_report.hr_payroll_request_form,access_hr_payroll_request_form,custom_hr_payroll_report.model_hr_payroll_request_form,base.group_system,1,1,1,1
+access_hr_payroll_report1,hr_payroll_report1,custom_hr_payroll_report.model_hr_payroll_report1,base.group_system,1,1,1,1

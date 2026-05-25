@@ -1,0 +1,22 @@
+<odoo>
+    <record model="ir.ui.view" id="hr_employee_inherit">
+        <field name="name">hr.employee.tree.views</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='work_email']" position="after">
+                <field name="number_of_days"/>
+            </xpath>
+        </field>
+    </record>
+     <record model="ir.ui.view" id="hr_employee_search_number_of_days">
+        <field name="name">hr.employee.search.number.of.days</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="number_of_days" string="Number Of Days"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

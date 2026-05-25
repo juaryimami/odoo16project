@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+        <record id="employee_bonus_rule" model="hr.salary.rule">
+            <field name="name">Bonus</field>
+            <field name="code">BON</field>
+            <field name="sequence" eval="200"/>
+            <field name="category_id" ref="om_hr_payroll.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.BON</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.BON.amount</field>
+            <field name="appears_on_payslip" eval="True"/>
+        </record>
+
+        <record id="hr_rule_input_BON" model="hr.rule.input">
+            <field name="code">BON</field>
+            <field name="name">Bonus</field>
+            <field name="input_id" ref="employee_bonus_rule"/>
+        </record>
+
+    </data>
+</odoo>

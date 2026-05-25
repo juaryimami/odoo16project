@@ -1,0 +1,115 @@
+<odoo>
+    <template id="hr_report_template_id">
+         <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+             <style>
+                        .p {
+                            font-size: 16px;
+                            margin-bottom: 1px;
+                        }
+
+                        .table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+
+                        .table th, .table td {
+                            border: 1px solid black;
+                            text-align: left;
+                            font-size: 14px;
+                            margin-bottom: 1px;
+                        }
+
+                        .table thead th {
+                            background-color: #f2f2f2;
+                        }
+
+                        .text-end {
+                            text-align: right;
+                        }
+
+                        .page {
+                            margin: 20px;
+                        }
+                    </style>
+            <div class="page">
+                 <div class="text-header">
+                     Date: <span t-esc="colum['date']"/><br/>
+                    <p>Ref: EEA/Fin/7580/24</p>
+
+                     <u><b><span t-esc="colum['bank']"/></b></u>
+                     <br/><br/>
+
+                    <u><b>Subject: Request to deposit Staff Salary in their Respective Account Number at your  Branch </b></u>
+                    <br/><br/>
+                    <p>Please deposit the attached one page Salary of Staff at your esteemed bank
+                     in their respective saving account at your Branch the month of <b><span t-esc="colum['date']"/></b>
+                    amounting <b><span t-esc="round(sum(doc.net for doc in docs), 2)"/> ( <span t-esc= "colum['amount_in_word']"/> )</b>
+                    </p>
+                     <p>we have authorized youor esteemed bank to deduct the amount and any service charge that
+                     may be extended to this purpose from account number <b><span t-esc= "colum['bank_acc']"/></b> </p>
+                     <p>We thanks you in advance for your Cooperation</p>
+
+                </div>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Bank</th>
+                            <th>Account Number</th>
+                            <th>Net</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="line_index" t-value="0"/>
+                        <t t-foreach="docs" t-as="doc">
+                            <t t-set="line_index" t-value="line_index + 1"/>
+                            <tr>
+                              <td><span t-esc="line_index"/></td>
+                              <td><t t-esc="doc.employee"/></td>
+                              <td><t t-esc="doc.bank_account_id.bank_id.name"/></td>
+                              <td><t t-esc="doc.bank_account_id.acc_number"/></td>
+                              <td><t t-esc="doc.net"/></td>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td colspan="4" >Total</td>
+                            <td><span t-esc="round(sum(doc.net for doc in docs), 2)"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+    </template>
+<!--    <report-->
+<!--        id="payroll_report_action_id"-->
+<!--        model="custom.hr.payroll.report"-->
+<!--        string="Payslip Payroll"-->
+<!--        report_type="qweb-pdf"-->
+<!--        name="custom_hr_payroll_report.hr_report_template_id"-->
+<!--        file="custom_hr_payroll_report.hr_report_template_id"-->
+<!--    />-->
+
+
+
+    <record id="payroll_report_action_id" model="ir.actions.report">
+        <field name="name">Bank latter</field>
+        <field name="model">custom.hr.payroll.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_hr_payroll_report.hr_report_template_id</field>
+        <field name="report_file">custom_hr_payroll_report.hr_report_template_id</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+</odoo>
+
+
+
+
+
+
+
+
+

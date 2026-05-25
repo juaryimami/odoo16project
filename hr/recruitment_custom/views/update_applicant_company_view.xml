@@ -1,0 +1,24 @@
+<odoo>
+    <record id="view_update_project_form" model="ir.ui.view">
+        <field name="name">Update</field>
+        <field name="model">update.project</field>
+        <field name="arch" type="xml">
+            <form string="Update Applicant Company">
+                <group>
+                    <field name="applicant_ids" widget="many2many_tags"/>
+                    <field name="company_id"/>
+                </group>
+                <footer>
+                     <button name="on_save_employee_company" type="object" string="Update" class="btn-primary"/>
+                     <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_update_applicant_project" model="ir.actions.act_window">
+        <field name="name">Update Company</field>
+        <field name="res_model">update.project</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

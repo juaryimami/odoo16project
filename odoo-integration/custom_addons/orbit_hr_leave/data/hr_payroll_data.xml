@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 
+            Example Salary Rule for Sick Leave 
+            This rule overrides or creates a Sick Leave deduction/allowance
+            using our custom python method.
+        -->
+        <record id="hr_salary_rule_sick_leave_tiered" model="hr.salary.rule">
+            <field name="name">Sick Leave (Tiered)</field>
+            <field name="sequence" eval="150"/>
+            <field name="code">SICK_TIERED</field>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+# Check if there are any sick days in this payslip
+result = any(line.code == 'SICK' for line in payslip.worked_days_line_ids)
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+# payslip object is available in this context
+# calculate_sick_leave_allowance is our custom method returning the amount to pay
+total_allowance = payslip.calculate_sick_leave_allowance()
+
+# Odoo typically pays the full basic salary and then DEDUCTS for unpaid/partially paid leave.
+# So we calculate the deduction amount.
+# Total days sick = sum(line.number_of_days for line in payslip.worked_days_line_ids if line.code == 'SICK')
+current_sick_lines = payslip.worked_days_line_ids.filtered(lambda l: l.code == 'SICK')
+current_sick_days = sum(line.number_of_days for line in current_sick_lines)
+
+daily_wage = contract.wage / 30.0
+# The amount that WOULD have been paid if 100%
+full_sick_pay = current_sick_days * daily_wage
+
+# The deduction is the difference between full pay and the allowed pay (based on tiers)
+deduction = full_sick_pay - total_allowance
+
+# Return as a negative number for deduction
+result = -deduction
+            </field>
+        </record>
+
+        <!-- 
+            Example Salary Rule for Annual Leave Encashment on Termination
+            This rule uses our python method to get the cash value of remaining leaves.
+        -->
+        <record id="hr_salary_rule_leave_encashment" model="hr.salary.rule">
+            <field name="name">Annual Leave Encashment (Termination)</field>
+            <field name="sequence" eval="100"/>
+            <field name="code">LEAVE_PAYOUT</field>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">
+# Trigger this rule ONLY if there's a specific Other Input code for Termination
+result = any(input_line.code == 'TERMINATION' for input_line in payslip.input_line_ids)
+            </field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = payslip.get_remaining_annual_leave_payout()
+            </field>
+        </record>
+    </data>
+</odoo>

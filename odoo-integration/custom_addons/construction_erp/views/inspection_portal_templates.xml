@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_inspection_layout" name="Inspection Portal Layout">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_footer" t-value="True"/>
+            <div id="portal_inspection_content" class="container-fluid py-5" style="min-height: 100vh; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-xl-8">
+                        <t t-out="0"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_inspection_form" name="Inspection Grading Form">
+        <style>
+            .transition-up { transition: all 0.3s ease; }
+            .transition-up:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+            .hover-shadow { transition: box-shadow 0.2s; }
+            .hover-shadow:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+            .btn-check:checked + label { background-color: var(--bs-success); color: white; }
+            .btn-check:checked + label.btn-outline-danger { background-color: var(--bs-danger); color: white; }
+        </style>
+        <t t-call="construction_erp.portal_inspection_layout">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-1 text-white">Quality Inspection Gate</h2>
+                            <p class="mb-0 opacity-75">Ref: <t t-out="inspection.name"/></p>
+                        </div>
+                        <i class="fa fa-shield fa-3x opacity-25"></i>
+                    </div>
+                </div>
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-2">Project</h6>
+                            <p class="h5 mb-0 text-dark"><t t-out="project.name"/></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-2">Contractor</h6>
+                            <p class="h5 mb-0 text-dark"><t t-out="job.contractor_id.name"/></p>
+                        </div>
+                    </div>
+                    
+                    <div t-if="inspection.inspection_type == 'evaluation'" class="row mb-5 py-3 border-top border-bottom bg-light bg-opacity-50">
+                        <div class="col-md-4 text-center border-end">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-1">Previous Certified</h6>
+                            <p class="h4 mb-0 text-secondary"><t t-out="inspection.previous_certified_progress"/>%</p>
+                        </div>
+                        <div class="col-md-4 text-center border-end">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-1">Current Claim</h6>
+                            <p class="h4 mb-0 text-primary"><t t-out="inspection.current_progress_claim"/>%</p>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h6 class="text-uppercase text-muted small fw-bold mb-1">Cumulative Goal</h6>
+                            <p class="h4 mb-0 text-success fw-bold"><t t-out="inspection.total_claim_progress"/>%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info border-0 rounded-3 mb-5">
+                        <i class="fa fa-info-circle me-2"></i> Please review each checklist item below. Select <strong>Pass</strong> if the work meets the standards, or <strong>Fail</strong> if rework is required.
+                    </div>
+
+                    <form action="/inspection/submit" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="token" t-att-value="inspection.access_token"/>
+
+                        <div class="checklist-items mb-5">
+                            <t t-foreach="inspection.line_ids" t-as="line">
+                                <div class="checklist-card p-3 mb-3 border rounded-3 bg-white hover-shadow transition">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-7 col-sm-12 mb-3 mb-md-0">
+                                            <h6 class="mb-1 fw-bold text-dark"><t t-out="line.name"/></h6>
+                                            <p class="text-muted small mb-0">Phase: <t t-out="inspection.task_id.name"/></p>
+                                        </div>
+                                        <div class="col-md-5 col-sm-12">
+                                            <div class="btn-group w-100" role="group">
+                                                <input type="radio" t-attf-name="status_#{line.id}" value="pass" class="btn-check" t-attf-id="pass_#{line.id}" checked="checked"/>
+                                                <label class="btn btn-outline-success border-2 fw-bold" t-attf-for="pass_#{line.id}">
+                                                    <i class="fa fa-check me-1"></i> PASS
+                                                </label>
+
+                                                <input type="radio" t-attf-name="status_#{line.id}" value="fail" class="btn-check" t-attf-id="fail_#{line.id}"/>
+                                                <label class="btn btn-outline-danger border-2 fw-bold" t-attf-for="fail_#{line.id}">
+                                                    <i class="fa fa-times me-1"></i> FAIL
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <textarea t-attf-name="notes_#{line.id}" class="form-control border-0 bg-light rounded-3" placeholder="Specific remarks for this item..."></textarea>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label fw-bold text-dark h5 mb-3">Overall Inspector Conclusion</label>
+                            <textarea name="overall_notes" class="form-control rounded-4 p-3 border-2" rows="4" placeholder="Summarize your findings here..."></textarea>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow fw-bold transition-up">
+                                <i class="fa fa-paper-plane me-2"></i> Submit Inspection Report
+                            </button>
+                            <p class="text-muted small mt-3 italic text-center">Once submitted, this link will expire and the result will be permanently recorded in the project archives.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_inspection_success" name="Inspection Success">
+        <t t-call="construction_erp.portal_inspection_layout">
+            <div class="text-center bg-white p-5 rounded-4 shadow-lg border-0">
+                <div class="display-1 text-success mb-4 pulse">
+                    <i class="fa fa-check-circle"></i>
+                </div>
+                <h1 class="fw-bold text-dark">Submission Successful</h1>
+                <p class="lead text-muted mb-5">Your inspection report for <strong><t t-out="inspection.name"/></strong> has been officially recorded. The project team has been notified.</p>
+                <div class="alert alert-secondary border-0 mb-4">
+                    The Job Order status and site progress have been updated based on your findings.
+                </div>
+                <p class="text-muted small">Access Token: <t t-out="inspection.access_token"/></p>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_inspection_expired" name="Inspection Expired">
+        <t t-call="construction_erp.portal_inspection_layout">
+            <div class="text-center bg-white p-5 rounded-4 shadow-lg border-0 border-top border-5 border-warning">
+                <div class="display-3 text-warning mb-4">
+                    <i class="fa fa-hourglass-end"></i>
+                </div>
+                <h2 class="fw-bold text-dark">Inspection Link Expired</h2>
+                <p class="lead text-muted mb-4">This inspection report (<t t-out="inspection.name"/>) was already submitted and the access token has been retired for security reasons.</p>
+                <p class="text-muted mb-0 small">Submission Date: <t t-out="inspection.write_date"/></p>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_inspection_not_found" name="Inspection Not Found">
+        <t t-call="construction_erp.portal_inspection_layout">
+            <div class="text-center bg-white p-5 rounded-4 shadow-lg border-0">
+                <div class="display-4 text-danger mb-4">
+                    <i class="fa fa-exclamation-triangle"></i>
+                </div>
+                <h2 class="fw-bold text-dark">Invalid Access Token</h2>
+                <p class="text-muted mb-0">The inspection record you are looking for does not exist or the link is broken.</p>
+            </div>
+        </t>
+    </template>
+</odoo>

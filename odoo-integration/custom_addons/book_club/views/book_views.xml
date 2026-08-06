@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_book_tree" model="ir.ui.view">
+        <field name="name">book.club.book.tree</field>
+        <field name="model">book_club.book</field>
+        <field name="arch" type="xml">
+            <tree string="Books">
+                <field name="title"/>
+                <field name="author_id"/>
+                <field name="publisher_id"/>
+                <field name="publication_date"/>
+                <field name="quantity"/>
+                <field name="availability_status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_book_form" model="ir.ui.view">
+        <field name="name">book.club.book.form</field>
+        <field name="model">book_club.book</field>
+        <field name="arch" type="xml">
+            <form string="Book">
+                <sheet>
+                    <field name="image_cover" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="title" placeholder="Book Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="author_id"/>
+                            <field name="publisher_id"/>
+                            <field name="isbn"/>
+                            <field name="publication_date"/>
+                        </group>
+                        <group>
+                            <field name="price"/>
+                            <field name="genre_ids" widget="many2many_tags"/>
+                            <field name="quantity"/>
+                            <field name="availability_status"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_book_search" model="ir.ui.view">
+        <field name="name">book.club.book.search</field>
+        <field name="model">book_club.book</field>
+        <field name="arch" type="xml">
+            <search string="Search Books">
+                <field name="title"/>
+                <field name="author_id"/>
+                <field name="isbn"/>
+                
+                <filter name="group_by_author" string="Author" context="{'group_by':'author_id'}"/>
+                <filter name="group_by_genre" string="Genre" context="{'group_by':'genre_ids'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_book_club_book" model="ir.actions.act_window">
+        <field name="name">Books</field>
+        <field name="res_model">book_club.book</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_book_club_book"
+              name="Books"
+              parent="menu_book_club_management"
+              action="action_book_club_book"
+              groups="book_club.group_book_club_user,book_club.group_book_club_manager,book_club.group_book_club_administrator"
+              sequence="30"/>
+</odoo>

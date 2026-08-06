@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_check_overdue_installments" model="ir.cron">
+            <field name="name">Construction ERP: Check Overdue Installments</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_check_installments()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="ir_cron_check_overdue_compliance" model="ir.cron">
+            <field name="name">Construction ERP: Execute Legal Compliance Dependency Sweep</field>
+            <field name="model_id" ref="construction_erp.model_construction_compliance"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_compliance_expiry()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+        <record id="ir_cron_auto_generate_installment_invoices" model="ir.cron">
+            <field name="name">Construction ERP: Auto-Generate Installment Invoices</field>
+            <field name="model_id" ref="construction_erp.model_real_estate_installment_plan"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_auto_generate_invoices()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

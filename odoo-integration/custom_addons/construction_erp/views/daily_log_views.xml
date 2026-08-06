@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_daily_log_tree" model="ir.ui.view">
+        <field name="name">construction.daily.log.tree</field>
+        <field name="model">construction.daily.log</field>
+        <field name="arch" type="xml">
+            <tree string="Daily Logs">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="phase_id"/>
+                <field name="job_order_id"/>
+                <field name="supervisor_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_daily_log_form" model="ir.ui.view">
+        <field name="name">construction.daily.log.form</field>
+        <field name="model">construction.daily.log</field>
+        <field name="arch" type="xml">
+            <form string="Daily Progress Log">
+                <header>
+                    <button name="action_submit" string="Submit Log" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted"/>
+                </header>
+                <sheet attrs="{'readonly': [('state', '=', 'submitted')]}">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <field name="lifecycle_id" invisible="1"/>
+                        <field name="allowed_product_ids" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                            <field name="job_order_id" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                            <field name="phase_id" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                            <field name="date" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                            <field name="supervisor_id" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                        </group>
+                        <group string="Site Manpower">
+                            <field name="skilled_labor_count" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                            <field name="unskilled_labor_count" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                            <field name="labor_count" readonly="1" string="Total Manpower" decoration-bf="1"/>
+                        </group>
+                        <group string="Operational Context">
+                            <field name="weather_conditions" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Log / Issues" name="issues">
+                            <separator string="Equipment Usage"/>
+                            <field name="equipment_notes" placeholder="Machinery active today..." class="w-100" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                            
+                            <separator string="Issues &amp; Delays"/>
+                            <field name="issues_notes" placeholder="Explain any site stoppages or external delays..." class="w-100" attrs="{'readonly': [('state', '=', 'submitted')]}"/>
+                        </page>
+                        <page string="Visitor Registry" name="visitors">
+                            <field name="visitor_ids" attrs="{'readonly': [('state', '=', 'submitted')]}">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="company"/>
+                                    <field name="reason"/>
+                                    <field name="time_in" widget="float_time"/>
+                                    <field name="time_out" widget="float_time"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Material Consumption" name="consumption">
+                            <field name="consumption_ids" attrs="{'readonly': [('state', '=', 'submitted')]}">
+                                <tree>
+                                    <field name="job_order_id" invisible="1"/>
+                                    <field name="product_id" domain="[('id', 'in', parent.allowed_product_ids)]"/>
+                                    <field name="description"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_id"/>
+                                </tree>
+                                <form string="Consumption Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="job_order_id" invisible="1"/>
+                                                <field name="product_id" domain="[('id', 'in', parent.allowed_product_ids)]"/>
+                                                <field name="product_uom_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="quantity"/>
+                                                <field name="description"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Progress Photos" name="progress_photos">
+                            <field name="image_ids" mode="kanban" attrs="{'readonly': [('state', '=', 'submitted')]}">
+                                <kanban string="Progress Photos">
+                                    <field name="id"/>
+                                    <field name="name"/>
+                                    <field name="image"/>
+                                    <field name="date"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_global_click">
+                                                <div class="o_kanban_image w-100 mb-2">
+                                                    <img t-att-src="kanban_image('construction.daily.log.image', 'image', record.id.raw_value)" alt="Progress Photo" style="width: 100%; object-fit: cover; max-height: 150px;"/>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <strong><field name="name"/></strong>
+                                                    <div class="text-muted"><field name="date"/></div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Progress Photo">
+                                    <sheet>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="date"/>
+                                            <field name="notes"/>
+                                            <field name="image" widget="image"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_daily_logs" model="ir.actions.act_window">
+        <field name="name">Daily Logs</field>
+        <field name="res_model">construction.daily.log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_daily_logs"
+              name="Daily Site Logs"
+              parent="menu_construction_operations"
+              action="action_construction_daily_logs"
+              sequence="10"/>
+</odoo>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add My Properties to portal home -->
+    <template id="portal_my_home_properties" name="Show Properties" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">My Properties</t>
+                <t t-set="url" t-value="'/my/properties'"/>
+                <t t-set="placeholder_count" t-value="'property_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Properties List View -->
+    <template id="portal_my_properties" name="My Properties">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Properties</t>
+            </t>
+            <t t-if="not properties">
+                <p>There are currently no properties for your account.</p>
+            </t>
+            <t t-if="properties" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Property / Sale Order</th>
+                        <th>Project</th>
+                        <th class="text-right">Total Value</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <t t-foreach="properties" t-as="prop">
+                    <tr>
+                        <td><a t-attf-href="/my/property/#{prop.id}"><t t-esc="prop.name"/></a></td>
+                        <td><t t-esc="prop.project_id.name"/></td>
+                        <td class="text-right"><t t-esc="prop.amount_total" t-options='{"widget": "monetary", "display_currency": prop.currency_id}'/></td>
+                        <td class="text-center">
+                            <span t-if="prop.state == 'sale'" class="badge badge-pill badge-success">Confirmed</span>
+                            <span t-if="prop.state == 'done'" class="badge badge-pill badge-info">Locked</span>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Property Dashboard Detailed View -->
+    <template id="portal_property_dashboard" name="Property Dashboard">
+        <t t-call="portal.portal_layout">
+            <div id="wrap" class="o_portal_wrap mt-4">
+                <!-- Header Banner -->
+                <div class="bg-primary text-white p-4 rounded shadow-sm mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-1"><t t-esc="sale_order.name"/></h2>
+                            <p class="mb-0 lead"><i class="fa fa-building-o mr-2"/> <t t-esc="sale_order.project_id.name"/></p>
+                        </div>
+                        <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                            <a href="/my/account" class="btn btn-light btn-sm rounded-pill px-3 shadow-sm mr-2"><i class="fa fa-user mr-1"/> Edit Profile</a>
+                            <a href="/my/security" class="btn btn-outline-light btn-sm rounded-pill px-3 shadow-sm"><i class="fa fa-lock mr-1"/> Security</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm border-0 h-100 rounded">
+                            <div class="card-body text-center py-4">
+                                <h6 class="text-uppercase text-muted font-weight-bold mb-2">Total Purchase Value</h6>
+                                <h3 class="text-primary mb-0"><t t-esc="sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mt-3 mt-md-0">
+                        <div class="card shadow-sm border-0 h-100 rounded">
+                            <div class="card-body text-center py-4">
+                                <h6 class="text-uppercase text-muted font-weight-bold mb-2">Total Paid</h6>
+                                <h3 class="text-success mb-0"><t t-esc="total_paid" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mt-3 mt-md-0">
+                        <div class="card shadow-sm border-0 h-100 rounded bg-light">
+                            <div class="card-body text-center py-4">
+                                <h6 class="text-uppercase text-muted font-weight-bold mb-2">Remaining Balance</h6>
+                                <h3 class="text-danger mb-0"><t t-esc="remaining_balance" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="card shadow-sm border-0 rounded mb-5">
+                    <div class="card-body">
+                        <h6 class="mb-3 font-weight-bold text-muted">Payment Progress</h6>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar bg-success" role="progressbar" t-attf-style="width: #{progress_pct}%;" t-att-aria-valuenow="progress_pct" aria-valuemin="0" aria-valuemax="100">
+                                <b><t t-esc="round(progress_pct, 1)"/>% Paid</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs for Details -->
+                <ul class="nav nav-tabs nav-justified bg-white shadow-sm rounded-top pt-2 px-2" id="propertyTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active font-weight-bold" id="installments-tab" data-bs-toggle="tab" data-bs-target="#installments" role="tab" aria-controls="installments" aria-selected="true"><i class="fa fa-calendar-check-o mr-2"/> Installments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-weight-bold" id="invoices-tab" data-bs-toggle="tab" data-bs-target="#invoices" role="tab" aria-controls="invoices" aria-selected="false"><i class="fa fa-money mr-2"/> Invoices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font-weight-bold" id="documents-tab" data-bs-toggle="tab" data-bs-target="#documents" role="tab" aria-controls="documents" aria-selected="false"><i class="fa fa-file-text-o mr-2"/> Documents</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content bg-white p-4 shadow-sm rounded-bottom mb-5" id="propertyTabsContent">
+                    <!-- Installments Tab -->
+                    <div class="tab-pane fade show active" id="installments" role="tabpanel" aria-labelledby="installments-tab">
+                        <t t-if="not plan">
+                            <div class="alert alert-warning text-center">No active installment plan found for this property.</div>
+                        </t>
+                        <t t-if="plan">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-borderless table-striped align-middle">
+                                    <thead class="bg-light text-muted">
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Due Date</th>
+                                            <th class="text-right">Amount</th>
+                                            <th class="text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="plan.line_ids" t-as="line">
+                                            <tr>
+                                                <td class="font-weight-bold"><t t-esc="line.name"/></td>
+                                                <td><t t-esc="line.due_date" t-options='{"widget": "date"}'/></td>
+                                                <td class="text-right"><t t-esc="line.amount" t-options='{"widget": "monetary", "display_currency": plan.currency_id}'/></td>
+                                                <td class="text-center">
+                                                    <t t-if="line.invoice_payment_state == 'paid'">
+                                                        <span class="badge badge-success badge-pill px-3 py-2">Paid</span>
+                                                    </t>
+                                                    <t t-elif="line.invoice_payment_state == 'in_payment'">
+                                                        <span class="badge badge-info badge-pill px-3 py-2">In Payment</span>
+                                                    </t>
+                                                    <t t-elif="line.is_invoiced">
+                                                        <span class="badge badge-warning badge-pill px-3 py-2 text-dark">Invoiced / Pending</span>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="badge badge-secondary badge-pill px-3 py-2">Upcoming</span>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Invoices Tab -->
+                    <div class="tab-pane fade" id="invoices" role="tabpanel" aria-labelledby="invoices-tab">
+                        <t t-if="not invoices">
+                            <div class="alert alert-info text-center">No invoices have been generated yet.</div>
+                        </t>
+                        <t t-if="invoices">
+                            <div class="row">
+                                <t t-foreach="invoices" t-as="inv">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card border border-light shadow-sm h-100">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                                    <h5 class="card-title mb-0 text-primary font-weight-bold"><t t-esc="inv.name"/></h5>
+                                                    <t t-if="inv.payment_state in ['paid', 'in_payment']">
+                                                        <span class="badge badge-success"><i class="fa fa-check-circle"/> Paid</span>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="badge badge-warning text-dark"><i class="fa fa-clock-o"/> Pending</span>
+                                                    </t>
+                                                </div>
+                                                <p class="card-text text-muted mb-1"><i class="fa fa-calendar mr-2"/> Date: <t t-esc="inv.invoice_date"/></p>
+                                                <p class="card-text mb-3"><strong>Total:</strong> <t t-esc="inv.amount_total" t-options='{"widget": "monetary", "display_currency": inv.currency_id}'/></p>
+                                                
+                                                <a t-attf-href="/my/invoices/#{inv.id}?access_token=#{inv.access_token}" class="btn btn-outline-primary btn-sm w-100 rounded-pill">View / Pay Invoice</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Documents Tab -->
+                    <div class="tab-pane fade" id="documents" role="tabpanel" aria-labelledby="documents-tab">
+                        <t t-if="not documents">
+                            <div class="alert alert-secondary text-center">No documents have been attached to this property.</div>
+                        </t>
+                        <t t-if="documents">
+                            <div class="list-group">
+                                <t t-foreach="documents" t-as="doc">
+                                    <a t-attf-href="/web/content/#{doc.id}?download=true" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fa fa-file-pdf-o text-danger mr-3 fa-lg" t-if="doc.mimetype == 'application/pdf'"/>
+                                            <i class="fa fa-image text-info mr-3 fa-lg" t-elif="'image' in doc.mimetype"/>
+                                            <i class="fa fa-file-text-o text-secondary mr-3 fa-lg" t-else=""/>
+                                            <span class="font-weight-bold"><t t-esc="doc.name"/></span>
+                                        </div>
+                                        <span class="btn btn-sm btn-light rounded-circle shadow-sm"><i class="fa fa-download text-primary"/></span>
+                                    </a>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </template>
+</odoo>

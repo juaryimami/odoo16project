@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_policy_template_admin,hr.policy.template.admin,model_hr_policy_template,hr.group_hr_manager,1,1,1,1
+access_hr_policy_template_user,hr.policy.template.user,model_hr_policy_template,base.group_user,1,0,0,0
+access_hr_policy_version_admin,hr.policy.version.admin,model_hr_policy_version,hr.group_hr_manager,1,1,1,1
+access_hr_policy_version_user,hr.policy.version.user,model_hr_policy_version,base.group_user,1,0,0,0
+access_hr_policy_attestation_admin,hr.policy.attestation.admin,model_hr_policy_attestation,hr.group_hr_manager,1,1,1,1
+access_hr_policy_attestation_user,hr.policy.attestation.user,model_hr_policy_attestation,base.group_user,1,1,0,0
+access_hr_policy_publish_wizard_admin,hr.policy.publish.wizard.admin,model_hr_policy_publish_wizard,hr.group_hr_manager,1,1,1,1

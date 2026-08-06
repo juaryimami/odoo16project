@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <template id="hr_letters.new_template_id" name="mail_notification" inherit_id="mail.mail_notification_layout">
+            <xpath expr="//table/tbody/tr[3]/td/table" position="replace"/>
+            <xpath expr="//table/tbody/tr[4]" position="replace"/>
+            <xpath expr="//p[last()]" position="replace"/>
+            <xpath expr="//p" position="replace" mode="inner"/>
+            <xpath expr="//div[4]" position="replace"/>
+        </template>
+
+
+        <!--  Offer Letter Mail Template  -->
+        <record id="email_template_offer_letter" model="mail.template">
+            <field name="name">Candidate: Offer Letter</field>
+            <field name="model_id" ref="hr_letters.model_hr_applicant"/>
+            <field name="subject">Offer Letter for the Position: {{ object.job_id.name }}</field>
+            <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+            <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+            <field name="email_cc">{{ (object.email_cc or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Hi <t t-out="object.partner_name or ''">Applicant Name</t>,
+                                <br/>
+                                Good Day!
+                                <br/>
+                                PFA
+                                <br/>
+                                We are pleased to appoint you as <span style="font-size: 15px; font-weight: bold;"><t t-out="object.job_id.name or ''"/></span>, in <span style="font-size: 15px; font-weight: bold;"><t t-out="object.company_id.name or ''">Your Company</t>,<br/></span>
+                                Please find the <strong>Offer Letter</strong>, attached, for your reference.<br/>
+                                Kindly share the signed copy of the document as your acceptance. Feel free to contact me in case of any concerns.
+                                <br/><br/>
+                                <strong>Reporting time : 10:00AM</strong>
+                                <br/><br/>
+                                Address:<br/>
+                                <t t-set="location" t-value="''" />
+                                <t t-if="object.company_id.name">
+                                    <span style="font-size: 15px; font-weight: bold;"><t t-out="object.company_id.name or ''">Your Company</t></span><br/>
+                                </t>
+                                <t t-if="object.company_id.street">
+                                    <t t-out="object.company_id.street or ''">Your Address</t><br/>
+                                    <t t-set="location" t-value="object.company_id.street"/>
+                                </t>
+                                <t t-if="object.company_id.city">
+                                    <t t-out="object.company_id.city or ''">Your City</t>,
+                                    <t t-set="location" t-value="'%s, %s' % (location, object.company_id.city)"/>
+                                </t>
+                                <t t-if="object.company_id.state_id.name">
+                                    <t t-out="object.company_id.state_id.name or ''">Your State</t>,
+                                    <t t-set="location" t-value="'%s, %s' % (location, object.company_id.state_id.name)"/>
+                                </t>
+                                <t t-if="object.company_id.zip">
+                                    <t t-out="object.company_id.zip or ''">Your Zip</t>,
+                                    <t t-set="location" t-value="'%s, %s' % (location, object.company_id.zip)"/>
+                                </t>
+                                <t t-if="object.company_id.country_id.name">
+                                    <t t-out="object.company_id.country_id.name or ''">Your Country</t><br/>
+                                    <t t-set="location" t-value="'%s, %s' % (location, object.company_id.country_id.name)"/>
+                                </t>
+                                Landmark:
+                                <t t-if="object.company_id.street2">
+                                    <t t-out="object.company_id.street2 or ''">Your Landmark</t><br/>
+                                    <t t-set="location" t-value="'%s, %s' % (location, object.company_id.street2)"/>
+                                </t>
+                                <br/>
+                                You can find us in Google:
+                                <br/>
+                                <t t-if="object.company_id.website">
+                                    <b><a t-att-href="'%s' % object.company_id.website" icon="fa-external-link" class="oe_highlight">
+                                        Technians Softech Pvt. Ltd.
+                                    </a></b>
+                                </t>
+                                <br/><br/>
+                                We value time and to make your first day more productive and hassle free from the paperwork, we request you to share the following information with us prior to your joining –
+                                <br/>
+                                <ul>
+                                    <li>Previous Organization Experience Letter</li>
+                                    <li>Previous Organization Reliving Letter</li>
+                                    <li>Carry of last three Months Salary Slip</li>
+                                    <li>A scanned copy of a passport size picture with a white background</li>
+                                </ul>
+                                If you are unable to share the same before joining, please inform me prior to your first day.<br/>
+                                Please feel free to reach out if you have any queries.<br/><br/>
+                                We look forward to welcoming you at in  <span style="font-size: 15px; font-weight: bold;"><t t-out="object.company_id.name or ''">Your Company</t>.<br/></span>
+                                <br/><br/>
+                                Best Regards,
+                                <br/>
+                                <t t-if="user">
+                                    <t t-if="user.name">
+                                        <h4 class="mb-1"><b t-esc="user.name"/></h4>
+                                    </t>
+                                    <t t-if="user.email">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <a t-att-href="'mailto:'+user.email" t-esc="user.email"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="user.phone">
+                                        <div class="d-flex flex-nowrap align-items-center mb-1">
+                                            <span t-esc="user.phone"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="user.city">
+                                        <div class="d-flex flex-nowrap align-items-center mb-1">
+                                            <span t-esc="user.city"/>
+                                        </div>
+                                    </t>
+                                </t>
+                                <br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!--- send mail -->
+         <record id="email_template_send_email" model="mail.template">
+            <field name="name">Candidate: Send Document Email</field>
+            <field name="model_id" ref="hr_letters.model_hr_applicant"/>
+            <field name="subject">Congratulations, you have been selected for the position of {{ object.job_id.name }} Document Submission Request</field>
+            <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+            <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+            <field name="email_cc">{{ (object.email_cc or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                 Dear <t t-out="object.partner_name or ''"> Applicant Name</t>,
+                                <br/>
+                                <br/>
+                                Congratulations!
+                                <br/>
+                                <br/>
+                                We are pleased to inform you that you have been selected for the position of <span style="font-size: 15px; font-weight: bold;"><t t-out="object.job_id.name or ''"/></span> at our company, based on your job application and the subsequent interview Your Company.<br/>
+                                We are excited to welcome you to our team, and we look forward to working together.<br/><br/>
+                                We anticipate your joining on or before <span style="font-size: 15px; font-weight: bold;"><t t-out="object.availability or ''"/></span>, and your gross CTC for the role will be <span style="font-size: 15px; font-weight: bold;"><t t-out="object.salary_proposed or ''"/>
+                                </span> INR annually. Your designated workplace will be in
+                                <span style="font-size: 15px; font-weight: bold;"><t t-out="object.location.name or ''"/></span>
+                                <br/><br/>
+                                To facilitate a smooth onboarding process, we kindly request you to share the soft copies of the following documents. Please ensure to bring the original documents at the time of joining the office:
+                                <br/><br/>
+                                <ul>
+                                    <li>Two passport-size photographs.</li>
+                                    <li>Scan copies and originals of all education certificates.</li>
+                                    <li>Scan copies and originals of previous employment documents.</li>
+                                    <li>Scan copies of your offer letters and experience and relieving letters from all previous companies.</li>
+                                    <li>Scan copy and original of PAN Card, Aadhaar Card, or Driving License/Voter Card.</li>
+                                </ul>
+                                We extend our heartfelt congratulations on becoming a part of our family!
+                                Please note that this offer is valid for acceptance until <span style="font-size: 15px; font-weight: bold;"><t t-out="object.availability or ''"/></span>, and it will be automatically withdrawn thereafter unless we extend the date through written communication.
+
+                                <br/><br/>
+                                We eagerly anticipate building a mutually long-lasting relationship and trust with you as a valuable member of our company.
+                                <br/>
+                                <br/>
+                                Kindly acknowledge the receipt of this email and share the required documents at your earliest convenience.
+                                <br/><br/>
+                                Signature
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- joining mail -->
+        <record id="email_template_joining_letter" model="mail.template">
+            <field name="name">Candidate: Joining Letter</field>
+            <field name="model_id" ref="hr_letters.model_hr_applicant"/>
+            <field name="subject">Welcome to Technians: Initiating Joining Formalities</field>
+            <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+            <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+            <field name="email_cc">{{ (object.email_cc or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Dear  <t t-out="object.partner_name or ''"> Applicant Name</t>,
+                                <br/><br/>
+                                Welcome to Technians!
+                                <br/>
+                                <br/>
+                                We are delighted to have you on board. As we embark on this exciting journey together, we want to ensure a smooth onboarding process for you.
+                                <br/><br/>
+                                To initiate the joining formalities, we kindly request you to fill out the following forms:
+                                <br/><br/>
+                                <ul style="list-style: none;">
+                                    <li>
+                                        <h4><u>Know Your Employee Form:</u></h4>
+                                        <ul>
+                                            <li>This form provides us with essential information about you, allowing us to better understand your background, skills, and preferences.</li>
+                                        </ul>
+                                        <br/>
+                                        <h4><u>Background Verification Form:</u></h4>
+                                        <ul>
+                                            <li>To maintain the highest standards of integrity and security, we conduct background verifications. Please complete this form to facilitate the process.</li>
+                                        </ul>
+                                        <br/>
+                                        <h4><u>Policies and Procedures Form: </u></h4>
+                                        <ul>
+                                            <li>Familiarize yourself with our company policies and procedures by completing this form. It ensures that you are well-informed about our organizational guidelines.</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <br/>
+                               Your prompt attention to these forms will contribute to a seamless onboarding experience. Once completed, our team will proceed with the orientation and induction processes.If you have any questions or require assistance,
+                                feel free to reach out to <span style="font-size: 15px; font-weight: bold;"><t t-out="object.user_id.name or ''"/></span>, at <span style="font-size: 15px; font-weight: bold;"><t t-out="object.email_from or ''"/></span>.
+                                <br/><br/>
+                                We look forward to having you as part of the Technians family!
+                                <br/><br/>
+                                Best Regards,
+                                <br/><br/>
+                                HR Signature
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!--  Appointment Letter Mail Template  -->
+        <record id="email_template_appointment_letter" model="mail.template">
+            <field name="name">Employee: Appointment Letter</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="subject">Completion of Probation Period - Appointment Letter Enclosed</field>
+            <field name="email_to">{{ (object.work_email or '') }}</field>
+            <field name="email_cc">{{ (object.private_email or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Dear <t t-out="object.name or ''">Applicant Name</t>,
+                                <br/>
+                                <br/>
+                                Congratulations on successfully completing your probationary period at <strong>Technians</strong>.We are pleased to inform you that, based on your performance and dedication, you have successfully transitioned from the probationary phase to regular employment.
+                                <br/><br/>
+                                Attached to this email, you will find your detailed appointment letter, which outlines the terms and conditions of your continued employment with us. We encourage you to review the document thoroughly and reach out to us if you have any questions or require further clarification.
+                                <br/><br/>
+                                We value your contributions to our team and look forward to your continued success.
+                                <br/><br/>
+                                If there are any specific details or discussions you would like to have regarding your role or responsibilities, please do not hesitate to schedule a meeting with your supervisor or the HR department.                                <br/>
+                                <br/><br/>
+                                Once again, congratulations on this achievement, and we wish you a fulfilling and rewarding journey ahead with <strong>Technians</strong>.
+                                <br/>
+                                <br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!--  Reliving Letter Mail Template  -->
+        <record id="email_template_relieving_letter" model="mail.template">
+            <field name="name">Employee: Relieving Letter</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="subject">Relieving Letter</field>
+            <field name="email_to">{{ (object.work_email or '') }}</field>
+            <field name="email_cc">{{ (object.private_email or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Hi <t t-out="object.name or ''">Kepa</t>,
+                                <br/>
+                                Greetings...
+                                <br/><br/>
+                                Please find the attached relieving letter.Kindly sign and get back to us.
+                                <br/><br/>
+                                You can find us in Google:
+                                <br/>
+                                <t t-if="object.company_id.website">
+                                    <b><a t-att-href="'%s' % object.company_id.website" icon="fa-external-link" class="oe_highlight">
+                                        Technians Softech Pvt. Ltd.
+                                    </a></b>
+                                </t>
+                                <br/><br/>
+                                Thanks and Regards,
+                                <br/>
+                                <t t-if="user">
+                                    <t t-if="user.name">
+                                        <h4 class="mb-1"><b t-esc="user.name"/></h4>
+                                    </t>
+                                    <t t-if="user.email">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <a t-att-href="'mailto:'+user.email" t-esc="user.email"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="user.phone">
+                                        <div class="d-flex flex-nowrap align-items-center mb-1">
+                                            <span t-esc="user.phone"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="user.city">
+                                        <div class="d-flex flex-nowrap align-items-center mb-1">
+                                            <span t-esc="user.city"/>
+                                        </div>
+                                    </t>
+                                </t>
+                                <br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!--  Resignation Letter Mail Template  -->
+        <record id="email_template_resignation_letter" model="mail.template">
+            <field name="name">Employee: Resignation Letter</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="subject">Acceptance of Resignation</field>
+            <field name="email_to">{{ (object.work_email or '') }}</field>
+            <field name="email_cc">{{ (object.private_email or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Dear <t t-out="object.name or ''"> Applicant Name</t>,
+                                <br/><br/>
+                                I hope this email finds you well.
+                                <br/><br/>
+                                We want to officially acknowledge receipt of your resignation letter dated <span style="font-size: 15px; font-weight: bold;"><t t-out="object.date or ''"/></span>.
+                                <br/><br/>
+                                After careful consideration, we accept your decision to resign from your position as <span style="font-size: 15px; font-weight: bold;"><t t-out="object.job_id.name or ''"/></span> at Technians, effective <span style="font-size: 15px; font-weight: bold;"><t t-out="object.resignation_date or ''"/></span>.
+                                <br/><br/>
+                                We want to express our appreciation for the contributions you have made during your time with the company. Your dedication and hard work have been valuable, and we wish you the best in your future endeavors.
+                                <br/><br/>
+                                Enclosed with this email is a formal acceptance letter, outlining the details discussed above. Please review it for your records.
+                                <br/><br/>
+                                If you have any outstanding tasks or responsibilities, please work with <span style="font-size: 15px; font-weight: bold;"><t t-out="object.parent_id.name or ''"/></span> to ensure a smooth transition. We also request that you return any company property and complete any necessary exit interviews before your departure.
+                                <br/><br/>
+                                Once again, thank you for your service to Technians. We wish you success in all your future endeavors. If you have any questions or require further clarification, feel free to reach out.
+                                <br/>
+
+                                <br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!--  Appraisal Letter Mail Template  -->
+        <record id="email_template_appraisal_letter" model="mail.template">
+            <field name="name">Employee: Appraisal Letter</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="subject">Congratulations on Your Appraisal - Appraisal Letter Enclosed</field>
+            <field name="email_to">{{ (object.work_email or '') }}</field>
+            <field name="email_cc">{{ (object.private_email or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Dear  <t t-out="object.name or ''"> Applicant Name</t>,
+                                <br/><br/>
+                                We are thrilled to extend our warmest congratulations on your well-deserved appraisal. Your hard work, dedication, and outstanding performance have not gone unnoticed, and we are delighted to recognize your contributions to the team.
+                                <br/><br/>
+                                Attached to this email, you will find your detailed appraisal letter, which outlines the specifics of your appraisal, including the revised compensation and any additional benefits. We believe that this acknowledgment is a testament to your commitment and the positive impact you have made within the organization.
+                                <br/><br/>
+                                Should you have any questions or require further clarification regarding the contents of the appraisal letter, please feel free to reach out to the HR department or your supervisor.
+                                <br/><br/>
+                                Once again, congratulations on this significant achievement. We value your continued dedication to our team and look forward to witnessing your continued success.
+                                <br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!--  Experience Letter Mail Template  -->
+        <record id="email_template_experience_letter" model="mail.template">
+            <field name="name">Employee: Experience Letter</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="subject">Experience Letter For {{ object.name }}</field>
+            <field name="email_to">{{ (object.work_email or '') }}</field>
+            <field name="email_cc">{{ (object.private_email or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Dear <t t-out="object.name or ''"> Applicant Name</t>,
+                                <br/><br/>
+                                We are pleased to provide you with this formal experience letter as a token of appreciation for your valuable contributions during your tenure at Technians. We would like to express our gratitude for the dedication, hard work, and professionalism you exhibited throughout your employment with us
+                                <br/><br/>
+                                Please find enclosed a detailed summary of your employment with Technians, including the duration of your service and your final position.
+                                <br/><br/>
+                                If you have any queries or require further clarification, feel free to contact our Human Resources department at +91 7895344855.
+                                <br/><br/>
+                                We wish you the very best in your future endeavors, and we are confident that your skills and expertise will continue to bring success in your career
+                                <br/><br/>
+                                Thank you once again for your hard work and dedication.
+                                <br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_promotion_letter" model="mail.template">
+            <field name="name">Employee: Promotion Letter</field>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="subject">Congratulations on Your Promotion - Promotion Letter Enclosed</field>
+            <field name="email_to">{{ (object.work_email or '') }}</field>
+            <field name="email_cc">{{ (object.private_email or '') }}</field>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+                    <tr>
+                        <td valign="top" style="padding: 0px 10px;">
+                            <div style="font-size: 15px; margin: 0px; padding: 0px;">
+                                <br/>
+                                Dear <t t-out="object.name or ''"> Applicant Name</t>,
+                                <br/><br/>
+                                Warm congratulations on your well-deserved promotion! Your dedication, hard work, and outstanding performance have set you apart, and we are thrilled to recognize and reward your contributions to the team.
+                                <br/><br/>
+                                Attached to this email, you will find your promotion letter.
+                                <br/><br/>
+                                We believe that this promotion is a testament to your commitment and the positive impact you have made within the organization.<p/>If you have any questions or require further clarification regarding the contents of the promotion letter, please feel free to reach out to the HR department or your supervisor.
+                                <br/><br/>
+                                Once again, congratulations on this significant achievement. We are confident that you will excel in your new role, and we look forward to witnessing your continued success.
+                                <br/><br/>
+                                Best Regards,
+                                <br/><br/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

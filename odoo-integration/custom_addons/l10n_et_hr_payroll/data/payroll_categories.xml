@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="TAXABLE" model="hr.salary.rule.category">
+            <field name="name">Taxable</field>
+            <field name="code">TAXABLE</field>
+            <field name="parent_id" ref="hr_payroll_community.GROSS"/>
+        </record>
+        
+        <record id="ALW_TAX" model="hr.salary.rule.category">
+            <field name="name">Taxable Allowance</field>
+            <field name="code">ALW_TAX</field>
+            <field name="parent_id" ref="hr_payroll_community.ALW"/>
+        </record>
+
+        <record id="ALW_EXEMPT" model="hr.salary.rule.category">
+            <field name="name">Exempt Allowance</field>
+            <field name="code">ALW_EXEMPT</field>
+            <field name="parent_id" ref="hr_payroll_community.ALW"/>
+        </record>
+
+        <record id="FRINGE" model="hr.salary.rule.category">
+            <field name="name">Fringe Benefits (Non-Cash)</field>
+            <field name="code">FRINGE</field>
+            <field name="parent_id" eval="False"/>
+        </record>
+        
+        <record id="PENSION" model="hr.salary.rule.category">
+            <field name="name">Pension</field>
+            <field name="code">PENSION</field>
+            <field name="parent_id" ref="hr_payroll_community.DED"/>
+        </record>
+
+        <record id="TAX" model="hr.salary.rule.category">
+            <field name="name">Tax</field>
+            <field name="code">TAX</field>
+            <field name="parent_id" ref="hr_payroll_community.DED"/>
+        </record>
+    </data>
+</odoo>

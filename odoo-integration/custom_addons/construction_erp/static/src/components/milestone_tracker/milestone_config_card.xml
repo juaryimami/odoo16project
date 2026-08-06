@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="construction_erp.MilestoneConfigCard" owl="1">
+        <Dialog title="props.mode === 'create' ? 'Add New Work Section' : 'Configure Work Section'" size="'md'">
+            <div class="milestone-premium-card">
+                <div class="card-body p-4">
+                    <!-- Basic Info -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-uppercase x-small text-muted mb-2">Section Identity</label>
+                        <input type="text" class="form-control form-control-lg custom-input" t-model="state.name" placeholder="e.g. Ground Excavation" t-att-disabled="state.isReadonly"/>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label class="form-label fw-bold text-uppercase x-small text-muted mb-2">Progress Impact (%)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control custom-input" t-model="state.percentage" t-att-disabled="state.isReadonly"/>
+                                <span class="input-group-text bg-light border-start-0">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-uppercase x-small text-muted mb-2">Detailed Work Description</label>
+                        <textarea class="form-control custom-input" rows="3" t-model="state.description" placeholder="Specify the work standards..." t-att-disabled="state.isReadonly"></textarea>
+                    </div>
+
+                    <!-- Quality Checklist Board -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-uppercase x-small text-muted mb-2 d-flex justify-content-between">
+                            Required Quality Checks
+                            <span class="badge bg-secondary x-small"><t t-esc="state.selectedChecklistIds.size"/> Pinned</span>
+                        </label>
+                        <div class="checklist-grid-container border rounded p-2 bg-light shadow-inner" style="max-height: 200px; overflow-y: auto;">
+                            <t t-if="state.availableChecklists.length == 0">
+                                <div class="text-center py-3 text-muted">
+                                    <i class="fa fa-info-circle me-1"></i> No checklist items found for this job.
+                                </div>
+                            </t>
+                            <t t-foreach="state.availableChecklists" t-as="item" t-key="item.id">
+                                <div t-attf-class="checklist-item-row d-flex align-items-center p-2 border-bottom {{state.selectedChecklistIds.has(item.id) ? 'selected-item' : ''}}"
+                                     t-on-click="() => !state.isReadonly &amp;&amp; this.toggleChecklist(item.id)" t-att-style="state.isReadonly ? '' : 'cursor: pointer;'">
+                                    <div class="form-check me-2">
+                                        <input class="form-check-input" type="checkbox" t-att-checked="state.selectedChecklistIds.has(item.id)" t-att-disabled="state.isReadonly"/>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div t-attf-class="x-small fw-bold {{item.is_done ? 'text-success' : ''}}">
+                                            <t t-esc="item.name"/>
+                                            <t t-if="item.mandatory"><span class="text-danger ms-1">*</span></t>
+                                        </div>
+                                    </div>
+                                    <div class="verification-status ms-2">
+                                        <t t-if="item.is_done">
+                                            <span class="badge bg-success shadow-sm" title="Verified by Inspector">
+                                                <i class="fa fa-check me-1"></i>Passed
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge bg-light text-muted border x-small">Pending</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button t-if="!state.isReadonly" class="btn btn-primary px-5 shadow-sm fw-bold" t-on-click="save">Save Section</button>
+                <button class="btn btn-secondary px-4 shadow-sm" t-on-click="props.close"><t t-esc="state.isReadonly ? 'Close' : 'Cancel'"/></button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

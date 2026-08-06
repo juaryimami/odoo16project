@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_construction_root"
+              name="Construction ERP"
+              web_icon="construction_erp,static/description/icon.png"
+              sequence="10"/>
+
+    <!-- Category Containers (No Actions) -->
+    <menuitem id="menu_construction_dashboards"
+              name="Dashboards"
+              parent="menu_construction_root"
+              sequence="5"/>
+
+    <menuitem id="menu_construction_projects"
+              name="Project Management"
+              parent="menu_construction_root"
+              sequence="10"/>
+
+    <menuitem id="menu_construction_commercials"
+              name="Commercial Management"
+              parent="menu_construction_root"
+              sequence="15"/>
+
+    <menuitem id="menu_construction_operations"
+              name="Site Operations"
+              parent="menu_construction_root"
+              sequence="20"/>
+
+    <menuitem id="menu_construction_real_estate"
+              name="Real Estate"
+              parent="menu_construction_root"
+              sequence="30"/>
+
+    <menuitem id="menu_construction_reporting"
+              name="Reporting"
+              parent="menu_construction_root"
+              sequence="25"/>
+
+    <menuitem id="menu_construction_master_data"
+              name="Master Data"
+              parent="menu_construction_root"
+              sequence="85"/>
+
+    <menuitem id="menu_construction_configuration"
+              name="Configuration"
+              parent="menu_construction_root"
+              sequence="100"/>
+</odoo>

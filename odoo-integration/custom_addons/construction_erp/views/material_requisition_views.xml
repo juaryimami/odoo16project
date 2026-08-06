@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_material_requisition_tree" model="ir.ui.view">
+        <field name="name">construction.material.requisition.tree</field>
+        <field name="model">construction.material.requisition</field>
+        <field name="arch" type="xml">
+            <tree string="Material Requisitions">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="request_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_material_requisition_form" model="ir.ui.view">
+        <field name="name">construction.material.requisition.form</field>
+        <field name="model">construction.material.requisition</field>
+        <field name="arch" type="xml">
+            <form string="Material Requisition">
+                <header>
+                    <button name="action_submit" string="Submit for Approval" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_pm_approve" string="PM Approve" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                    <button name="action_approve" string="Owner Approve (Select Vendors)" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'pm_approved')]}"/>
+                    <button name="action_approve" string="Process Outstanding Items" type="object" attrs="{'invisible': ['|', ('state', 'not in', ['approved', 'partially_ordered']), ('show_outstanding_action', '=', False)]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,pm_approved,approved,partially_ordered,transferred"/>
+                </header>
+                <sheet>
+                    <field name="state" invisible="1"/>
+                    <field name="allowed_product_ids" invisible="1"/>
+                    <field name="show_outstanding_action" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_purchases" type="object" class="oe_stat_button" icon="fa-shopping-cart">
+                            <field name="purchase_count" widget="statinfo" string="Purchase RFQs"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="project_info" string="Context">
+                            <field name="project_id" readonly="1" force_save="1"/>
+                            <field name="phase_id" readonly="1" force_save="1"/>
+                            <field name="job_order_id" required="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                        <group name="req_details" string="Scheduling">
+                            <field name="request_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="date_required" decoration-bf="1" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="requested_by" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Requested Items" name="items">
+                            <field name="line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree decoration-warning="remaining_qty &gt; 0">
+                                    <field name="product_id" options="{'no_create': True}" 
+                                           domain="[('id', 'in', parent.allowed_product_ids)]"/>
+                                    <field name="quantity" string="Qty Requested"/>
+                                    <field name="ordered_qty" string="Qty in RFQ" readonly="1"/>
+                                    <field name="transferred_qty" string="Issued Qty" readonly="1"/>
+                                    <field name="remaining_qty" string="To be Procured" decoration-danger="remaining_qty &gt; 0" font-weight="bold"/>
+                                </tree>
+                                <form string="Requisition Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="product_id" options="{'no_create': True}" 
+                                                       domain="[('id', 'in', parent.allowed_product_ids)]"/>
+                                                <field name="quantity" string="Qty Requested"/>
+                                            </group>
+                                            <group>
+                                                <field name="ordered_qty" string="Qty in RFQ" readonly="1"/>
+                                                <field name="transferred_qty" string="Issued Qty" readonly="1"/>
+                                                <field name="remaining_qty" string="To be Procured" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_material_requisition" model="ir.actions.act_window">
+        <field name="name">Material Requisitions</field>
+        <field name="res_model">construction.material.requisition</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_material_requisition"
+              name="Material Requisitions"
+              parent="menu_construction_operations"
+              action="action_material_requisition"
+              sequence="40"/>
+</odoo>

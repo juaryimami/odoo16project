@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_policy_attestation.PolicyDashboard" owl="1">
+        <div class="o_policy_dashboard">
+            <div class="o_dashboard_header">
+                <h1>HR Policy Compliance Dashboard</h1>
+            </div>
+
+            <div class="o_kpi_cards" t-if="state.data">
+                <div class="o_kpi_card">
+                    <div class="o_kpi_icon">
+                        <i class="fa fa-file-text-o"></i>
+                    </div>
+                    <div class="o_kpi_content">
+                        <div class="o_kpi_title">Active Policies</div>
+                        <div class="o_kpi_value"><t t-esc="state.data.metrics.total_policies"/></div>
+                    </div>
+                </div>
+
+                <div class="o_kpi_card">
+                    <div class="o_kpi_icon">
+                        <i class="fa fa-check-circle-o"></i>
+                    </div>
+                    <div class="o_kpi_content">
+                        <div class="o_kpi_title">Compliance Rate</div>
+                        <div class="o_kpi_value"><t t-esc="state.data.metrics.compliance_rate"/>%</div>
+                    </div>
+                </div>
+
+                <div class="o_kpi_card">
+                    <div class="o_kpi_icon">
+                        <i class="fa fa-clock-o"></i>
+                    </div>
+                    <div class="o_kpi_content">
+                        <div class="o_kpi_title">Pending Signatures</div>
+                        <div class="o_kpi_value"><t t-esc="state.data.metrics.pending_signatures"/></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="o_dashboard_main" t-if="state.data">
+                <!-- Chart Section -->
+                <div class="o_dashboard_card">
+                    <h2>Compliance Breakdown by Policy</h2>
+                    <div class="o_chart_container">
+                        <canvas t-ref="chartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Signatures Section -->
+                <div class="o_dashboard_card">
+                    <h2>Recent Signatures</h2>
+                    <ul class="o_recent_list">
+                        <t t-foreach="state.data.recent_signatures" t-as="record" t-key="record_index">
+                            <li>
+                                <span class="o_recent_emp"><t t-esc="record.employee"/></span>
+                                <span class="o_recent_policy"><t t-esc="record.policy"/></span>
+                                <span class="o_recent_date"><t t-esc="record.date"/></span>
+                            </li>
+                        </t>
+                        <li t-if="state.data.recent_signatures.length === 0">
+                            <span class="text-muted">No recent signatures.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div t-if="!state.data" class="text-center mt-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

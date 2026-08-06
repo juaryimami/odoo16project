@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="ir.module.category" id="module_category_construction">
+            <field name="name">Construction ERP</field>
+            <field name="description">Construction and Real Estate Management</field>
+            <field name="sequence">15</field>
+        </record>
+
+        <record id="group_construction_supervisor" model="res.groups">
+            <field name="name">Site Supervisor</field>
+            <field name="category_id" ref="module_category_construction"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_construction_manager" model="res.groups">
+            <field name="name">Construction Manager</field>
+            <field name="category_id" ref="module_category_construction"/>
+            <!-- Add project mapping inherit natively -->
+            <field name="implied_ids" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('project.group_project_manager'))]"/>
+        </record>
+        <record id="group_construction_sales" model="res.groups">
+            <field name="name">Sales Team</field>
+            <field name="category_id" ref="module_category_construction"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- RECORD RULES: Isolation for Managers -->
+        <record id="rule_project_manager_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see assigned projects only</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('user_id', '=', user.id), ('site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_job_order_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see job orders of assigned projects only</field>
+            <field name="model_id" ref="model_construction_job_order"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_estimate_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see estimates of assigned projects only</field>
+            <field name="model_id" ref="model_construction_estimate"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_cost_sheet_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see cost sheets of assigned projects only</field>
+            <field name="model_id" ref="model_construction_cost_sheet"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_site_expense_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see expenses of assigned projects only</field>
+            <field name="model_id" ref="model_construction_site_expense"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_daily_log_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see daily logs of assigned projects only</field>
+            <field name="model_id" ref="model_construction_daily_log"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_material_requisition_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see material requests of assigned projects only</field>
+            <field name="model_id" ref="model_construction_material_requisition"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_cpr_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see CPRs of assigned projects only</field>
+            <field name="model_id" ref="model_construction_cpr"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_inspection_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see inspections of assigned projects only</field>
+            <field name="model_id" ref="model_construction_inspection"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_scrap_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see scrap logs of assigned projects only</field>
+            <field name="model_id" ref="model_construction_scrap"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="rule_variation_assigned_only" model="ir.rule">
+            <field name="name">Construction: Managers see variation orders of assigned projects only</field>
+            <field name="model_id" ref="model_construction_variation_order"/>
+            <field name="groups" eval="[(4, ref('construction_erp.group_construction_supervisor')), (4, ref('construction_erp.group_construction_manager'))]"/>
+            <field name="domain_force">['|', ('project_id.user_id', '=', user.id), ('project_id.site_manager_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
+</odoo>

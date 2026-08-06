@@ -1,0 +1,72 @@
+
+.o_menu_systray .badge {
+    --o-navbar-badge-bg: #{$o-brand-primary};
+    font-family: $ashewa-font-type !important;
+    font-weight: bold !important;
+    font-size: 20px;
+//     color: white !important;
+}
+.iframe-wrapper{
+    margin: 0;
+}
+.o_main_navbar{
+    background: white;
+    color: $ashewa-text-color!important;
+    height: 42px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16);
+    margin-bottom: 10px !important;
+    font-weight: bold !important;
+    > a {
+       font-weight: bold !important;
+       font-size: 13px;
+       color: $ashewa-text-color !important;
+    }
+}
+.o_menu_sections {
+font-size: 13px;
+font-weight: bold !important;
+font-family: "Poppins", sans-serif !important;
+     > a{
+    color: $ashewa-text-color !important;
+    padding: 3px;
+    font-size: 13px;
+    font-family: $ashewa-font-type;
+    font-weight: bold !important;
+
+     }
+
+  }
+.MessagingMenuContainer{
+    color:  $ashewa-text-color !important;
+}
+.o_MessagingMenu_toggler{
+    color: $ashewa-text-color !important;
+}
+.o_ActivityMenuView_dropdownToggle{
+color: $ashewa-text-color !important;
+}
+.o-dropdown{
+   font-size: 13px;
+   font-weight: bold !important;
+   font-family: $ashewa-font-type !important;
+.dropdown-toggle {
+ font-weight: bold !important;
+ color: $ashewa-text-color !important;
+ font-size: 13px;
+ .dropdown {
+  color: $ashewa-text-color !important;
+  font-size: 13px;
+  font-weight: bold !important;
+  font-family: $ashewa-font-type !important;
+}
+}
+}
+
+.o_menu_sections{
+.dropdown-item{
+.o_nav_entry{
+ font-weight: bold !important;
+}
+}
+}
+//}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_inherit_construction" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.construction</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="button_validate" string="Validate" type="object" groups="construction_erp.group_construction_stock_keeper" class="oe_highlight" attrs="{'invisible': ['|', ('state', 'not in', ('assigned', 'partially_available')), ('job_order_id', '=', False)]}" data-hotkey="v"/>
+            </xpath>
+            <xpath expr="//header/button[@name='button_validate']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ('assigned', 'partially_available')), ('job_order_id', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_set_quantities_to_reservation']" position="attributes">
+                <attribute name="groups">construction_erp.group_construction_stock_keeper</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="is_stock_keeper" invisible="1"/>
+                <field name="project_id" readonly="1" force_save="1"/>
+                <field name="phase_id" readonly="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+                <field name="job_order_id" readonly="1" force_save="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="after">
+                <field name="project_id" invisible="1"/>
+                <field name="phase_id" invisible="1"/>
+                <field name="planned_product_ids" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('id', 'in', planned_product_ids)]</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='quantity_done']" position="attributes">
+                 <attribute name="attrs">{'readonly': [('parent.job_order_id', '!=', False), ('parent.is_stock_keeper', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='quantity_done']" position="after">
+                 <field name="quantity_done" string="Done (Readonly)" readonly="1" attrs="{'invisible': ['|', ('parent.job_order_id', '=', False), ('parent.is_stock_keeper', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_internal_search_inherit_construction" model="ir.ui.view">
+        <field name="name">stock.picking.internal.search.inherit.construction</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="project_id"/>
+                <field name="job_order_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Project" name="group_by_project" context="{'group_by': 'project_id'}"/>
+                <filter string="Job Order" name="group_by_job_order" context="{'group_by': 'job_order_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_inherit_construction" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.construction</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="project_id" readonly="1"/>
+                <field name="phase_id" readonly="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+                <field name="job_order_id" readonly="1" attrs="{'invisible': [('project_id', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="after">
+                <field name="project_id" invisible="1"/>
+                <field name="phase_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

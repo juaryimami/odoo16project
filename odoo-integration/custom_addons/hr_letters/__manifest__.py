@@ -1,0 +1,21 @@
+{
+    'name': 'HR Letters',
+    'version': "16.0",
+    "author": "Technians",
+    "website": "https://technians.com/",
+    'category': 'Human Resources Letters',
+    'depends': ['base', 'hr_recruitment', 'web'],
+    'data': [
+        'data/mail_templates.xml',
+        'security/ir.model.access.csv',
+        'security/letters_group.xml',
+        'views/hr_employee_view.xml',
+        # 'views/base_documents_layout.xml',
+        # 'views/res_config_view.xml',
+        'reports/letters_views.xml',
+        'reports/report_actions.xml',
+    ],
+    'images': ['static/description/icon.png'],
+    'installable': True,
+    'application': False,
+}

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Employee specific Action -->
+    <record id="action_employee_agreements" model="ir.actions.act_window">
+        <field name="name">My Agreements</field>
+        <field name="res_model">hr.policy.attestation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                You currently have no policy agreements to review.
+            </p>
+        </field>
+    </record>
+
+    <!-- Employee Tree View -->
+    <record id="view_hr_policy_employee_tree" model="ir.ui.view">
+        <field name="name">hr.policy.employee.tree</field>
+        <field name="model">hr.policy.attestation</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree string="My Agreements" decoration-danger="status == 'pending'" decoration-success="status == 'agreed'" decoration-muted="status == 'superseded'" create="0" edit="0" delete="0">
+                <field name="template_id"/>
+                <field name="version_id"/>
+                <field name="status" widget="badge" decoration-danger="status == 'pending'" decoration-success="status == 'agreed'" decoration-info="status == 'superseded'"/>
+                <field name="signed_datetime"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Employee Form View -->
+    <record id="view_hr_policy_employee_form" model="ir.ui.view">
+        <field name="name">hr.policy.employee.form</field>
+        <field name="model">hr.policy.attestation</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Review Agreement" create="0" edit="0" delete="0">
+                <header>
+                    <button name="action_sign_document" string="I Agree &amp; Digitally Sign" type="object" class="btn-success oe_highlight" attrs="{'invisible': [('status', '!=', 'pending')]}" confirm="By clicking 'Ok', you confirm that you have read and understood this document."/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-success text-center" role="alert" attrs="{'invisible': [('status', '!=', 'agreed')]}">
+                        <i class="fa fa-check-circle fa-2x align-middle"/>
+                        <span class="align-middle ml-2">You have digitally signed and agreed to this policy.</span>
+                        <div class="mt-2 text-muted" style="font-size: 0.9em;">
+                            <strong>Signed Date:</strong> <field name="signed_datetime" readonly="1" class="oe_inline"/>
+                            <br/>
+                            <strong>Digital Fingerprint:</strong> <field name="ip_address" readonly="1" class="oe_inline"/>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning text-center" role="alert" attrs="{'invisible': [('status', '!=', 'pending')]}">
+                        Please review the policy document below. Once you have read and understood the terms, click the <strong>"I Agree &amp; Digitally Sign"</strong> button at the top.
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="template_id" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="version_id" readonly="1"/>
+                        </h2>
+                    </div>
+
+                    <group invisible="1">
+                        <field name="employee_id"/>
+                    </group>
+
+                    <separator string="Policy Document"/>
+                    
+                    <field name="content_type" invisible="1" string="Content Type"/>
+                    
+                    <!-- Display HTML -->
+                    <div attrs="{'invisible': [('content_type', '!=', 'text')]}">
+                        <field name="body_html" widget="html" readonly="1" nolabel="1" options="{'collaborative': false}"/>
+                    </div>
+                    
+                    <field name="is_pdf" invisible="1"/>
+                    
+                    <!-- Display File (PDF) -->
+                    <div attrs="{'invisible': ['|', ('content_type', '!=', 'file'), ('is_pdf', '=', False)]}">
+                        <field name="attachment" filename="attachment_name" widget="pdf_viewer" readonly="1" nolabel="1"/>
+                        <field name="attachment_name" invisible="1"/>
+                    </div>
+                    
+                    <!-- Display File (Non-PDF) -->
+                    <div attrs="{'invisible': ['|', ('content_type', '!=', 'file'), ('is_pdf', '=', True)]}">
+                        <div class="alert alert-info" role="alert" style="margin-bottom: 20px;">
+                            <i class="fa fa-info-circle mr-2"></i> This document format cannot be previewed in the browser. Please download it below to review.
+                        </div>
+                        <group>
+                            <field name="attachment" filename="attachment_name" widget="binary" readonly="1" string="Download Document"/>
+                            <field name="attachment_name" invisible="1"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Map the specific tree/form views to the employee action -->
+    <record id="action_my_agreements_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_hr_policy_employee_tree"/>
+        <field name="act_window_id" ref="action_employee_agreements"/>
+    </record>
+
+    <record id="action_my_agreements_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_hr_policy_employee_form"/>
+        <field name="act_window_id" ref="action_employee_agreements"/>
+    </record>
+
+</odoo>

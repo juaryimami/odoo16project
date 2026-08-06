@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+
+        <template id="report_hr_loan">
+            <t t-call="web.external_layout">
+                <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="doc">
+                        <!--<t t-call="ohrms_loan.report_hr_loans"/>-->
+                        <style>
+                            .custom-paragraph {
+                                font-size: 14px; /* Increase or decrease the size as needed */
+                            }
+                        </style>
+
+
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <br/>
+                            <div>
+                                <h4 class="text-center">
+                                    <strong>Loan Request</strong>
+
+                                </h4>
+                                <h3 class="text-center">
+                                    <strong>SARIA Consultancy Plc</strong>
+                                </h3>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <p>Dear Manager,
+                                </p>
+                                <br></br>
+                                <p>I am writing to request a financial assistance in the form of a short-term loan to
+                                    support <span t-field="doc.reason_of_loan_request"/>.
+
+                                </p>
+                                <br></br>
+                                <p>I respectfully request a loan of  <span t-field="doc.loan_amount"/> <span t-field="doc.currency_id"/>,
+                                    which I plan to repay through payroll deductions over period of  <span
+                                            t-field="doc.installment"/> <span t-field="doc.payment_of_cycle"/>.
+                                    I have attached the necessary documents and a detailed repayment plan for your
+                                    consideration.
+                                </p>
+                                <br></br>
+                                <p>Your consideration and support in this matter would be greatly appreciated.</p>
+                                <br></br>
+                                <p>Sincerely,</p>
+                                <br></br>
+                                <br></br>
+                                <br></br>
+                                <span t-field="doc.employee_id"/>
+                                <br></br>
+                                <span t-field="doc.job_position"/>
+
+                            </div>
+                        </div>
+
+
+
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+
+</odoo>

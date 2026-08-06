@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="construction_erp.GpsCollectorButton" owl="1">
+        <div class="o_gps_collector_container mt-2">
+            <button class="btn o_gps_collector_button d-flex align-items-center justify-content-center" 
+                    t-on-click="collectGps"
+                    t-att-disabled="state.loading">
+                <i t-attf-class="fa #{state.loading ? 'fa-spinner fa-spin' : 'fa-map-marker'} me-2"/>
+                <span t-if="!state.loading">Locate Site Position</span>
+                <span t-else="">Fetching Pulse...</span>
+            </button>
+            <div t-if="state.error" class="text-danger small mt-2 text-center">
+                <i class="fa fa-exclamation-triangle me-1"/> <t t-esc="state.error"/>
+            </div>
+        </div>
+    </t>
+</templates>

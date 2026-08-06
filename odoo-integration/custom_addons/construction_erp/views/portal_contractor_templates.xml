@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_job_orders" name="My Job Orders">
+        <t t-call="portal.portal_layout">
+            <h3>My Job Orders</h3>
+            <table class="table table-sm table-striped mt-4">
+                <thead>
+                    <tr>
+                        <th>Job Reference</th>
+                        <th>Project</th>
+                        <th>Task</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="job_orders" t-as="job">
+                        <tr>
+                            <td><a t-attf-href="/my/job_order/{{ job.id }}"><t t-esc="job.name"/></a></td>
+                            <td><t t-esc="job.project_id.name"/></td>
+                            <td><t t-esc="job.task_id.name"/></td>
+                            <td><span class="badge text-bg-info"><t t-esc="job.state"/></span></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+
+    <template id="portal_job_order_detail" name="Job Order Details">
+        <t t-call="portal.portal_layout">
+            <div class="row mt-4">
+                <div class="col-8">
+                    <h3>Job Order: <t t-esc="job_order.name"/></h3>
+                    <p><strong>Project:</strong> <t t-esc="job_order.project_id.name"/></p>
+                    <p><strong>Scope:</strong> <t t-esc="job_order.description"/></p>
+                </div>
+                <div class="col-4 text-end">
+                    <span class="badge fs-5 text-bg-primary"><t t-esc="job_order.state"/></span>
+                    <t t-if="job_order.state == 'offered'">
+                        <a t-attf-href="/my/job_order/accept/{{ job_order.id }}" class="btn btn-success mt-2 mt-md-0 d-block">Accept Contract</a>
+                    </t>
+                </div>
+            </div>
+
+            <h4 class="mt-5">Payment Milestones</h4>
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Milestone</th>
+                        <th>Percentage</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="job_order.milestone_ids" t-as="ms">
+                        <tr>
+                            <td><t t-esc="ms.name"/></td>
+                            <td><t t-esc="ms.percentage"/>%</td>
+                            <td><t t-esc="ms.amount"/></td>
+                            <td><span class="badge text-bg-warning"><t t-esc="ms.state"/></span></td>
+                            <td>
+                                <t t-if="ms.state == 'pending' and job_order.state in ['accepted', 'active']">
+                                    <a t-attf-href="/my/milestone/request_inspection/{{ ms.id }}" class="btn btn-sm btn-primary">Request Inspection</a>
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </template>
+</odoo>

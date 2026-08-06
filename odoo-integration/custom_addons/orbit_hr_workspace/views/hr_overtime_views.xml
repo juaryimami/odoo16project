@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_my_overtime" model="ir.actions.act_window">
+        <field name="name">My Overtime Requests</field>
+        <field name="res_model">hr.overtime</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="context">{'default_employee_id': uid}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No overtime requests found. Let's create one!
+            </p>
+            <p>
+                Keep track of your extra hours and choose to be compensated by cash or time-off.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_overtime_form_view_inherit_workspace" model="ir.ui.view">
+        <field name="name">hr.overtime.form.inherit.workspace</field>
+        <field name="model">hr.overtime</field>
+        <field name="inherit_id" ref="ohrms_overtime.hr_overtime_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='attendance_ids']" position="replace">
+                <field name="attendance_ids" readonly="1" force_save="1">
+                    <tree string="Attendances" decoration-success="primary_ot_type == 'holiday'" decoration-info="primary_ot_type == 'weekend'" decoration-danger="primary_ot_type == 'night'" decoration-warning="primary_ot_type == 'normal'">
+                        <field name="employee_id"/>
+                        <field name="check_in"/>
+                        <field name="check_out"/>
+                        <field name="worked_hours" string="Work Hours" widget="float_time"/>
+                        <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-info="state == 'draft'"/>
+                        <field name="primary_ot_type" invisible="1"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_my_overtime" name="My Overtime" parent="menu_my_workspace" sequence="40"/>
+    <menuitem id="menu_my_overtime_requests" name="Overtime Requests" parent="menu_my_overtime" action="action_my_overtime" sequence="10"/>
+</odoo>

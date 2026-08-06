@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top menu item -->
+    <menuitem id="menu_book_club_root"
+              name="Book Club"
+              sequence="10"/>
+
+    <!-- Categories -->
+    <menuitem id="menu_book_club_management"
+              name="Management"
+              parent="menu_book_club_root"
+              sequence="10"/>
+
+    <menuitem id="menu_book_club_transactions"
+              name="Transactions"
+              parent="menu_book_club_root"
+              sequence="20"/>
+
+    <menuitem id="menu_book_club_reports"
+              name="Reports"
+              parent="menu_book_club_root"
+              groups="book_club.group_book_club_manager,book_club.group_book_club_administrator"
+              sequence="30"/>
+
+    <menuitem id="menu_book_club_configuration"
+              name="Configuration"
+              parent="menu_book_club_root"
+              groups="book_club.group_book_club_administrator"
+              sequence="100"/>
+</odoo>

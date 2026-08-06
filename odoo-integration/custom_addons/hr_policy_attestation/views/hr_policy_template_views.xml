@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template Actions -->
+    <record id="action_hr_policy_template" model="ir.actions.act_window">
+        <field name="name">Policy Templates</field>
+        <field name="res_model">hr.policy.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Template Tree View -->
+    <record id="view_hr_policy_template_tree" model="ir.ui.view">
+        <field name="name">hr.policy.template.tree</field>
+        <field name="model">hr.policy.template</field>
+        <field name="arch" type="xml">
+            <tree string="Policy Templates">
+                <field name="name"/>
+                <field name="current_version_id"/>
+                <field name="target_type"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Template Form View -->
+    <record id="view_hr_policy_template_form" model="ir.ui.view">
+        <field name="name">hr.policy.template.form</field>
+        <field name="model">hr.policy.template</field>
+        <field name="arch" type="xml">
+            <form string="Policy Template">
+                <header>
+                    <button name="action_publish_wizard" string="Publish New Version" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Remote Work Policy"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="content_type" widget="radio"/>
+                            <field name="current_version_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="target_type"/>
+                            <field name="department_ids" widget="many2many_tags" attrs="{'invisible': [('target_type', '!=', 'department')], 'required': [('target_type', '=', 'department')]}"/>
+                            <field name="employee_ids" widget="many2many_tags" attrs="{'invisible': [('target_type', '!=', 'specific')], 'required': [('target_type', '=', 'specific')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Policy Content" name="content">
+                            <field name="body_html" attrs="{'invisible': [('content_type', '!=', 'text')]}" options="{'collaborative': true}" placeholder="Enter policy text here..."/>
+                            <group attrs="{'invisible': [('content_type', '!=', 'file')]}">
+                                <field name="attachment" filename="attachment_name"/>
+                                <field name="attachment_name" invisible="1"/>
+                            </group>
+                        </page>
+                        <page string="Versions" name="versions">
+                            <field name="version_ids" readonly="1">
+                                <tree>
+                                    <field name="version_num"/>
+                                    <field name="published_date"/>
+                                    <field name="is_major"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>

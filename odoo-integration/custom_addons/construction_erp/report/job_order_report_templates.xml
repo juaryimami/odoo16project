@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_job_order_contract">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Inter', Helvetica, Arial, sans-serif; color: #333;">
+                        <div class="row mb-4">
+                            <div class="col-12 text-center">
+                                <h1 style="color: #1a4a7c; font-weight: 700; border-bottom: 2px solid #1a4a7c; padding-bottom: 10px;">JOB ORDER CONTRACT</h1>
+                                <h4 class="text-muted"><t t-esc="o.name"/></h4>
+                            </div>
+                        </div>
+
+                        <!-- Project Context -->
+                        <style>
+                            .table-contract {
+                                width: 100% !important;
+                                border-collapse: collapse;
+                                margin-bottom: 20px;
+                            }
+                            .table-contract thead tr {
+                                background-color: #1a4a7c !important;
+                                color: white !important;
+                                -webkit-print-color-adjust: exact;
+                            }
+                            .table-contract th {
+                                padding: 12px 8px !important;
+                                border: 1px solid #dee2e6 !important;
+                                text-transform: uppercase;
+                                font-size: 11px;
+                                letter-spacing: 0.5px;
+                            }
+                            .table-contract td {
+                                padding: 10px 8px !important;
+                                border: 1px solid #dee2e6 !important;
+                                vertical-align: middle;
+                                font-size: 12px;
+                            }
+                            .signature-box {
+                                border: 1.5px dashed #1a4a7c;
+                                background-color: #f8fbff;
+                                min-height: 100px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                margin-bottom: 15px;
+                                border-radius: 8px;
+                            }
+                        </style>
+
+                        <div class="row mb-5" style="background-color: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 5px solid #1a4a7c;">
+                            <div class="col-7">
+                                <p class="mb-1"><strong>PRIMARY PROJECT:</strong> <span class="text-primary"><t t-esc="o.project_id.name"/></span></p>
+                                <p class="mb-1"><strong>CONSTRUCTION PHASE:</strong> <t t-esc="o.phase_id.name"/></p>
+                                <p class="mb-1"><strong>AGREEMENT TYPE:</strong> <span class="badge badge-info"><t t-esc="dict(o._fields['contract_type'].selection).get(o.contract_type)"/></span></p>
+                                <p class="mb-0"><strong>ADVANCE MOBILIZATION:</strong> <span class="text-success fw-bold"><t t-esc="o.advance_payment_pct"/>%</span> (Value: <t t-esc="o.agreed_rate * o.advance_payment_pct / 100.0" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>)</p>
+                            </div>
+                            <div class="col-5 text-right">
+                                <p class="mb-1"><strong>CONTRACTOR:</strong> <t t-esc="o.contractor_id.name"/></p>
+                                <p class="mb-1"><strong>CERTIFIED RATE:</strong> <span class="h4 fw-bold text-dark mt-2 d-block"><t t-esc="o.agreed_rate" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></span></p>
+                                <p class="mb-0"><strong>DEADLINE:</strong> <t t-esc="o.date_deadline" t-options='{"widget": "date"}'/></p>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="row mb-5">
+                            <div class="col-12">
+                                <h3 style="color: #1a4a7c; border-bottom: 2px solid #1a4a7c; padding-bottom: 8px; font-weight: 700;">I. Scope of Work &amp; Deliverables</h3>
+                                <div style="margin-top: 15px; line-height: 1.8; font-size: 13px; text-align: justify;">
+                                    <t t-out="o.description"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Budget Planning (Filtered) -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h3 style="color: #1a4a7c; border-bottom: 2px solid #1a4a7c; padding-bottom: 8px; font-weight: 700;">II. Resource Allocation Plan</h3>
+                                <p class="text-muted small mb-4">The following resource authorizations are mandated for the execution of this contract.</p>
+                                
+                                <!-- Labor -->
+                                <t t-if="o.labor_budget_line_ids">
+                                    <h5 class="mt-4 mb-2" style="color: #333; font-weight: 700; text-transform: uppercase; font-size: 14px;">1. Human Capital &amp; Labor</h5>
+                                    <table class="table-contract">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 40%;">Reference/Personnel Role</th>
+                                                <th class="text-center" style="width: 20%;">Allocation Weight</th>
+                                                <th class="text-right" style="width: 20%;">Standard Rate</th>
+                                                <th class="text-right" style="width: 20%;">Total Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.labor_budget_line_ids" t-as="line">
+                                                <tr>
+                                                    <td class="fw-bold"><t t-esc="line.name"/></td>
+                                                    <td class="text-center"><t t-esc="line.quantity"/> <t t-esc="dict(line._fields['unit'].selection).get(line.unit)"/></td>
+                                                    <td class="text-right"><t t-esc="line.unit_cost" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                                    <td class="text-right fw-bold"><t t-esc="line.total_cost" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+
+                                <!-- Fleet/Vehicles -->
+                                <t t-if="o.vehicle_line_ids">
+                                    <h5 class="mt-4 mb-2" style="color: #333; font-weight: 700; text-transform: uppercase; font-size: 14px;">2. Fleet &amp; Logistics Support</h5>
+                                    <table class="table-contract">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50%;">Vehicle Identification / Type</th>
+                                                <th class="text-center" style="width: 25%;">Quantity</th>
+                                                <th class="text-right" style="width: 25%;">Allocated Valuation</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.vehicle_line_ids" t-as="line">
+                                                <tr>
+                                                    <td><t t-esc="line.name"/></td>
+                                                    <td class="text-center"><t t-esc="line.quantity"/> <t t-esc="dict(line._fields['unit'].selection).get(line.unit)"/></td>
+                                                    <td class="text-right fw-bold"><t t-esc="line.total_cost" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+
+                                <!-- Equipment -->
+                                <t t-if="o.equipment_line_ids">
+                                    <h5 class="mt-4 mb-2" style="color: #333; font-weight: 700; text-transform: uppercase; font-size: 14px;">3. Specialized Machinery &amp; Equipment</h5>
+                                    <table class="table-contract">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50%;">Machine Description / Expertise</th>
+                                                <th class="text-center" style="width: 25%;">Usage Allocation</th>
+                                                <th class="text-right" style="width: 25%;">Planned Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="o.equipment_line_ids" t-as="line">
+                                                <tr>
+                                                    <td><t t-esc="line.name"/></td>
+                                                    <td class="text-center"><t t-esc="line.quantity"/> <t t-esc="dict(line._fields['unit'].selection).get(line.unit)"/></td>
+                                                    <td class="text-right fw-bold"><t t-esc="line.total_cost" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+
+                                <div class="mt-3 text-right" style="border-top: 2px solid #1a4a7c; padding-top: 10px;">
+                                    <h4 class="mb-0">TOTAL PLANNED RESOURCE VALUATION: <span class="text-primary font-weight-bold"><t t-esc="o.planned_resource_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></span></h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Signatures Placeholder -->
+                        <div class="row mt-5 pt-4">
+                            <div class="col-6 text-center">
+                                <div class="signature-box" style="margin: 0 15px;">
+                                    <t t-if="o.pm_signature">
+                                        <img t-att-src="image_data_uri(o.pm_signature)" style="max-height: 90px; filter: grayscale(100%);"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted small opacity-50 italic">Electronic Signature Record Pending</span>
+                                    </t>
+                                </div>
+                                <h6 class="mb-0 fw-bold"><t t-esc="o.pm_name"/></h6>
+                                <p class="text-muted small mb-0 font-italic">Authorized Project Manager</p>
+                                <div class="mt-2 text-muted" style="font-size: 10px;">Date: ____________________</div>
+                            </div>
+                            <div class="col-6 text-center">
+                                <div class="signature-box" style="margin: 0 15px;">
+                                    <span class="text-muted small opacity-50 italic">Contractor Seal &amp; Authority</span>
+                                </div>
+                                <h6 class="mb-0 fw-bold"><t t-esc="o.contractor_id.name"/></h6>
+                                <p class="text-muted small mb-0 font-italic">Authorized Contractor Representative</p>
+                                <div class="mt-2 text-muted" style="font-size: 10px;">Date: ____________________</div>
+                            </div>
+                        </div>
+
+                        <!-- Portal Notice -->
+                        <div class="row mt-5 pt-4">
+                            <div class="col-12">
+                                <div style="background-color: #1a4a7c; color: white; padding: 20px; border-radius: 12px; font-size: 12px;" class="text-center shadow-sm">
+                                    <p class="mb-0 fw-bold"><i class="fa fa-info-circle me-2"></i>LEGAL NOTICE</p>
+                                    <p class="mb-0 opacity-75 mt-1">This document is a formal engagement offer. Please digitally sign and upload through your secure <strong>Contractor Execution Portal</strong> to activate mobilization and payment gates.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

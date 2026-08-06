@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="loan_advance_print_report" model="ir.actions.report">
+            <field name="name">Print Advance Salary Report</field>
+            <field name="model">salary.advance</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">ohrms_salary_advance.report_advance</field>
+            <field name="report_file">ohrms_salary_advance.report_advance</field>
+            <field name="print_report_name">'Advance print report'</field>
+            <field name="binding_model_id" ref="model_salary_advance"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+     <template id="report_advance">
+        <t t-call="web.html_container">
+               <t t-call="web.external_layout">
+<!--                   <t t-call="provident_fund.pad_custom_header_layout"></t>-->
+                 <t t-foreach="docs" t-as="o">
+
+                     <h2 style="text-align:center;">
+                         Salary Advance Request Form
+                     </h2>
+
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Name of employee: <span t-field="o.employee_id.name" />
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Company: <span t-field="o.employee_id.company_id.name" />
+                         Office Location <span t-field="o.employee_id.work_location_id.name" />
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Employment Date: <t t-foreach="request.env['hr.contract'].search([('employee_id','=',o.employee_id.id),('state','=','open'),])" t-as="obj">
+                         <t t-esc="obj.date_start" />
+                     </t>
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        Request Type Advance salary
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Current Monthly basic salary:
+                         <t t-foreach="request.env['hr.contract'].search([('employee_id','=',o.employee_id.id),('state','=','open'),])" t-as="obj">
+
+                         <t t-esc="'{:,}'.format(round(obj.wage),2)" />
+                     </t>
+
+                     </p>
+
+                     <p>
+                          Requested salary advance Amount: <span t-field="o.advance"/>
+                     </p>
+                     <p  style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        Amount in words: <span t-field="o.amount_in_word"/>
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        Reason <span t-field="o.reason"/>
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+
+                        Signature:
+                     </p>
+
+                     <p  style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Date of submission: <span t-field="o.checked_date"/>
+                     </p>
+
+                     <br/>
+
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Checked by: <span t-field="o.checked_by"/> Signature _____________ Date <span t-field="o.checked_date"/>
+                     </p>
+
+                     <h3> Repayment</h3>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+
+
+                    The Salary advance will be paid back from the employee salary in
+<!--                         installment during <span t-field="o.loan_duration" /> Months.-->
+                         The first installment will be deducted from the salary payment for the month.
+                     </p>
+                     <p>
+                         <h3>
+                             Human Resource Approval:
+                             <br />
+                         </h3>
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Approved/Disapproved by <span t-field="o.approved_by"/>
+                         Signature ________________ Date <span t-field="o.approved_date"/>
+                     </p>
+
+                      <h3>
+                             General Manager Approval:
+                             <br />
+                         </h3>
+
+                      <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         Approved/Disapproved by <span t-field="o.approved_by"/>
+                         Signature ________________ Date <span t-field="o.approved_date"/>
+                     </p>
+
+                 </t>
+                </t>
+        </t>
+
+    </template>
+
+
+</odoo>

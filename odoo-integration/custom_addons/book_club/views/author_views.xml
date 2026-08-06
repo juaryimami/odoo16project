@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_author_tree" model="ir.ui.view">
+        <field name="name">book.club.author.tree</field>
+        <field name="model">book_club.author</field>
+        <field name="arch" type="xml">
+            <tree string="Authors">
+                <field name="name"/>
+                <field name="birth_date"/>
+                <field name="age"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_author_form" model="ir.ui.view">
+        <field name="name">book.club.author.form</field>
+        <field name="model">book_club.author</field>
+        <field name="arch" type="xml">
+            <form string="Author">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Author Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="birth_date"/>
+                            <field name="age"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Biography" name="biography">
+                            <field name="biography"/>
+                        </page>
+                        <page string="Authored Books" name="books">
+                            <field name="book_ids">
+                                <tree>
+                                    <field name="title"/>
+                                    <field name="isbn"/>
+                                    <field name="publication_date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_author_search" model="ir.ui.view">
+        <field name="name">book.club.author.search</field>
+        <field name="model">book_club.author</field>
+        <field name="arch" type="xml">
+            <search string="Search Authors">
+                <field name="name"/>
+                <filter name="group_by_name" string="Name" context="{'group_by':'name'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_book_club_author" model="ir.actions.act_window">
+        <field name="name">Authors</field>
+        <field name="res_model">book_club.author</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first author!
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_book_club_author"
+              name="Authors"
+              parent="menu_book_club_management"
+              action="action_book_club_author"
+              groups="book_club.group_book_club_manager,book_club.group_book_club_administrator"
+              sequence="10"/>
+</odoo>

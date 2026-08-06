@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_construction_material_issue_request_tree" model="ir.ui.view">
+        <field name="name">construction.material.issue.request.tree</field>
+        <field name="model">construction.material.issue.request</field>
+        <field name="arch" type="xml">
+            <tree string="Material Stock Issue Requests" decoration-info="state == 'draft'" decoration-warning="state == 'requested'" decoration-success="state == 'done'">
+                <field name="name"/>
+                <field name="job_order_id"/>
+                <field name="project_id"/>
+                <field name="request_type"/>
+                <field name="time_needed"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'requested'" decoration-success="state == 'done'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_construction_material_issue_request_form" model="ir.ui.view">
+        <field name="name">construction.material.issue.request.form</field>
+        <field name="model">construction.material.issue.request</field>
+        <field name="arch" type="xml">
+            <form string="Material Stock Issue Request">
+                <header>
+                    <button name="action_submit" string="Submit Request" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_approve" string="Approve" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'requested')]}"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger" attrs="{'invisible': [('state', '!=', 'requested')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,requested,approved,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pickings" type="object" class="oe_stat_button" icon="fa-truck" attrs="{'invisible': [('picking_count', '=', 0)]}">
+                            <field name="picking_count" widget="statinfo" string="Pickings"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="request_info" string="Request Context">
+                            <field name="job_order_id" options="{'no_create': True}" attrs="{'readonly': [('state', 'not in', ['draft', 'requested'])]}"/>
+                            <field name="project_id"/>
+                            <field name="phase_id"/>
+                        </group>
+                        <group name="operations" string="Operations &amp; Logistics">
+                            <field name="request_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="time_needed" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="description" placeholder="Specify logistics details or request reason..." attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Requested Materials" name="materials">
+                            <field name="line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree>
+                                    <field name="product_id" options="{'no_create': True}"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_id" groups="uom.group_uom" readonly="0"/>
+                                </tree>
+                                <form string="Material Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="product_id" options="{'no_create': True}"/>
+                                                <field name="quantity"/>
+                                            </group>
+                                            <group>
+                                                <field name="product_uom_id" groups="uom.group_uom" readonly="0"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_construction_material_issue_request_search" model="ir.ui.view">
+        <field name="name">construction.material.issue.request.search</field>
+        <field name="model">construction.material.issue.request</field>
+        <field name="arch" type="xml">
+            <search string="Material Stock Issue Request Search">
+                <field name="name"/>
+                <field name="job_order_id"/>
+                <field name="project_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Submitted" name="submitted" domain="[('state', '=', 'requested')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Job Order" name="group_by_job_order" context="{'group_by': 'job_order_id'}"/>
+                    <filter string="Project" name="group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_construction_material_issue_request" model="ir.actions.act_window">
+        <field name="name">Material Issue Requests</field>
+        <field name="res_model">construction.material.issue.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_construction_material_issue_request_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Material Stock Issue Request.
+            </p>
+            <p>
+                Requests must be submitted by Site Managers and approved by Project Managers before an inventory transfer is generated.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_construction_material_issue_request"
+              name="Material Issue Requests"
+              parent="menu_construction_operations"
+              action="action_construction_material_issue_request"
+              sequence="25"/>
+</odoo>

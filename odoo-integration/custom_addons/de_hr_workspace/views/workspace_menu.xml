@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_my_workspace" 
+            name="Self Service" 
+            sequence="10" 
+            web_icon="de_hr_workspace,static/description/icon.png"
+        />
+
+        <menuitem id="menu_my_ws_employee" name="Employee" parent="menu_my_workspace" sequence="10" />
+         <menuitem id="menu_for_requests"
+            name="Requests"
+            sequence="11"
+            parent="menu_my_workspace"
+        />
+
+        <menuitem id="ohrms_loan.menu_hr_loan_request" name="Request for Loan" parent="menu_for_requests" sequence="1" />
+        <menuitem id="ohrms_salary_advance.menu_my_salary_advance" name="Request Salary Advance" parent="menu_for_requests" sequence="2"/>
+    </data>
+</odoo>

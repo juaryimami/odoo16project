@@ -1,0 +1,200 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!--  HR Employee  -->
+    <record id="hr-employee_letter_form_view_id" model="ir.ui.view">
+        <field name="name">hr.employee.letter.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button string="APPOINTMENT LETTER" type="object" name="action_appointment_letter" groups="hr_letters.group_hr_employee"/>
+                <button string="APPRAISAL LETTER" type="object" name="action_appraisal_letter" groups="hr_letters.group_hr_employee"/>
+                <button string="RELIEVING LETTER" type="object" name="action_relieving_letter" groups="hr_letters.group_hr_employee"/>
+                <button string="RESIGNATION LETTER" type="object" name="action_resignation_letter" groups="hr_letters.group_hr_employee"/>
+                <button string="EXPERIENCE LETTER" type="object" name="action_experience_letter" groups="hr_letters.group_hr_employee"/>
+                <button string="PROMOTION LETTER " type="object" name="action_promotion_letter" groups="hr_letters.group_hr_employee"/>
+            </xpath>
+            <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
+                <field name="joining_date"/>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="before">
+                <field name="date"/>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="before">
+                <field name="annually_salary"/>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="effective_date"/>
+            </xpath>
+            <xpath expr="//field[@name='effective_date']" position="after">
+                <field name="resignation_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--  Applicant  -->
+    <record id="applicant_letter_form_view_id" model="ir.ui.view">
+        <field name="name">applicant.letter.form.inherit</field>
+        <field name="model">hr.applicant</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='archive_applicant']" position="after">
+                <button string="OFFER LETTER" type="object" name="action_offer_letter" groups="hr_letters.group_hr_employee"/>
+                <button string="SEND DOCUMENT EMAIL" type="object" name="action_send_email_letter" groups="hr_letters.group_hr_employee"/>
+                <button string="JOINING SEND EMAIL" type="object" name="action_send_email_joining" groups="hr_letters.group_hr_employee"/>
+            </xpath>
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="location"/>
+            </xpath>
+        </field>
+    </record>
+
+     <record id="hr_job_form_view_id" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='interviewer_ids']" position="after">
+                <field name="notice_period"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--  Preview Document(Button) Template  -->
+    <template id="custom_preview_external_report_id">
+        <t t-set="company" t-value="env.company"/>
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="res_company"/>
+            <t t-call="hr_letters.external_layout">
+                <div class="page">
+                    <p>This is a sample of an external report......</p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!--  External Layout Template  -->
+    <template id="external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <t t-if="company.external_letter_layout_id" t-call="{{company.external_letter_layout_id.sudo().key}}"><t t-out="0"/></t>
+<!--        <t t-else="else" t-call="hr_letters.external_layout_letters"><t t-out="0"/></t>-->
+        <t t-else="else" t-call="web.external_layout_standard"><t t-out="0"/></t>
+    </template>
+
+    <!--  Header / Footer  -->
+    <template id="external_layout_letters">
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <!-- Header -->
+        <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
+            <div class="o_background_header">
+                <div class="float-end">
+                    <div class="mt0 text-end h3" t-field="company.report_header"/>
+                </div>
+                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo"/>
+                <div class="float-start company_address">
+                    <span t-if="company.company_details" t-field="company.company_details"/>
+                </div>
+                <div class="clearfix mb8"/>
+            </div>
+        </div>
+        <!-- Address -->
+        <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_striped {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' }});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-out="0"/>
+        </div>
+        <!-- Footer -->
+        <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <div t-field="company.report_footer"/>
+                </ul>
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page:
+                    <span class="page"/>
+                    of
+                    <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!--  Style Company Report Template  -->
+    <template id="custom_styles_company_report">
+        <t t-foreach="company_ids" t-as="company" t-translation="off">
+            <t t-set="forced_vat" t-value="False"/>
+            <t t-set="font" t-value="company.font or 'Lato'" />
+            <t t-set="primary" t-value="company.primary_color or 'black'" />
+            <t t-set="secondary" t-value="company.secondary_color or 'black'" />
+            <t t-set="layout" t-value="company.external_letter_layout_id.key or 'hr_letters.external_layout_letters'" />
+                .o_company_<t t-esc='company.id'/>_layout {
+                font-family: <t t-esc="font" />;
+            <t t-if="layout == 'hr_letters.external_layout_letters'">
+                &amp;.o_report_layout_striped {
+                   strong {
+                        color: <t t-esc='secondary'/>;
+                    }
+                    h2 {
+                        color: <t t-esc='primary'/>;
+                    }
+                    thead tr th {
+                        color: <t t-esc='secondary'/>;
+                    }
+                }
+                .row > div > table,
+                div#total table {
+                    &amp;:first-child,
+                    &amp;:last-child,
+                    &amp;.o_subtotal,
+                    &amp;.o_total {
+                        strong {
+                            color: <t t-esc='primary'/>;
+                        }
+                    }
+                }
+            </t>
+            }
+        </t>
+    </template>
+
+
+
+    <!--  Download PDF Preview -->
+    <template id="custom_preview_layout_report">
+        <t t-set="company" t-value="env.company"/>
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="res_company"/>
+            <t t-call="hr_letters.external_layout_letters"/>
+<!--            <t t-call="web.report_invoice_wizard_preview"/>-->
+        </t>
+    </template>
+
+    <!--  Template Layout -->
+    <record id="report_layout_letters" model="report.layout">
+        <field name="name">Letters</field>
+        <field name="sequence">7</field>
+        <field name="view_id" ref="hr_letters.external_layout_letters"/>
+    </record>
+</odoo>

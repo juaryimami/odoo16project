@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Record rules for employees to only see templates/versions targeted to them, and their own attestations -->
+    <!-- Admin sees everything by default for HR objects -->
+    
+    <record id="rule_hr_policy_attestation_user" model="ir.rule">
+        <field name="name">Employee Policy Attestation</field>
+        <field name="model_id" ref="model_hr_policy_attestation"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="rule_hr_policy_attestation_admin" model="ir.rule">
+        <field name="name">Admin Policy Attestation All</field>
+        <field name="model_id" ref="model_hr_policy_attestation"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_manager'))]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_borrow_tree" model="ir.ui.view">
+        <field name="name">book.club.borrow.tree</field>
+        <field name="model">book_club.borrow</field>
+        <field name="arch" type="xml">
+            <tree string="Borrows">
+                <field name="book_id"/>
+                <field name="member_id"/>
+                <field name="loan_date"/>
+                <field name="due_date"/>
+                <field name="status"/>
+                <field name="is_overdue" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_borrow_form" model="ir.ui.view">
+        <field name="name">book.club.borrow.form</field>
+        <field name="model">book_club.borrow</field>
+        <field name="arch" type="xml">
+            <form string="Borrow Record">
+                <header>
+                    <button name="action_borrow" string="Borrow" type="object" states="draft" class="oe_highlight"/>
+                    <button name="action_request_return" string="Request Return" type="object" states="borrowed"/>
+                    <button name="action_approve_return" string="Approve Return" type="object" states="pending_return" groups="book_club.group_book_club_manager" class="oe_highlight"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,borrowed,pending_return,returned"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="book_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                            <field name="member_id" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                        </group>
+                        <group>
+                            <field name="loan_date" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                            <field name="due_date" attrs="{'readonly': [('status', '!=', 'draft')]}"/>
+                            <field name="is_overdue" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_borrow_search" model="ir.ui.view">
+        <field name="name">book.club.borrow.search</field>
+        <field name="model">book_club.borrow</field>
+        <field name="arch" type="xml">
+            <search string="Search Borrows">
+                <field name="book_id"/>
+                <field name="member_id"/>
+                <filter name="filter_borrowed" string="Currently Borrowed" domain="[('status','in',['borrowed','pending_return'])]"/>
+                <filter name="filter_overdue" string="Overdue" domain="[('is_overdue', '=', True)]"/>
+                <filter name="group_by_book" string="Book" context="{'group_by':'book_id'}"/>
+                <filter name="group_by_member" string="Member" context="{'group_by':'member_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_book_club_borrow" model="ir.actions.act_window">
+        <field name="name">Borrows</field>
+        <field name="res_model">book_club.borrow</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_book_club_borrow"
+              name="Borrow Workflow"
+              parent="menu_book_club_transactions"
+              action="action_book_club_borrow"
+              groups="book_club.group_book_club_manager,book_club.group_book_club_administrator"
+              sequence="10"/>
+</odoo>

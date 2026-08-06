@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+
+    <!-- Admin Attestations Action -->
+    <record id="action_hr_policy_attestation_admin" model="ir.actions.act_window">
+        <field name="name">All Attestations</field>
+        <field name="res_model">hr.policy.attestation</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="context">{'search_default_group_by_template': 1}</field>
+    </record>
+
+    <!-- Dashboard Action (OWL Component) -->
+    <record id="action_hr_policy_dashboard_client" model="ir.actions.client">
+        <field name="name">Compliance Dashboard</field>
+        <field name="tag">hr_policy_dashboard_owl</field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_hr_policy_attestation_search" model="ir.ui.view">
+        <field name="name">hr.policy.attestation.search</field>
+        <field name="model">hr.policy.attestation</field>
+        <field name="arch" type="xml">
+            <search string="Attestations">
+                <field name="employee_id"/>
+                <field name="template_id"/>
+                <field name="department_id"/>
+                <filter string="Pending Action" name="pending" domain="[('status', '=', 'pending')]"/>
+                <filter string="Agreed" name="agreed" domain="[('status', '=', 'agreed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Policy" name="group_by_template" context="{'group_by': 'template_id'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_hr_policy_attestation_tree" model="ir.ui.view">
+        <field name="name">hr.policy.attestation.tree</field>
+        <field name="model">hr.policy.attestation</field>
+        <field name="arch" type="xml">
+            <tree string="Attestations" decoration-danger="status == 'pending'" decoration-success="status == 'agreed'" decoration-muted="status == 'superseded'">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="template_id"/>
+                <field name="version_id"/>
+                <field name="status" widget="badge" decoration-danger="status == 'pending'" decoration-success="status == 'agreed'" decoration-info="status == 'superseded'"/>
+                <field name="signed_datetime"/>
+                <field name="ip_address" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_hr_policy_attestation_form" model="ir.ui.view">
+        <field name="name">hr.policy.attestation.form</field>
+        <field name="model">hr.policy.attestation</field>
+        <field name="arch" type="xml">
+            <form string="Attestation">
+                <header>
+                    <button name="action_send_reminder" string="Send Reminder" type="object" class="oe_highlight" attrs="{'invisible': [('status', '!=', 'pending')]}"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="department_id"/>
+                            <field name="template_id"/>
+                            <field name="version_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="signed_datetime" attrs="{'invisible': [('status', '!=', 'agreed')]}"/>
+                            <field name="ip_address" attrs="{'invisible': [('status', '!=', 'agreed')]}"/>
+                            <field name="user_agent" attrs="{'invisible': [('status', '!=', 'agreed')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Graph View for Dashboard Matrix -->
+    <record id="view_hr_policy_attestation_graph" model="ir.ui.view">
+        <field name="name">hr.policy.attestation.graph</field>
+        <field name="model">hr.policy.attestation</field>
+        <field name="arch" type="xml">
+            <graph string="Compliance Dashboard" type="bar" stacked="True">
+                <field name="template_id" type="row"/>
+                <field name="status" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Pivot View -->
+    <record id="view_hr_policy_attestation_pivot" model="ir.ui.view">
+        <field name="name">hr.policy.attestation.pivot</field>
+        <field name="model">hr.policy.attestation</field>
+        <field name="arch" type="xml">
+            <pivot string="Compliance Analysis" disable_linking="True">
+                <field name="template_id" type="row"/>
+                <field name="department_id" type="row"/>
+                <field name="status" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Server Action to Bulk Send Reminders -->
+    <record id="action_bulk_send_reminders" model="ir.actions.server">
+        <field name="name">Send Reminders</field>
+        <field name="model_id" ref="model_hr_policy_attestation"/>
+        <field name="binding_model_id" ref="model_hr_policy_attestation"/>
+        <field name="binding_view_types">tree,form</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_send_reminder()
+        </field>
+    </record>
+
+</odoo>

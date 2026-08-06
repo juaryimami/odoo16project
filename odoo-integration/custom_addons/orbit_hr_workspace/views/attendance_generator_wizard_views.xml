@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action to open the wizard -->
+    <record id="action_attendance_generator_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Attendances</field>
+        <field name="res_model">orbit.attendance.generator.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Wizard Form View -->
+    <record id="view_attendance_generator_wizard_form" model="ir.ui.view">
+        <field name="name">orbit.attendance.generator.wizard.form</field>
+        <field name="model">orbit.attendance.generator.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Attendances">
+                <sheet>
+                    <div class="alert alert-info text-center" role="alert">
+                        <strong>Bulk Attendance Generator</strong><br/>
+                        Select a date range below. The system will automatically generate check-ins and check-outs according to the employee's working schedule, perfectly skipping weekends, approved time off, and registered Public Holidays.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate_attendances" string="Generate Attendances" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,1106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Public Portal: Job Offer Acceptance View -->
+    <template id="job_order_portal_view" name="Job Order Offer">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                
+                <style>
+                    :root {
+                        --contractor-primary: #1a2a3a;
+                        --contractor-accent: #00d2ff;
+                        --contractor-secondary: #0081a7;
+                        --glass-bg: rgba(255, 255, 255, 0.85);
+                    }
+
+                    body {
+                        font-family: 'Outfit', sans-serif !important;
+                        background: url('file:///home/orbit-health/.gemini/antigravity/brain/b7814628-f6f6-4272-99a1-4fcb50645977/construction_portal_bg_1776089846669.png') no-repeat center center fixed;
+                        background-size: cover;
+                        min-height: 100vh;
+                    }
+
+                    #wrap {
+                        background: rgba(0, 0, 0, 0.4);
+                        min-height: 100vh;
+                        padding-top: 40px;
+                        padding-bottom: 80px;
+                    }
+
+                    .glass-card {
+                        background: var(--glass-bg);
+                        backdrop-filter: blur(15px);
+                        -webkit-backdrop-filter: blur(15px);
+                        border: 1px solid rgba(255, 255, 255, 0.3);
+                        border-radius: 24px;
+                        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+                        overflow: hidden;
+                        transition: transform 0.3s ease;
+                    }
+
+                    .hero-banner {
+                        background: linear-gradient(135deg, var(--contractor-primary) 0%, var(--contractor-secondary) 100%);
+                        padding: 4rem 2rem;
+                        color: white;
+                        text-align: center;
+                        position: relative;
+                    }
+
+                    .status-pill {
+                        background: rgba(0, 210, 255, 0.2);
+                        border: 1px solid var(--contractor-accent);
+                        color: var(--contractor-accent);
+                        padding: 6px 20px;
+                        border-radius: 50px;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                        letter-spacing: 1px;
+                        font-size: 0.8rem;
+                        display: inline-block;
+                        margin-bottom: 1rem;
+                        animation: pulse 2s infinite;
+                    }
+
+                    @keyframes pulse {
+                        0% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0.4); }
+                        70% { box-shadow: 0 0 0 10px rgba(0, 210, 255, 0); }
+                        100% { box-shadow: 0 0 0 0 rgba(0, 210, 255, 0); }
+                    }
+
+                    .financial-card {
+                        background: white;
+                        border-radius: 16px;
+                        padding: 2rem;
+                        text-align: center;
+                        border-bottom: 5px solid var(--contractor-accent);
+                    }
+
+                    .section-title {
+                        font-weight: 700;
+                        color: var(--contractor-primary);
+                        border-left: 5px solid var(--contractor-accent);
+                        padding-left: 15px;
+                        margin-bottom: 25px;
+                    }
+
+                    .table-modern thead {
+                        background: var(--contractor-primary);
+                        color: white;
+                    }
+                    
+                    .table-modern th { border: none !important; padding: 15px !important; }
+                    .table-modern td { vertical-align: middle; padding: 15px !important; }
+
+                    .btn-premium {
+                        background: linear-gradient(to right, var(--contractor-secondary), var(--contractor-accent));
+                        border: none;
+                        border-radius: 12px;
+                        padding: 15px 40px;
+                        font-weight: 700;
+                        color: white;
+                        box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .btn-premium:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 15px 25px rgba(0, 210, 255, 0.4);
+                        color: white;
+                    }
+
+                    .info-grid i { font-size: 1.5rem; color: var(--contractor-accent); }
+                </style>
+            </t>
+
+            <main id="wrap">
+                <div class="container">
+                    <div class="glass-card">
+                        <!-- Hero Section -->
+                        <div class="hero-banner">
+                            <div class="status-pill text-white">Pending Offer</div>
+                            <h2 class="display-6 fw-bold mb-1 opacity-75"><t t-esc="res_company.name"/></h2>
+                            <h1 class="display-4 fw-bold mb-3">Job Order: <t t-esc="job_order.name"/></h1>
+                            <div class="d-inline-block px-4 py-2 bg-white bg-opacity-10 rounded-pill mb-3">
+                                <span class="lead text-white fw-bold"><i class="fa-solid fa-building me-2"></i> Project: <t t-esc="job_order.project_id.name"/></span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 p-md-5">
+                            <div class="row g-5">
+                                <!-- LEFT COLUMN: Details -->
+                                <div class="col-lg-8">
+                                    <h4 class="section-title">Project Overview</h4>
+                                    <div class="row info-grid mb-5">
+                                        <div class="col-sm-6 mb-4">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa-solid fa-building-columns me-3"></i>
+                                                <div>
+                                                    <small class="text-muted d-block fw-bold">Primary Project</small>
+                                                    <span class="h6 mb-0 text-dark fw-bold"><t t-esc="job_order.project_id.name"/></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 mb-4">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fa-solid fa-layer-group me-3"></i>
+                                                <div>
+                                                    <small class="text-muted d-block">Construction Phase</small>
+                                                    <span class="h6 mb-0 text-dark fw-bold"><t t-esc="job_order.phase_id.name"/></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="section-title">Scope of Work</h4>
+                                    <div class="card bg-white border-0 shadow-sm p-4 mb-5" style="border-radius: 16px;">
+                                        <div class="text-secondary" style="line-height: 1.8;">
+                                            <t t-out="job_order.description"/>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="section-title">Resource Allocation</h4>
+                                    <div class="table-responsive rounded-4 shadow-sm mb-5">
+                                        <table class="table table-modern mb-0 bg-white">
+                                            <thead>
+                                                <tr>
+                                                    <th>Description</th>
+                                                    <th class="text-center">Reference</th>
+                                                    <th class="text-center">Allocation</th>
+                                                    <th class="text-end">Planned Cost</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="job_order.labor_budget_line_ids" t-as="l">
+                                                    <tr>
+                                                        <td class="fw-bold"><t t-esc="l.name"/></td>
+                                                        <td class="text-center">Labor Pool</td>
+                                                        <td class="text-center badge-light text-primary fw-bold"><t t-esc="l.quantity"/> <t t-esc="l.unit"/></td>
+                                                        <td class="text-end fw-bold text-dark"><t t-esc="l.total_cost" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/></td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="job_order.vehicle_line_ids" t-as="v">
+                                                    <tr>
+                                                        <td class="fw-bold text-success"><t t-esc="v.name"/></td>
+                                                        <td class="text-center">Fleet Asset</td>
+                                                        <td class="text-center fw-bold"><t t-esc="v.quantity"/> Units</td>
+                                                        <td class="text-end fw-bold text-dark"><t t-esc="v.total_cost" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/></td>
+                                                    </tr>
+                                                </t>
+                                                <t t-foreach="job_order.equipment_line_ids" t-as="e">
+                                                    <tr>
+                                                        <td class="fw-bold text-info"><t t-esc="e.name"/></td>
+                                                        <td class="text-center">Machinery</td>
+                                                        <td class="text-center fw-bold"><t t-esc="e.quantity"/> <t t-esc="e.unit"/>s</td>
+                                                        <td class="text-end fw-bold text-dark"><t t-esc="e.total_cost" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                            <tfoot class="bg-light">
+                                                <tr class="fw-bold">
+                                                    <td colspan="3" class="text-end py-3">GRAND TOTAL PLANNED COST:</td>
+                                                    <td class="text-end py-3 text-primary h5 mb-0">
+                                                        <t t-esc="job_order.planned_resource_total" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="d-grid d-md-flex gap-3 justify-content-center mt-4 pt-4 border-top">
+                                        <button class="btn btn-premium btn-lg" data-bs-toggle="modal" data-bs-target="#modal_accept">
+                                            <i class="fa-solid fa-file-signature me-2"></i>Review &amp; Accept Offer
+                                        </button>
+                                        <button class="btn btn-light btn-lg px-5 border-0 text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#modal_reject" style="border-radius: 12px;">
+                                            Decline Offer
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- RIGHT COLUMN: FINANCIALS -->
+                                <div class="col-lg-4">
+                                    <div class="financial-card shadow-lg mb-4">
+                                        <h6 class="text-muted text-uppercase mb-3 fw-bold">Certified Offer Value</h6>
+                                        <div class="h1 fw-bold text-primary mb-2">
+                                            <t t-esc="job_order.agreed_rate" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/>
+                                        </div>
+                                        <div class="badge bg-success py-2 px-3 rounded-pill">
+                                            <i class="fa-solid fa-shield-check me-2"></i>Budget Approved
+                                        </div>
+                                    </div>
+
+                                    <div class="card border-0 shadow-sm p-4 bg-white" style="border-radius: 20px;">
+                                        <h5 class="fw-bold mb-4">Contractor Details</h5>
+                                        <div class="d-flex align-items-center mb-4">
+                                            <div class="bg-primary text-white rounded-4 d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px; font-size: 24px; font-weight: 700;">
+                                                <t t-esc="job_order.contractor_id.name[0]"/>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold"><t t-esc="job_order.contractor_id.name"/></h6>
+                                                <span class="text-muted small">Registered Partner</span>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-warning border-0 p-3 small" style="background: #fff9db; border-radius: 12px;">
+                                            <i class="fa-solid fa-circle-info me-2 text-warning"></i>
+                                            <strong>Policy:</strong> High-resolution document submittal is required for account activation.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODALS -->
+                <!-- Accept Modal -->
+                <div class="modal fade" id="modal_accept" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <form t-attf-action="/job_offer/{{token}}/accept" method="post" enctype="multipart/form-data" class="modal-content glass-card border-0" style="background: white;">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-header border-0 p-4">
+                                <h4 class="modal-title fw-bold">Certify Acceptance</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-4 pt-0">
+                                <p class="text-muted small mb-4">You are officially accepting the job offer for <strong><t t-esc="job_order.name"/></strong>. Please upload your signed contract documents below.</p>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold small text-muted">UPLOAD CONTRACT DOCUMENTS</label>
+                                    <input type="file" name="acceptance_papers" multiple="multiple" class="form-control form-control-lg border-2 shadow-none" required="required" style="border-style: dashed !important; border-radius: 16px;"/>
+                                </div>
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <i class="fa-solid fa-fingerprint text-success fs-3 me-3"></i>
+                                    <span class="small text-muted font-italic">This action will be recorded as a binding digital signature with your IP address and timestamp.</span>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 p-4">
+                                <button type="submit" class="btn btn-premium w-100 py-3 shadow">Confirm &amp; Mobilize</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Decline Modal -->
+                <div class="modal fade" id="modal_reject" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <form t-attf-action="/job_offer/{{token}}/reject" method="post" class="modal-content glass-card border-0" style="background: white;">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-header border-0 p-4">
+                                <h4 class="modal-title fw-bold">Decline Engagement</h4>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-4 pt-0">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small text-muted">REASON FOR DECLINING</label>
+                                    <textarea name="rejection_reason" class="form-control border-2 shadow-none" rows="4" placeholder="Please provide specific feedback for our procurement team..." required="required" style="border-radius: 16px;"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 p-4">
+                                <button type="submit" class="btn btn-danger btn-lg w-100 py-3 shadow border-0" style="border-radius: 12px;">Submit Feedback</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </t>
+    </template>
+
+    <!-- Success: Accepted -->
+    <template id="job_order_accepted_page" name="Job Order Accepted">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+                <style>
+                    body {
+                        font-family: 'Outfit', sans-serif !important;
+                        background: url('file:///home/orbit-health/.gemini/antigravity/brain/b7814628-f6f6-4272-99a1-4fcb50645977/construction_portal_bg_1776089846669.png') no-repeat center center fixed;
+                        background-size: cover;
+                        min-height: 100vh;
+                    }
+                    #wrap { background: rgba(0, 0, 0, 0.4); min-height: 100vh; padding-top: 100px; }
+                    .success-card { max-width: 600px; margin: 0 auto; border-radius: 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+                </style>
+            </t>
+            <div id="wrap">
+                <div class="container text-center">
+                    <div class="card success-card shadow-lg p-5 border-0">
+                        <div class="mb-4">
+                            <i class="fa-solid fa-circle-check text-success display-1"></i>
+                        </div>
+                        <h1 class="fw-bold mb-3">Job Successfully Accepted</h1>
+                        <p class="lead text-muted mb-4">Partner: <strong><t t-esc="job_order.contractor_id.name"/></strong></p>
+                        <div class="alert alert-info border-0 rounded-4 p-4 text-start shadow-sm" style="background: #e7f5ff; color: #004d7a;">
+                            <h6 class="fw-bold"><i class="fa-solid fa-truck-fast me-2"></i>Next Steps:</h6>
+                            <p class="small mb-2">You now have access to the <strong>Execution Portal</strong>. Use the secure password sent to your email to log in and manage your site progress.</p>
+                            <a t-attf-href="/job_offer/{{job_order.access_token}}" class="btn btn-primary w-100 rounded-pill fw-bold">Enter Execution Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Password Challenge Template -->
+    <template id="job_order_password_auth" name="Contractor Access Portal Authentication">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <style>
+                    body {
+                        font-family: 'Outfit', sans-serif !important;
+                        background-color: #0f172a;
+                        min-height: 100vh;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin: 0;
+                    }
+                    #wrap { background: transparent; width: 100%; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+                    
+                    .auth-card { 
+                        width: 100%;
+                        max-width: 440px; 
+                        padding: 4rem !important;
+                        border-radius: 32px; 
+                        background: #ffffff; 
+                        box-shadow: 0 40px 100px -20px rgba(0,0,0,0.4);
+                        border: 1px solid rgba(255,255,255,0.1);
+                        transition: all 0.3s ease;
+                    }
+                    
+                    .auth-card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 50px 120px -30px rgba(0,0,0,0.5);
+                    }
+
+                    .lock-icon-container {
+                        width: 80px; height: 80px;
+                        background: #f1f5f9;
+                        border-radius: 24px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin: 0 auto 2.5rem;
+                        color: #1e293b;
+                    }
+
+                    .btn-premium { 
+                        display: block !important;
+                        width: 100% !important;
+                        background: #3b82f6; 
+                        color: white !important; 
+                        border: none;
+                        border-radius: 16px; 
+                        height: 60px; 
+                        font-weight: 700;
+                        font-size: 1rem;
+                        transition: all 0.2s ease;
+                        margin-top: 50px !important;
+                    }
+
+                    .btn-premium:hover {
+                        background: #2563eb;
+                        transform: translateY(-2px);
+                        box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+                    }
+
+                    .pass-input {
+                        background: #ffffff !important;
+                        border: 2px solid #e2e8f0 !important;
+                        border-radius: 16px !important;
+                        height: 60px;
+                        font-size: 1.25rem;
+                        color: #1e293b !important;
+                        text-align: center;
+                        transition: all 0.2s ease;
+                    }
+
+                    .pass-input:focus {
+                        background: #ffffff !important;
+                        border-color: #3b82f6 !important;
+                        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+                        outline: none;
+                    }
+
+                    .pass-input::placeholder {
+                        color: #cbd5e1 !important;
+                        letter-spacing: 2px;
+                    }
+
+                    .ref-tag {
+                        color: #94a3b8;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        letter-spacing: 0.05em;
+                        text-transform: uppercase;
+                    }
+                </style>
+            </t>
+            <div id="wrap">
+                <div class="card auth-card border-0">
+                    <div class="text-center">
+                        <div class="lock-icon-container">
+                            <i class="fa-solid fa-lock fs-2"></i>
+                        </div>
+                        <h1 class="fw-bold text-slate-900 mb-3" style="font-size: 1.75rem; color: #0f172a;">Secure Access</h1>
+                        <p class="text-slate-500 mb-5 small" style="color: #64748b; line-height: 1.6;">Authorized Personnel Only. Please enter your portal password to continue.</p>
+                    </div>
+
+                    <form t-attf-action="/job_offer/{{token}}/authenticate" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="mb-5">
+                            <input type="password" name="password" class="form-control pass-input" placeholder="Password" required="required" autofocus="autofocus"/>
+                            
+                            <t t-if="error == 'invalid_password'">
+                                <div class="alert alert-danger border-0 mt-4 rounded-3 py-3 px-4 d-flex align-items-center" style="background: #fef2f2; color: #991b1b; font-size: 0.875rem;">
+                                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                                    <strong>Access Denied:</strong> Invalid password.
+                                </div>
+                            </t>
+                        </div>
+                        <button type="submit" class="btn btn-premium w-100 mb-4">Confirm Identity</button>
+                    </form>
+                    
+                    <div class="text-center mt-2">
+                        <span class="ref-tag">ID: <t t-esc="job_order.name"/></span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Execution Dashboard Template -->
+    <template id="job_order_execution_dashboard" name="Contractor Execution Portal">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                <style>
+                    :root {
+                        --contractor-primary: #1a2a3a;
+                        --contractor-accent: #00d2ff;
+                        --contractor-success: #2ecc71;
+                        --contractor-warning: #f1c40f;
+                    }
+
+                    body {
+                        font-family: 'Outfit', sans-serif !important;
+                        background: #f4f7fa;
+                        min-height: 100vh;
+                    }
+
+                    .navbar-portal {
+                        background: var(--contractor-primary);
+                        padding: 1rem 0;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                    }
+
+                    .dashboard-card {
+                        background: white;
+                        border-radius: 20px;
+                        border: none;
+                        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+                        overflow: hidden;
+                        margin-bottom: 2rem;
+                    }
+
+                    .card-header-premium {
+                        background: #fff;
+                        border-bottom: 1px solid #edf2f7;
+                        padding: 1.5rem 2rem;
+                    }
+
+                    .phase-row {
+                        padding: 1.5rem 2rem;
+                        border-bottom: 1px solid #f7fafc;
+                        transition: all 0.2s ease;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+
+                    .phase-row:hover { background: #f8fafc; }
+
+                    .status-pill {
+                        padding: 5px 15px;
+                        border-radius: 50px;
+                        font-size: 0.75rem;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                    }
+
+                    .status-pending { background: #fff3cd; color: #856404; }
+                    .status-inspection { background: #cfe2ff; color: #084298; }
+                    .status-approved { background: #d1e7dd; color: #0f5132; }
+
+                    .btn-action {
+                        border-radius: 10px;
+                        padding: 8px 15px;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        transition: all 0.3s ease;
+                    }
+
+                    .stat-box {
+                        text-align: center;
+                        padding: 1.5rem;
+                        border-right: 1px solid #edf2f7;
+                    }
+                    .stat-box:last-child { border-right: none; }
+
+                    /* Milestones Flow */
+                    .milestone-stepper {
+                        position: relative;
+                        padding-left: 50px;
+                    }
+                    .milestone-stepper::before {
+                        content: '';
+                        position: absolute;
+                        left: 24px;
+                        top: 0;
+                        bottom: 0;
+                        width: 4px;
+                        background: #edf2f7;
+                        border-radius: 2px;
+                    }
+                    .milestone-item {
+                        position: relative;
+                        margin-bottom: 3rem;
+                    }
+                    .milestone-dot {
+                        position: absolute;
+                        left: -33px;
+                        top: 0;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        background: white;
+                        border: 4px solid #edf2f7;
+                        z-index: 1;
+                        transition: all 0.3s ease;
+                    }
+                    .milestone-item.active .milestone-dot {
+                        border-color: var(--contractor-accent);
+                        box-shadow: 0 0 0 5px rgba(0, 210, 255, 0.2);
+                        transform: scale(1.2);
+                    }
+                    .milestone-item.done .milestone-dot {
+                        background: var(--contractor-success);
+                        border-color: var(--contractor-success);
+                    }
+                    .milestone-card {
+                        background: white;
+                        border-radius: 16px;
+                        padding: 1.5rem;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+                        border-left: 5px solid #edf2f7;
+                        transition: all 0.3s ease;
+                    }
+                    .milestone-item.active .milestone-card {
+                        border-left-color: var(--contractor-accent);
+                        box-shadow: 0 10px 25px rgba(0, 210, 255, 0.1);
+                    }
+                    .milestone-item.done .milestone-card {
+                        border-left-color: var(--contractor-success);
+                        opacity: 0.85;
+                    }
+                    .checklist-item {
+                        background: rgba(0, 210, 255, 0.03);
+                        border: 1px dashed rgba(0, 210, 255, 0.2);
+                        border-radius: 10px;
+                        padding: 10px 15px;
+                        margin-bottom: 8px;
+                        font-size: 0.9rem;
+                    }
+                </style>
+            </t>
+
+            <header class="navbar-portal text-white">
+                <div class="container d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="badge bg-info text-dark fw-bold px-2 py-1" style="font-size: 0.65rem; border-radius: 4px;"><t t-esc="res_company.name"/></span>
+                            <span class="text-info opacity-75 small uppercase fw-bold" style="letter-spacing: 1.5px;">EXECUTION MISSION CONTROL</span>
+                        </div>
+                        <h4 class="mb-0 fw-bold">
+                            <t t-esc="job_order.name"/> 
+                            <span class="opacity-25 mx-2">|</span> 
+                            <span class="text-white opacity-75"><t t-esc="job_order.project_id.name"/></span>
+                        </h4>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="text-end">
+                            <span class="h6 mb-0 d-block"><t t-esc="job_order.contractor_id.name"/></span>
+                            <span class="badge bg-success rounded-pill">Authorized Session</span>
+                        </div>
+                        <button class="btn btn-outline-info btn-sm rounded-pill text-white border-info-subtle" data-bs-toggle="modal" data-bs-target="#modal_change_password">
+                            <i class="fa-solid fa-key me-1"></i> Security
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="py-5">
+                <div class="container">
+                    <!-- Notifications -->
+                    <t t-if="request.params.get('success') == 'password_changed'">
+                        <div class="alert alert-success border-0 shadow-sm rounded-4 mb-4 p-3 d-flex align-items-center">
+                            <i class="fa-solid fa-circle-check fs-4 me-3 text-success"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Security Update Successful</h6>
+                                <span class="small">Your portal access password has been updated.</span>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-if="request.params.get('error')">
+                        <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4 p-3 d-flex align-items-center">
+                            <i class="fa-solid fa-circle-xmark fs-4 me-3 text-danger"></i>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Update Failed</h6>
+                                <span class="small text-danger">
+                                    <t t-if="request.params.get('error') == 'old_password_invalid'">The current password you entered is incorrect.</t>
+                                    <t t-if="request.params.get('error') == 'password_mismatch'">New password and confirmation do not match.</t>
+                                </span>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="row g-4">
+                        <!-- Stats Overview -->
+                        <div class="col-12">
+                            <div class="dashboard-card d-flex flex-wrap flex-md-nowrap">
+                                <div class="stat-box flex-fill">
+                                    <small class="text-muted d-block text-uppercase fw-bold">Total Contract</small>
+                                    <span class="h4 fw-bold text-dark"><t t-esc="job_order.agreed_rate" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/></span>
+                                </div>
+                                <div class="stat-box flex-fill">
+                                    <small class="text-muted d-block text-uppercase fw-bold">Execution Progress</small>
+                                    <div class="d-flex align-items-center justify-content-center gap-3">
+                                        <span class="h4 fw-bold text-primary"><t t-esc="int(job_order.progress_ratio)"/>%</span>
+                                        <div class="progress" style="width: 100px; height: 8px;">
+                                            <div class="progress-bar bg-primary" role="progressbar" t-attf-style="width: {{job_order.progress_ratio}}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="stat-box flex-fill">
+                                    <small class="text-muted d-block text-uppercase fw-bold">Active Phase</small>
+                                    <span class="h4 fw-bold text-info"><t t-esc="job_order.phase_id.name or 'N/A'"/></span>
+                                </div>
+                                <div class="stat-box flex-fill">
+                                    <small class="text-muted d-block text-uppercase fw-bold">Contract Type</small>
+                                    <span class="h6 fw-bold text-secondary"><t t-esc="dict(job_order._fields['contract_type'].selection).get(job_order.contract_type)"/></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Execution Body -->
+                        <div class="col-lg-8">
+                            <ul class="nav nav-pills mb-4 gap-2" id="execution-tabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active rounded-pill fw-bold" id="roadmap-tab" data-bs-toggle="pill" data-bs-target="#tab-roadmap" type="button" role="tab">
+                                        <i class="fa-solid fa-route me-2"></i>Execution Roadmap
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link rounded-pill fw-bold" id="payments-tab" data-bs-toggle="pill" data-bs-target="#tab-payments" type="button" role="tab">
+                                        <i class="fa-solid fa-receipt me-2"></i>Financials &amp; Payments
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="execution-tab-content">
+                                <!-- TAB 1: ROADMAP -->
+                                <div class="tab-pane fade show active" id="tab-roadmap" role="tabpanel">
+                                    <div class="dashboard-card">
+                                        <div class="card-header-premium d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0 fw-bold">Live Execution Roadmap</h5>
+                                            <div class="d-flex align-items-center">
+                                                <div class="spinner-grow text-primary spinner-grow-sm me-2" role="status"></div>
+                                                <span class="text-primary small fw-bold">Active Tracking</span>
+                                            </div>
+                                        </div>
+                                        <div class="p-4 p-md-5">
+                                    <div class="milestone-stepper">
+                                        <t t-foreach="job_order.milestone_ids" t-as="m">
+                                            <div t-attf-class="milestone-item {{'active' if m.state == 'in_progress' else ''}} {{'done' if m.state in ['approved', 'billed'] else ''}} {{'locked' if m.state == 'pending' else ''}}">
+                                                <div class="milestone-dot"></div>
+                                                <div class="milestone-card">
+                                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                                        <div>
+                                                            <h5 class="fw-bold mb-1"><t t-esc="m.name"/></h5>
+                                                            <span t-attf-class="status-pill status-{{m.state}}">
+                                                                <t t-esc="m.state.replace('_', ' ')"/>
+                                                            </span>
+                                                        </div>
+                                                        <div class="text-end">
+                                                            <span class="h4 mb-0 fw-bold text-dark"><t t-esc="m.percentage"/>%</span>
+                                                            <small class="text-muted d-block fw-bold">Impact</small>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Phase Scope Details -->
+                                                    <div class="mb-4 text-muted small" style="line-height: 1.6;">
+                                                        <t t-out="m.description"/>
+                                                    </div>
+
+                                                    <!-- Interaction Section -->
+                                                    <t t-if="m.state == 'in_progress'">
+                                                        <div class="bg-light rounded-4 p-3 mb-4">
+                                                            <h6 class="fw-bold mb-3 small text-primary"><i class="fa-solid fa-list-check me-2"></i>REQUIRED QUALITY CHECKS:</h6>
+                                                            <t t-foreach="m.checklist_ids or job_order.checklist_ids" t-as="cl">
+                                                                <div class="checklist-item d-flex align-items-center">
+                                                                    <i class="fa-solid fa-circle-notch me-2 text-primary opacity-50"></i>
+                                                                    <span><t t-esc="cl.name"/></span>
+                                                                </div>
+                                                            </t>
+                                                            <div class="mt-4 pt-3 border-top">
+                                                                <button type="button" class="btn btn-premium w-100 py-3 shadow" data-bs-toggle="modal" t-attf-data-bs-target="#modal_inspection_{{m.id}}">
+                                                                    <i class="fa-solid fa-camera-viewfinder me-2"></i>Phase Complete: Request Inspection
+                                                                </button>
+                                                            </div>
+
+                                                            <!-- Modal for Inspection Remarks -->
+                                                            <div class="modal fade" t-attf-id="modal_inspection_{{m.id}}" tabindex="-1" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content border-0 rounded-4 shadow">
+                                                                        <div class="modal-header border-0 pb-0">
+                                                                            <h5 class="modal-title fw-bold">Request Final Inspection</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <form t-attf-action="/job_offer/{{token}}/trigger_inspection/{{m.id}}" method="post">
+                                                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                                            <div class="modal-body py-4">
+                                                                                <p class="text-muted small mb-4">Before submitting, please provide a brief summary of the work performed or any specific details for the inspector.</p>
+                                                                                <div class="mb-3">
+                                                                                    <label class="form-label fw-bold small text-slate-600">Contractor Remarks</label>
+                                                                                    <textarea name="remarks" class="form-control rounded-3 border-slate-200" rows="4" placeholder="e.g. All structural elements finished according to drawing REV-2. Site cleared and ready." required="required"></textarea>
+                                                                                </div>
+                                                                                <div class="alert alert-warning border-0 rounded-3 small">
+                                                                                    <i class="fa-solid fa-circle-info me-2"></i> Note: Once submitted, this phase will be locked for review and cannot be modified.
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer border-0 pt-0 pb-4 px-4">
+                                                                                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                                                                                <button type="submit" class="btn btn-premium rounded-pill px-4">Confirm &amp; Request</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+
+                                                    <t t-if="m.state == 'inspection'">
+                                                        <div class="alert alert-info border-0 rounded-4 d-flex align-items-center p-3 mb-0">
+                                                            <div class="spinner-border spinner-border-sm me-3" role="status"></div>
+                                                            <div class="small fw-bold">Waiting for Project Manager to verify and sign-off this phase.</div>
+                                                        </div>
+                                                    </t>
+
+                                                    <t t-if="m.state == 'pending'">
+                                                        <div class="small text-muted italic">
+                                                            <i class="fa-solid fa-lock me-1"></i> Phase locked. Complete previous milestones to unlock.
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <t t-if="not job_order.milestone_ids">
+                                        <div class="p-5 text-center text-muted">
+                                            <i class="fa-solid fa-clipboard-list fs-1 mb-3 opacity-25"></i>
+                                            <p>No execution phases defined yet. Contact PM.</p>
+                                        </div>
+                                    </t>
+                                </div>
+                                </div>
+                                </div> <!-- End of tab-roadmap -->
+
+                                <!-- TAB 2: PAYMENTS -->
+                                <div class="tab-pane fade" id="tab-payments" role="tabpanel">
+                                    <div class="dashboard-card p-4 p-md-5">
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <h4 class="fw-bold mb-0">Financial Status</h4>
+                                            <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#modal_request_payment">
+                                                <i class="fa-solid fa-hand-holding-dollar me-2"></i>New Payment Claim
+                                            </button>
+                                        </div>
+
+                                        <!-- Financial Summary -->
+                                        <div class="row g-3 mb-5">
+                                            <div class="col-md-4">
+                                                <div class="p-3 bg-light rounded-4 text-center">
+                                                    <small class="text-muted fw-bold d-block">Certified Progress</small>
+                                                    <span class="h4 fw-bold text-primary">
+                                                        <t t-esc="int(job_order.total_certified_progress)"/>%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="p-3 bg-light rounded-4 text-center">
+                                                    <small class="text-muted fw-bold d-block">Net Paid to Date</small>
+                                                    <span class="h4 fw-bold text-success">
+                                                        <t t-esc="job_order.total_paid_amount" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="p-3 bg-light rounded-4 text-center">
+                                                    <small class="text-muted fw-bold d-block">Retention Fund</small>
+                                                    <span class="h4 fw-bold text-danger">
+                                                        <t t-esc="job_order.total_retention_amount" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <h5 class="section-title small">PAYMENT HISTORY</h5>
+                                        <div class="table-responsive rounded-4 border">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th>Ref</th>
+                                                        <th>Type</th>
+                                                        <th class="text-center">Claim %</th>
+                                                        <th class="text-center">Certified %</th>
+                                                        <th class="text-end">Net Payable</th>
+                                                        <th class="text-end">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="job_order.payment_request_ids.sorted('id', reverse=True)" t-as="p">
+                                                        <tr>
+                                                            <td class="fw-bold"><t t-esc="p.name"/></td>
+                                                            <td><span class="badge bg-secondary-subtle text-secondary small"><t t-esc="dict(p._fields['cpr_type'].selection).get(p.cpr_type)"/></span></td>
+                                                            <td class="text-center"><t t-esc="int(p.current_progress_claim)"/>%</td>
+                                                            <td class="text-center fw-bold text-primary"><t t-esc="int(p.certified_progress)"/>%</td>
+                                                            <td class="text-end fw-bold"><t t-esc="p.net_payable_amount" t-options='{"widget": "monetary", "display_currency": job_order.currency_id}'/></td>
+                                                            <td class="text-end">
+                                                                <span t-attf-class="badge rounded-pill {{'bg-warning' if p.state == 'verify' else 'bg-success' if p.state in ['approved', 'invoiced', 'paid'] else 'bg-light text-muted'}}">
+                                                                    <t t-esc="p.state.upper()"/>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                    <t t-if="not job_order.payment_request_ids">
+                                                        <tr>
+                                                            <td colspan="6" class="text-center py-5 text-muted italic">No payment requests found.</td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- End of tab-content -->
+                        </div>
+
+                        <!-- MODAL: Request Payment -->
+                        <div class="modal fade" id="modal_request_payment" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <form t-attf-action="/job_offer/{{token}}/request_payment" method="post" class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <div class="modal-header border-0 p-4">
+                                        <h4 class="modal-title fw-bold">Request Work Certification</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body p-4 pt-0">
+                                        <div class="alert alert-info border-0 rounded-4 mb-4 small">
+                                            <i class="fa-solid fa-circle-info me-2"></i> Submitting this claim will automatically trigger an internal <strong>Work Evaluation Inspection</strong>. Payment will be approved once execution is verified.
+                                        </div>
+                                        
+                                        <t t-set="last_certified" t-value="int(job_order.total_certified_progress)"/>
+                                        
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold small text-muted text-uppercase">New Work Progress Claim (%)</label>
+                                            <div class="input-group input-group-lg">
+                                                <input type="number" name="claim_percentage" class="form-control border-2 shadow-none" min="1" t-att-max="100 - last_certified" value="10" required="required" style="border-radius: 15px 0 0 15px;"/>
+                                                <span class="input-group-text bg-white border-2 border-start-0" style="border-radius: 0 15px 15px 0;">%</span>
+                                            </div>
+                                            <div class="form-text mt-2 text-muted">
+                                                Certified to date: <strong class="text-success"><t t-esc="last_certified"/>%</strong> | 
+                                                Maximum remaining: <strong class="text-primary"><t t-esc="100 - last_certified"/>%</strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold small text-muted text-uppercase">CONTRACTOR REMARKS</label>
+                                            <textarea name="notes" class="form-control border-2 shadow-none" rows="3" placeholder="Describe the work completed for this claim..." style="border-radius: 15px;"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 p-4 pt-0">
+                                        <button type="submit" class="btn btn-premium w-100 py-3 shadow">Submit Payment Claim</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- MODAL: Change Password -->
+                        <div class="modal fade" id="modal_change_password" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <form t-attf-action="/job_offer/{{job_order.access_token}}/change_password" method="post" class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <div class="modal-header border-0 p-4">
+                                        <h4 class="modal-title fw-bold">Security Settings</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body p-4 pt-0">
+                                        <p class="text-muted small mb-4">Update your secure access password for this execution dashboard.</p>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold small text-muted text-uppercase">Current Password</label>
+                                            <input type="password" name="old_password" class="form-control border-2 shadow-none" required="required" style="border-radius: 12px;"/>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold small text-muted text-uppercase">New Password</label>
+                                            <input type="password" name="new_password" class="form-control border-2 shadow-none" required="required" style="border-radius: 12px;"/>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold small text-muted text-uppercase">Confirm New Password</label>
+                                            <input type="password" name="confirm_password" class="form-control border-2 shadow-none" required="required" style="border-radius: 12px;"/>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 p-4 pt-0">
+                                        <button type="submit" class="btn btn-premium w-100 py-3 shadow">Update Password</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Info -->
+                        <div class="col-lg-4">
+                            <div class="dashboard-card p-4">
+                                <h6 class="section-title mb-4 fw-bold">Resource Center</h6>
+                                <div class="d-grid gap-3">
+                                    <t t-set="attachments" t-value="request.env['ir.attachment'].sudo().search([('res_model', '=', 'construction.job.order'), ('res_id', '=', job_order.id)])"/>
+                                    <t t-foreach="attachments" t-as="att">
+                                        <a t-attf-href="/web/content/{{att.id}}?download=true" class="btn btn-light text-start p-3 rounded-4 d-flex align-items-center border-0 shadow-sm transition-hover">
+                                            <i t-attf-class="fa-solid {{'fa-file-pdf text-danger' if att.mimetype == 'application/pdf' else 'fa-file-image text-info' if 'image' in att.mimetype else 'fa-file-contract text-primary'}} fs-3 me-3"></i>
+                                            <div class="overflow-hidden">
+                                                <small class="text-muted d-block fw-bold text-uppercase" style="font-size: 0.65rem;">Contract Asset</small>
+                                                <span class="small d-block text-truncate fw-bold"><t t-esc="att.name"/></span>
+                                            </div>
+                                        </a>
+                                    </t>
+                                    
+                                    <!-- Dynamic Payment Documents -->
+                                    <t t-set="invoices" t-value="request.env['account.move'].sudo().search([('job_order_id', '=', job_order.id), ('move_type', '=', 'in_invoice'), ('state', '!=', 'cancel')])"/>
+                                    <t t-foreach="invoices" t-as="inv">
+                                        <a t-attf-href="/report/pdf/account.report_invoice/{{inv.id}}" class="btn btn-light text-start p-3 rounded-4 d-flex align-items-center border-0 shadow-sm transition-hover">
+                                            <i class="fa-solid fa-file-pdf text-success fs-3 me-3"></i>
+                                            <div class="overflow-hidden">
+                                                <small class="text-muted d-block fw-bold text-uppercase" style="font-size: 0.65rem;">Payment Document</small>
+                                                <span class="small d-block text-truncate fw-bold"><t t-esc="inv.name"/></span>
+                                            </div>
+                                        </a>
+                                    </t>
+
+                                    <t t-if="not attachments and not invoices">
+                                        <div class="p-3 text-center text-muted small opacity-50 italic">
+                                            <i class="fa-solid fa-folder-open mb-2 d-block fs-4"></i> No documents shared.
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="dashboard-card p-4">
+                                <h6 class="section-title mb-4 fw-bold">Site Specifications</h6>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="p-3 bg-light rounded-4">
+                                            <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">LENGTH</small>
+                                            <span class="fw-bold"><t t-esc="job_order.project_id.site_length"/> m</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="p-3 bg-light rounded-4">
+                                            <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">WIDTH</small>
+                                            <span class="fw-bold"><t t-esc="job_order.project_id.site_width"/> m</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <div class="p-3 bg-light rounded-4 d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">GEOLOCATION</small>
+                                                <span class="small fw-bold">
+                                                    <t t-esc="job_order.project_id.site_latitude"/>, 
+                                                    <t t-esc="job_order.project_id.site_longitude"/>
+                                                </span>
+                                            </div>
+                                            <a t-attf-href="https://www.google.com/maps?q={{job_order.project_id.site_latitude}},{{job_order.project_id.site_longitude}}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill">
+                                                <i class="fa-solid fa-map-pin"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-dark border-0 p-4 shadow-sm" style="border-radius: 20px; background: #2d3748; color: white;">
+                                <h6 class="fw-bold mb-3"><i class="fa-solid fa-headset me-2 text-info"></i>PM Support</h6>
+                                <p class="small opacity-75 mb-3">Your assigned Project Manager is monitoring this dashboard for inspection requests.</p>
+                                <hr class="border-secondary mb-3"/>
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-info text-dark d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px;">PM</div>
+                                    <div>
+                                        <span class="d-block small fw-bold">Construction Office</span>
+                                        <span class="small opacity-50">Support Availability: 8am - 6pm</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </t>
+    </template>
+
+    <!-- Success: Rejected -->
+    <template id="job_order_rejected_page" name="Job Order Offer Declined">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+                <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+                <style>
+                    body {
+                        font-family: 'Outfit', sans-serif !important;
+                        background: url('file:///home/orbit-health/.gemini/antigravity/brain/b7814628-f6f6-4272-99a1-4fcb50645977/construction_portal_bg_1776089846669.png') no-repeat center center fixed;
+                        background-size: cover;
+                        min-height: 100vh;
+                    }
+                    #wrap { background: rgba(0, 0, 0, 0.4); min-height: 100vh; padding-top: 100px; }
+                    .reject-card { max-width: 600px; margin: 0 auto; border-radius: 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+                </style>
+            </t>
+            <div id="wrap">
+                <div class="container text-center">
+                    <div class="card reject-card shadow-lg p-5 border-0">
+                        <div class="mb-4">
+                            <i class="fa-solid fa-circle-xmark text-danger display-1"></i>
+                        </div>
+                        <h1 class="text-danger fw-bold mb-4">Offer Declined</h1>
+                        <p class="text-muted mb-5">Your feedback has been successfully logged for Reference: <strong><t t-esc="job_order.name"/></strong>.</p>
+                        <div class="alert alert-secondary border-0 rounded-4 p-3 small">
+                            <i class="fa-solid fa-link-slash me-2"></i>Access token has expired for security.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

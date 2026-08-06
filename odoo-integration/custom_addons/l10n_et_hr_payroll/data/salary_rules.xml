@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="et_rule_basic" model="hr.salary.rule">
+            <field name="name">Basic Salary</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">BASIC</field>
+            <field name="category_id" ref="hr_payroll_community.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
+        </record>
+
+        <!-- Standard Fully Taxable Allowances -->
+        <record id="et_rule_alw_cash" model="hr.salary.rule">
+            <field name="name">Standard Cash Allowances</field>
+            <field name="sequence" eval="10"/>
+            <field name="code">ALW_CASH</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.transport_allowance + contract.housing_allowance + contract.position_allowance + contract.mobile_allowance</field>
+        </record>
+
+        <!-- Meal Allowance (Taxable vs Exempt) -->
+        <record id="et_rule_alw_meal_tax" model="hr.salary.rule">
+            <field name="name">Meal Allowance (Taxable)</field>
+            <field name="sequence" eval="11"/>
+            <field name="code">ALW_MEAL_TAX</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = not contract.is_exempt_canteen_eligible</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.meal_allowance</field>
+        </record>
+
+        <record id="et_rule_alw_meal_exempt" model="hr.salary.rule">
+            <field name="name">Meal Allowance (Exempt)</field>
+            <field name="sequence" eval="12"/>
+            <field name="code">ALW_MEAL_EXEMPT</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_EXEMPT"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.is_exempt_canteen_eligible</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.meal_allowance</field>
+        </record>
+
+        <!-- Desert Allowance (Split logic) -->
+        <record id="et_rule_alw_desert_tax" model="hr.salary.rule">
+            <field name="name">Desert Allowance (Taxable)</field>
+            <field name="sequence" eval="13"/>
+            <field name="code">ALW_DESERT_TAX</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = max(0, contract.desert_allowance - (contract.wage * 0.25))</field>
+        </record>
+
+        <record id="et_rule_alw_desert_exempt" model="hr.salary.rule">
+            <field name="name">Desert Allowance (Exempt)</field>
+            <field name="sequence" eval="14"/>
+            <field name="code">ALW_DESERT_EXEMPT</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_EXEMPT"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = min(contract.desert_allowance, contract.wage * 0.25)</field>
+        </record>
+
+        <!-- Payroll Inputs (Per-Diem & Indemnity) -->
+        <record id="et_rule_per_diem_tax" model="hr.salary.rule">
+            <field name="name">Per-Diem (Taxable Portion)</field>
+            <field name="sequence" eval="15"/>
+            <field name="code">ALW_PER_DIEM_TAX</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+daily_exempt = max(500, (contract.wage / 30.0) * 0.04)
+monthly_exempt_cap = 2200
+input_val = inputs.PER_DIEM.amount if inputs.PER_DIEM else 0.0
+exempt_portion = min(input_val, monthly_exempt_cap)
+result = input_val - exempt_portion
+            </field>
+        </record>
+
+        <record id="et_rule_per_diem_exempt" model="hr.salary.rule">
+            <field name="name">Per-Diem (Exempt Portion)</field>
+            <field name="sequence" eval="16"/>
+            <field name="code">ALW_PER_DIEM_EXEMPT</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_EXEMPT"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+daily_exempt = max(500, (contract.wage / 30.0) * 0.04)
+monthly_exempt_cap = 2200
+input_val = inputs.PER_DIEM.amount if inputs.PER_DIEM else 0.0
+result = min(input_val, monthly_exempt_cap)
+            </field>
+        </record>
+
+        <record id="et_rule_indemnity_exempt" model="hr.salary.rule">
+            <field name="name">Cash Indemnity (Exempt)</field>
+            <field name="sequence" eval="17"/>
+            <field name="code">ALW_INDEMNITY</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_EXEMPT"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+result = inputs.INDEMNITY.amount if inputs.INDEMNITY else 0.0
+            </field>
+        </record>
+
+        <!-- Overtime Rules -->
+        <record id="et_rule_ot_norm" model="hr.salary.rule">
+            <field name="name">Overtime (Normal Day)</field>
+            <field name="sequence" eval="18"/>
+            <field name="code">OT_NORM</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.OT_NORM and inputs.OT_NORM.amount > 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.OT_NORM.amount</field>
+        </record>
+        
+        <record id="et_rule_ot_night" model="hr.salary.rule">
+            <field name="name">Overtime (Night Time)</field>
+            <field name="sequence" eval="19"/>
+            <field name="code">OT_NIGHT</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.OT_NIGHT and inputs.OT_NIGHT.amount > 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.OT_NIGHT.amount</field>
+        </record>
+        
+        <record id="et_rule_ot_week" model="hr.salary.rule">
+            <field name="name">Overtime (Weekend)</field>
+            <field name="sequence" eval="19"/>
+            <field name="code">OT_WEEK</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.OT_WEEK and inputs.OT_WEEK.amount > 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.OT_WEEK.amount</field>
+        </record>
+        
+        <record id="et_rule_ot_hol" model="hr.salary.rule">
+            <field name="name">Overtime (Public Holiday)</field>
+            <field name="sequence" eval="19"/>
+            <field name="code">OT_HOL</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.ALW_TAX"/>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = inputs.OT_HOL and inputs.OT_HOL.amount > 0</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.OT_HOL.amount</field>
+        </record>
+
+        <!-- Fringe Benefits -->
+        <record id="et_rule_fringe_capped" model="hr.salary.rule">
+            <field name="name">Capped Fringe Benefits (Non-Cash)</field>
+            <field name="sequence" eval="18"/>
+            <field name="code">FRINGE_CAPPED</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.FRINGE"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+vehicle = contract.wage * 0.05 if contract.has_company_vehicle else 0.0
+housing = max(0, contract.company_leased_housing_rent - contract.employee_housing_contribution)
+total_fringe = vehicle + housing
+result = min(total_fringe, contract.wage * 0.10)
+            </field>
+        </record>
+
+        <!-- Gross Salary (Cash only) -->
+        <record id="et_rule_gross" model="hr.salary.rule">
+            <field name="name">Gross Salary</field>
+            <field name="sequence" eval="20"/>
+            <field name="code">GROSS</field>
+            <field name="category_id" ref="hr_payroll_community.GROSS"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
+        </record>
+
+        <!-- Taxable Income -->
+        <record id="et_rule_taxable" model="hr.salary.rule">
+            <field name="name">Taxable Income</field>
+            <field name="sequence" eval="30"/>
+            <field name="code">TAXABLE</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.TAXABLE"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+exempt_cap = 2800 if contract.travels_for_work else 600
+exempt_transport = min(contract.transport_allowance, exempt_cap) if contract.transport_allowance else 0.0
+result = categories.BASIC + categories.ALW_TAX + categories.FRINGE - exempt_transport
+            </field>
+        </record>
+
+        <!-- Pensions -->
+        <record id="et_rule_emp_pension" model="hr.salary.rule">
+            <field name="name">Employee Pension (7%)</field>
+            <field name="sequence" eval="40"/>
+            <field name="code">EMP_PENSION</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.PENSION"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = - (contract.wage * 0.07) if contract.subject_to_pension else 0.0</field>
+        </record>
+
+        <record id="et_rule_er_pension" model="hr.salary.rule">
+            <field name="name">Employer Pension (11%)</field>
+            <field name="sequence" eval="50"/>
+            <field name="code">ER_PENSION</field>
+            <field name="category_id" ref="hr_payroll_community.COMP"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage * 0.11 if contract.subject_to_pension else 0.0</field>
+        </record>
+
+        <!-- Income Tax -->
+        <record id="et_rule_paye" model="hr.salary.rule">
+            <field name="name">Income Tax (PAYE)</field>
+            <field name="sequence" eval="60"/>
+            <field name="code">PAYE</field>
+            <field name="category_id" ref="l10n_et_hr_payroll.TAX"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+taxable = categories.TAXABLE
+if taxable &lt;= 2000:
+    result = 0.0
+elif taxable &lt;= 4000:
+    result = -(taxable * 0.15 - 300)
+elif taxable &lt;= 7000:
+    result = -(taxable * 0.20 - 500)
+elif taxable &lt;= 10000:
+    result = -(taxable * 0.25 - 850)
+elif taxable &lt;= 14000:
+    result = -(taxable * 0.30 - 1350)
+else:
+    result = -(taxable * 0.35 - 2050)
+            </field>
+        </record>
+
+        <!-- Net Salary -->
+        <record id="et_rule_net" model="hr.salary.rule">
+            <field name="name">Net Salary</field>
+            <field name="sequence" eval="100"/>
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_payroll_community.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.GROSS + categories.DED</field>
+        </record>
+
+        <!-- INPUTS definitions -->
+        <record id="et_input_per_diem" model="hr.rule.input">
+            <field name="code">PER_DIEM</field>
+            <field name="name">Field Per-Diem (Input)</field>
+            <field name="input_id" ref="l10n_et_hr_payroll.et_rule_per_diem_tax"/>
+        </record>
+
+        <record id="et_input_indemnity" model="hr.rule.input">
+            <field name="code">INDEMNITY</field>
+            <field name="name">Cash Indemnity (Input)</field>
+            <field name="input_id" ref="l10n_et_hr_payroll.et_rule_indemnity_exempt"/>
+        </record>
+
+        <record id="et_input_ot_norm" model="hr.rule.input">
+            <field name="code">OT_NORM</field>
+            <field name="name">Overtime (Normal Day)</field>
+            <field name="input_id" ref="l10n_et_hr_payroll.et_rule_ot_norm"/>
+        </record>
+
+        <record id="et_input_ot_night" model="hr.rule.input">
+            <field name="code">OT_NIGHT</field>
+            <field name="name">Overtime (Night Time)</field>
+            <field name="input_id" ref="l10n_et_hr_payroll.et_rule_ot_night"/>
+        </record>
+
+        <record id="et_input_ot_week" model="hr.rule.input">
+            <field name="code">OT_WEEK</field>
+            <field name="name">Overtime (Weekend)</field>
+            <field name="input_id" ref="l10n_et_hr_payroll.et_rule_ot_week"/>
+        </record>
+
+        <record id="et_input_ot_hol" model="hr.rule.input">
+            <field name="code">OT_HOL</field>
+            <field name="name">Overtime (Public Holiday)</field>
+            <field name="input_id" ref="l10n_et_hr_payroll.et_rule_ot_hol"/>
+        </record>
+
+    </data>
+</odoo>

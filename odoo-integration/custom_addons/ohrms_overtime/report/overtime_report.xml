@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Report Action -->
+        <record id="action_report_overtime_request" model="ir.actions.report">
+            <field name="name">Overtime Request</field>
+            <field name="model">hr.overtime</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">ohrms_overtime.report_overtime_request</field>
+            <field name="report_file">ohrms_overtime.report_overtime_request</field>
+            <field name="print_report_name">(object.name or 'Overtime_Request') + '.pdf'</field>
+            <field name="binding_model_id" ref="model_hr_overtime"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Report Template -->
+        <template id="report_overtime_request">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            
+                            <h2 class="mt-4 mb-4" style="color: #017e84;">
+                                Overtime Request: <span t-field="doc.name"/>
+                            </h2>
+                            
+                            <!-- Employee & Request Info -->
+                            <div class="row mb-4" style="font-size: 14px;">
+                                <div class="col-6">
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <th style="width: 40%;"><strong>Employee:</strong></th>
+                                            <td><span t-field="doc.employee_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Department:</strong></th>
+                                            <td><span t-field="doc.department_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Job Position:</strong></th>
+                                            <td><span t-field="doc.job_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Manager:</strong></th>
+                                            <td><span t-field="doc.manager_id.name"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-sm table-borderless">
+                                        <tr>
+                                            <th style="width: 40%;"><strong>Status:</strong></th>
+                                            <td><span t-field="doc.state"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Duration Type:</strong></th>
+                                            <td><span t-field="doc.duration_type"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Date From:</strong></th>
+                                            <td><span t-field="doc.date_from"/></td>
+                                        </tr>
+                                        <tr>
+                                            <th><strong>Date To:</strong></th>
+                                            <td><span t-field="doc.date_to"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- Work Description -->
+                            <t t-if="doc.desc">
+                                <div class="mb-4">
+                                    <h4 style="color: #017e84; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Work Description</h4>
+                                    <p class="mt-2" t-field="doc.desc"/>
+                                </div>
+                            </t>
+
+                            <!-- Calculations Summary -->
+                            <div class="mb-4">
+                                <h4 style="color: #017e84; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Calculations Summary</h4>
+                                <table class="table table-sm table-bordered mt-3" style="text-align: center;">
+                                    <thead style="background-color: #f8f9fa;">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Normal</th>
+                                            <th>Night</th>
+                                            <th>Weekend</th>
+                                            <th>Holiday</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Hours</strong></td>
+                                            <td><span t-field="doc.ot_normal_hours" t-options='{"widget": "float_time"}'/></td>
+                                            <td><span t-field="doc.ot_night_hours" t-options='{"widget": "float_time"}'/></td>
+                                            <td><span t-field="doc.ot_weekend_hours" t-options='{"widget": "float_time"}'/></td>
+                                            <td><span t-field="doc.ot_holiday_hours" t-options='{"widget": "float_time"}'/></td>
+                                        </tr>
+                                        <tr t-if="doc.type == 'cash'">
+                                            <td><strong>Amount</strong></td>
+                                            <td><span t-field="doc.ot_normal_amount" t-options='{"widget": "monetary", "display_currency": doc.contract_id.company_id.currency_id or res_company.currency_id}'/></td>
+                                            <td><span t-field="doc.ot_night_amount" t-options='{"widget": "monetary", "display_currency": doc.contract_id.company_id.currency_id or res_company.currency_id}'/></td>
+                                            <td><span t-field="doc.ot_weekend_amount" t-options='{"widget": "monetary", "display_currency": doc.contract_id.company_id.currency_id or res_company.currency_id}'/></td>
+                                            <td><span t-field="doc.ot_holiday_amount" t-options='{"widget": "monetary", "display_currency": doc.contract_id.company_id.currency_id or res_company.currency_id}'/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <t t-if="doc.type == 'cash'">
+                                    <div class="row">
+                                        <div class="col-8"></div>
+                                        <div class="col-4 text-right">
+                                            <strong style="font-size: 18px; color: #017e84;">
+                                                Total Amount: <span t-field="doc.ot_total_amount" t-options='{"widget": "monetary", "display_currency": doc.contract_id.company_id.currency_id or res_company.currency_id}'/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+
+                            <!-- Attendances Table -->
+                            <t t-if="doc.attendance_ids">
+                                <div class="mb-4">
+                                    <h4 style="color: #017e84; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Approved Overtime Attendances</h4>
+                                    <table class="table table-sm mt-3" style="font-size: 13px;">
+                                        <thead>
+                                            <tr style="background-color: #e9ecef;">
+                                                <th class="text-left">Employee</th>
+                                                <th class="text-left">Check In</th>
+                                                <th class="text-left">Check Out</th>
+                                                <th class="text-right">Work Hours</th>
+                                                <th class="text-center">OT Type</th>
+                                                <th class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="doc.attendance_ids" t-as="att">
+                                                <tr>
+                                                    <td class="text-left"><span t-field="att.employee_id.name"/></td>
+                                                    <td class="text-left"><span t-field="att.check_in"/></td>
+                                                    <td class="text-left"><span t-field="att.check_out"/></td>
+                                                    <td class="text-right"><span t-field="att.worked_hours" t-options='{"widget": "float_time"}'/></td>
+                                                    
+                                                    <!-- Color-coded OT Type badge in PDF -->
+                                                    <td class="text-center">
+                                                        <t t-if="att.primary_ot_type == 'holiday'">
+                                                            <span class="badge badge-pill badge-success">Holiday</span>
+                                                        </t>
+                                                        <t t-elif="att.primary_ot_type == 'weekend'">
+                                                            <span class="badge badge-pill badge-info">Weekend</span>
+                                                        </t>
+                                                        <t t-elif="att.primary_ot_type == 'night'">
+                                                            <span class="badge badge-pill badge-danger">Night</span>
+                                                        </t>
+                                                        <t t-elif="att.primary_ot_type == 'normal'">
+                                                            <span class="badge badge-pill badge-warning">Normal</span>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="badge badge-pill badge-secondary">Standard</span>
+                                                        </t>
+                                                    </td>
+                                                    
+                                                    <td class="text-center">
+                                                        <span t-attf-class="badge badge-pill #{'badge-success' if att.state == 'approved' else 'badge-info'}">
+                                                            <t t-esc="dict(att.fields_get(allfields=['state'])['state']['selection'])[att.state]"/>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                            
+                            <div class="oe_structure"/>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

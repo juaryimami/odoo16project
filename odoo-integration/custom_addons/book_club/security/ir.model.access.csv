@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_book_club_author_user,book_club.author.user,model_book_club_author,book_club.group_book_club_user,1,0,0,0
+access_book_club_author_manager,book_club.author.manager,model_book_club_author,book_club.group_book_club_manager,1,1,1,1
+access_book_club_publisher_user,book_club.publisher.user,model_book_club_publisher,book_club.group_book_club_user,1,0,0,0
+access_book_club_publisher_manager,book_club.publisher.manager,model_book_club_publisher,book_club.group_book_club_manager,1,1,1,1
+access_book_club_genre_user,book_club.genre.user,model_book_club_genre,book_club.group_book_club_user,1,0,0,0
+access_book_club_genre_manager,book_club.genre.manager,model_book_club_genre,book_club.group_book_club_manager,1,1,1,1
+access_book_club_book_user,book_club.book.user,model_book_club_book,book_club.group_book_club_user,1,0,0,0
+access_book_club_book_manager,book_club.book.manager,model_book_club_book,book_club.group_book_club_manager,1,1,1,1
+access_book_club_member_manager,book_club.member.manager,model_book_club_member,book_club.group_book_club_manager,1,1,1,1
+access_book_club_borrow_user,book_club.borrow.user,model_book_club_borrow,book_club.group_book_club_user,1,1,0,0
+access_book_club_borrow_manager,book_club.borrow.manager,model_book_club_borrow,book_club.group_book_club_manager,1,1,1,1

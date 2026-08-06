@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Salary Rule Form View: Add Debit/Credit Accounts -->
+    <record id="hr_salary_rule_form_account_inherit" model="ir.ui.view">
+        <field name="name">hr.salary.rule.form.account.inherit</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="inherit_id" ref="hr_payroll_community.hr_salary_rule_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="accounting" string="Accounting">
+                    <group>
+                        <field name="account_debit"/>
+                        <field name="account_credit"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Payroll Structure Form View: Add Journal -->
+    <record id="hr_payroll_structure_form_account_inherit" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.form.account.inherit</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="inherit_id" ref="hr_payroll_community.view_hr_employee_grade_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="journal_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Payslip Form View: Add Accounting Entry Link -->
+    <record id="hr_payslip_form_account_inherit" model="ir.ui.view">
+        <field name="name">hr.payslip.form.account.inherit</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll_community.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_note']" position="after">
+                <field name="move_id" attrs="{'invisible': [('move_id', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

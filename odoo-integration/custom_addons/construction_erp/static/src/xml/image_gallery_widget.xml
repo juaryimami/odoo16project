@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="construction_erp.ImageGalleryWidgetTemplate" owl="1">
+        <div class="w-100">
+            <h4 class="fw-bold text-secondary mb-3 mt-4"><i class="fa fa-camera-retro"></i> Recent Site Visuals</h4>
+            <div class="d-flex flex-row overflow-auto pb-4 pt-2 photo-gallery-container w-100">
+                <t t-foreach="images" t-as="visual" t-key="visual.id">
+                    <div class="card border-0 shadow-sm flex-shrink-0 photo-card cursor-pointer" t-on-click="() => this.openImage(visual.id)">
+                        <img t-attf-src="/web/image?model=construction.project.image&amp;id={{visual.id}}&amp;field=image" class="card-img-top photo-img" alt="Site Visual"/>
+                        <div class="card-img-overlay d-flex flex-column justify-content-end photo-overlay pb-2 pt-0 px-3">
+                            <h5 class="card-title text-white fw-bolder mb-0 text-truncate"><t t-esc="visual.name"/></h5>
+                            <p class="card-text text-white-50 small mt-1 mb-0"><t t-esc="visual.date"/></p>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="!images.length">
+                    <div class="text-muted w-100 p-5 text-center bg-light rounded shadow-sm border border-dashed">
+                        <i class="fa fa-image fa-3x mb-3 text-secondary"></i>
+                        <h4>No Active Site Photos Logged</h4>
+                        <p class="mb-0">Upload specific site photographs in the 'Progress Photos' tab below to activate this gallery.</p>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

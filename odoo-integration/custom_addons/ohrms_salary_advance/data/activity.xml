@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail_activity_advance_salary" model="mail.activity.type">
+            <field name="name">Advance Salary Activity</field>
+            <field name="res_model">salary.advance</field>
+        </record>
+
+    </data>
+</odoo>

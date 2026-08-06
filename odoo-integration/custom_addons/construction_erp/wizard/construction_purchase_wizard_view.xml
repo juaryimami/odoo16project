@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_purchase_wizard_form" model="ir.ui.view">
+        <field name="name">construction.purchase.wizard.form</field>
+        <field name="model">construction.purchase.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Smart Sourcing: Generate PO from BOQ">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="lifecycle_id" invisible="1"/>
+                            <field name="phase_id" domain="[('lifecycle_id', '=', lifecycle_id)]"/>
+                        </group>
+                        <group>
+                            <field name="vendor_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Select BOQ Lines" name="lines">
+                            <field name="line_ids">
+                                <tree editable="bottom" create="0">
+                                    <field name="cost_line_id" readonly="1"/>
+                                    <field name="product_id" readonly="1"/>
+                                    <field name="qty_remaining" readonly="1"/>
+                                    <field name="qty_to_order" decoration-bf="1" decoration-danger="qty_to_order > qty_remaining"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_generate_po" string="Generate Purchase Order" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_purchase_wizard" model="ir.actions.act_window">
+        <field name="name">Smart Sourcing (BOQ to PO)</field>
+        <field name="res_model">construction.purchase.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_construction_purchase_wizard"
+              name="Smart Sourcing (BOQ to PO)"
+              parent="menu_construction_operations"
+              action="action_construction_purchase_wizard"
+              sequence="25"/>
+</odoo>

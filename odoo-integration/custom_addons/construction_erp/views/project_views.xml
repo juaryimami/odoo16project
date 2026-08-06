@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Modify Native Project Action to EXCLUDE Construction Projects -->
+    <record id="project.open_view_project_all" model="ir.actions.act_window">
+        <field name="domain">[('project_type', '!=', 'construction')]</field>
+    </record>
+
+    <record id="view_project_project_form_inherit_construction" model="ir.ui.view">
+        <field name="name">project.project.form.inherit.construction</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_refresh_financials" string="Refresh Financials" type="object" class="oe_highlight" icon="fa-refresh" title="Force calculate Master Plan and Budgets"/>
+                <button name="action_start_project" string="Start Project" type="object" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                <button name="action_mark_done" string="Complete Project" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'in_progress'), ('is_final_phase', '=', False)]}"/>
+                <button name="action_cancel_project" string="Cancel Project" type="object" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}"/>
+                <button name="action_initialize_warehouse" string="Initialize Warehouse" type="object" icon="fa-cube" class="btn-warning" attrs="{'invisible': [('warehouse_id', '!=', False)]}" title="Create a dedicated warehouse for this project site"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                <field name="is_final_phase" invisible="1"/>
+                <field name="warehouse_id" invisible="1"/>
+            </xpath>
+            <!-- Hide Share Buttons by Context as string-based selectors are not permitted and names are dynamic -->
+            <xpath expr="//header//button[@context=&quot;{'default_access_mode': 'read'}&quot;]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//header//button[@context=&quot;{'default_access_mode': 'edit'}&quot;]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div class="row align-items-center bg-light p-3 mb-3 border rounded shadow-sm" attrs="{'invisible': [('state', '=', 'draft')]}">
+                    <div class="col-md-7">
+                        <strong class="text-muted d-block mb-1"><i class="fa fa-road me-1"/> Construction Roadmap</strong>
+                        <field name="current_phase_id" widget="statusbar" readonly="1" options="{'clickable': '1'}"/>
+                    </div>
+                    <div class="col-md-3 text-center border-start border-end">
+                        <strong class="text-muted d-block mb-1"><i class="fa fa-bolt me-1"/> Phase Actions</strong>
+                        <div class="d-flex justify-content-center gap-2">
+                            <button name="action_advance_phase" string="Complete Phase" type="object" class="btn-primary btn-sm" groups="construction_erp.group_construction_manager" confirm="Advance to next phase? This will check for pending Job Orders." icon="fa-check-circle"/>
+                            <button name="action_create_job_order" string="New Job" type="object" class="btn-secondary btn-sm" icon="fa-plus-circle"/>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <strong class="text-muted d-block mb-1">Overall</strong>
+                        <field name="phase_progress" widget="progressbar" string="Lifecycle Progress"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="warehouse_id" string="Dedicated Site Warehouse" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_open_real_estate_units" type="object" icon="fa-building">
+                    <field name="unit_count" widget="statinfo" string="Total Units"/>
+                </button>
+                <button class="oe_stat_button" name="action_view_project_rfis" type="object" icon="fa-question-circle" attrs="{'invisible': [('rfi_count', '=', 0)]}">
+                    <field name="rfi_count" widget="statinfo" string="Pending RFIs"/>
+                </button>
+                <button class="oe_stat_button" name="action_view_project_submittals" type="object" icon="fa-file-text-o" attrs="{'invisible': [('submittal_count', '=', 0)]}">
+                    <field name="submittal_count" widget="statinfo" string="Pending Submittals"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_sold_units" type="object" icon="fa-shopping-cart">
+                    <field name="total_sold_count" widget="statinfo" string="Sold Units"/>
+                </button>
+                <button name="%(construction_erp.action_construction_estimate)d" type="action" class="oe_stat_button" icon="fa-calculator">
+                    <field name="estimate_count" widget="statinfo" string="Estimates"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_job_orders" type="object" icon="fa-tasks">
+                    <field name="job_order_count" widget="statinfo" string="Job Orders"/>
+                </button>
+                <button name="%(construction_erp.action_construction_document)d" type="action" class="oe_stat_button" icon="fa-file-pdf-o">
+                    <field name="document_count" widget="statinfo" string="Documents"/>
+                </button>
+                <button name="action_open_compliance" type="object" class="oe_stat_button" icon="fa-gavel">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="compliance_count"/> /
+                            <field name="expired_compliance_count" class="text-danger"/>
+                        </span>
+                        <span class="o_stat_text">Permits</span>
+                    </div>
+                </button>
+                <button name="%(construction_erp.action_construction_scrap)d" type="action" class="oe_stat_button" icon="fa-trash">
+                    <field name="scrap_count" widget="statinfo" string="Wastage Logs"/>
+                </button>
+                <button name="action_view_variations" type="object" class="oe_stat_button" icon="fa-exchange">
+                    <field name="total_variation_amount" widget="statinfo" string="Variations"/>
+                </button>
+                <button name="action_view_procurement_risks" type="object" class="oe_stat_button" icon="fa-truck" decoration-danger="procurement_risk_count &gt; 0">
+                    <field name="procurement_risk_count" widget="statinfo" string="Sourcing Risks"/>
+                </button>
+                <button class="oe_stat_button" icon="fa-shopping-cart" type="object" name="action_launch_sourcing_wizard">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="total_ordered_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">Ordered</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" name="action_open_active_phase_jobs" type="object" icon="fa-tasks">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value"><field name="active_phase_job_count"/></span>
+                        <span class="o_stat_text">Pending Work</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" name="action_open_daily_logs" type="object" icon="fa-list-alt">
+                    <field string="Logs" name="daily_log_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='settings']" position="inside">
+               <div class="row bg-white p-4 border rounded shadow-sm m-2">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-primary m-0"><i class="fa fa-road me-2"/> Progress Roadmap &amp; Phase Weight Configuration</h4>
+                            <button name="action_sync_roadmap" string="Sync Roadmap" type="object" class="btn-primary" icon="fa-refresh" confirm="This will add any missing phases from the project lifecycle and reset weights to defaults. Continue?"/>
+                        </div>
+                        <field name="roadmap_total_weight" invisible="1"/>
+                        <div class="alert alert-danger py-2" role="alert" attrs="{'invisible': [('roadmap_total_weight', '=', 100.0)]}">
+                             <i class="fa fa-exclamation-triangle me-2"/> <strong>Warning:</strong> The total phase weight must be exactly 100% for accurate progress tracking. Currently at <field name="roadmap_total_weight" readonly="1" class="fw-bold"/>.
+                        </div>
+                        <div class="alert alert-secondary py-2" role="alert" attrs="{'invisible': [('roadmap_total_weight', '!=', 100.0)]}">
+                             <i class="fa fa-check-circle me-2 text-success"/> Configure the relative importance of each phase for overall progress calculation.
+                        </div>
+                        <field name="phase_config_ids" context="{'default_project_id': active_id}">
+                            <tree editable="bottom" decoration-muted="weight == 0">
+                                <field name="sequence" widget="handle"/>
+                                <field name="phase_id" options="{'no_create': True}" domain="[('lifecycle_id', '=', parent.lifecycle_id)]"/>
+                                <field name="weight" sum="Total Weight" string="Weight (%)" decoration-danger="parent.roadmap_total_weight != 100" decoration-success="parent.roadmap_total_weight == 100"/>
+                                <field name="total_jobs" readonly="1"/>
+                                <field name="completed_jobs" readonly="1" string="Passed Jobs"/>
+                                <field name="phase_progress_ratio" widget="progressbar" string="Phase Progress"/>
+                                <field name="contribution" sum="Total Progress" string="Contribution (%)" decoration-bf="1"/>
+                            </tree>
+                        </field>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//group" position="after">
+                <group string="Construction General &amp; Financials">
+                    <group string="Project Lifecycle">
+                        <field name="lifecycle_id" options="{'no_create': True}" required="1"/>
+                        <field name="user_id" string="Project Manager" options="{'no_create': True}"/>
+                        <field name="site_manager_id" options="{'no_create': True}"/>
+                        <field name="project_owner_id" options="{'no_create': True}"/>
+                        <field name="inspector_id" options="{'no_create': True}" placeholder="Select Inspector for Quality Gates"/>
+                    </group>
+                    <group string="Real Estate Sales Indicators">
+                        <field name="total_sold_value" widget="monetary"/>
+                        <field name="total_collected_revenue" widget="monetary" decoration-success="total_collected_revenue &gt; 0"/>
+                        <field name="total_sold_count"/>
+                        <field name="unsold_unit_count" string="Unsold Unit Count"/>
+                    </group>
+                <group string="Financial Execution Summary (Actual Spend)">
+                    <field name="total_budget" string="Projected BOQ Cost (JO)" readonly="1" decoration-bf="1"/>
+                    <field name="total_variation_amount" string="Approved Variations" readonly="1" decoration-danger="total_variation_amount &gt; 0"/>
+                    <field name="revised_budget_amount" string="Total Revised Budget" readonly="1" decoration-bf="1" class="text-primary"/>
+                    <field name="total_expense" string="Total Actual Site Spend" readonly="1" force_save="1" decoration-danger="total_expense &gt; revised_budget_amount"/>
+                    <field name="budget_utilization_pct" widget="progressbar" string="Budget Burn Velocity"/>
+                    <field name="profitability" string="Unspent Balance" readonly="1" force_save="1" decoration-success="profitability &gt;= 0" decoration-danger="profitability &lt; 0"/>
+                </group>
+                </group>
+               
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Site Dimensions &amp; Geo-Mapping">
+                    <group>
+                        <group string="Physical Blueprint (Meters)">
+                            <field name="site_width" placeholder="e.g. 150.5"/>
+                            <field name="site_length" placeholder="e.g. 300.2"/>
+                            <field name="site_area" readonly="1" force_save="1"/>
+                        </group>
+                        <group string="GPS Coordinates">
+                            <field name="site_latitude" placeholder="e.g. 34.052235"/>
+                            <field name="site_longitude" placeholder="e.g. -118.243683"/>
+                            <field name="gps_collector" widget="gps_collector" nolabel="1"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Progress Photos">
+                    <field name="progress_image_ids" mode="kanban">
+                        <kanban string="Progress Photos">
+                            <field name="id"/>
+                            <field name="name"/>
+                            <field name="image"/>
+                            <field name="date"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <div class="o_kanban_image w-100 mb-2">
+                                            <img t-att-src="kanban_image('construction.project.image', 'image', record.id.raw_value)" alt="Progress Photo" style="width: 100%; object-fit: cover; max-height: 150px;"/>
+                                        </div>
+                                        <div class="oe_kanban_details">
+                                            <strong><field name="name"/></strong>
+                                            <div class="text-muted"><field name="date"/></div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form string="Progress Photo">
+                            <sheet>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="notes"/>
+                                    <field name="image" widget="image"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+                <page string="Master Project Plan">
+                    <field name="master_plan_summary_ids" readonly="1">
+                        <tree>
+                            <field name="item_type"/>
+                            <field name="total_budget" sum="Total Budget" widget="monetary"/>
+                            <field name="actual_spent" sum="Total Actual" widget="monetary"/>
+                            <field name="phases"/>
+                            <field name="variation_amount" sum="Total Variation" widget="monetary"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Real Estate Assets/Units">
+                    <field name="unit_ids" mode="tree">
+                        <tree string="Project Unit Profiles">
+                            <field name="name"/>
+                            <field name="unit_type"/>
+                            <field name="product_id"/>
+                            <field name="total_quantity" sum="Total Aggregate Units"/>
+                            <field name="quantity_sold" sum="Total Sold Units"/>
+                            <field name="quantity_available" sum="Total Available" decoration-danger="quantity_available == 0"/>
+                            <field name="price" widget="monetary"/>
+                            <field name="size"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Dedicated Action for the Construction New Project Popup -->
+    <record id="action_construction_project_new" model="ir.actions.act_window">
+        <field name="name">Create a Construction Project</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project.project_project_view_form_simplified"/>
+        <field name="target">new</field>
+        <field name="context">{'default_project_type': 'construction'}</field>
+    </record>
+
+    <!-- Dedicated Construction Kanban View (Completely Separate from Native) -->
+    <record id="view_construction_project_kanban" model="ir.ui.view">
+        <field name="name">construction.project.kanban</field>
+        <field name="model">project.project</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1" on_create="construction_erp.action_construction_project_new">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="color"/>
+                <field name="project_type"/>
+                <field name="lifecycle_id"/>
+                <field name="current_phase_id"/>
+                <field name="phase_progress"/>
+                <field name="compliance_count"/>
+                <field name="expired_compliance_count"/>
+                <field name="job_order_count"/>
+                <field name="date_start"/>
+                <field name="date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click o_has_icon">
+                            <div class="o_project_kanban_main">
+                                <div class="o_kanban_card_content">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <span><t t-esc="record.name.value"/></span>
+                                        </div>
+                                        <div t-if="record.date_start.value or record.date.value" class="text-muted small">
+                                            <i class="fa fa-clock-o me-1"/>
+                                            <t t-esc="record.date_start.value"/> 
+                                            <t t-if="record.date_start.value and record.date.value"> → </t>
+                                            <t t-esc="record.date.value"/>
+                                        </div>
+                                        <div t-if="record.partner_id.value">
+                                            <span class="text-muted"><i class="fa fa-user me-1"/> <t t-esc="record.partner_id.value"/></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <div class="o_kanban_card_manage_section o_kanban_manage_reports">
+                                        <div role="menuitem">
+                                            <a type="edit">Edit</a>
+                                        </div>
+                                    </div>
+                                    <div t-if="widget.editable" class="o_project_kanban_colorpicker">
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                </div>
+                                <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                            </div>
+                            
+                            <!-- Construction Roadmap Pulse -->
+                            <div class="o_project_kanban_card_progress w-100 flex-grow-1 border-top pt-2 mt-2">
+                                <div class="d-flex justify-content-between align-items-center mb-1 px-1">
+                                    <span class="badge rounded-pill bg-primary-light text-primary">
+                                        <i class="fa fa-road me-1"/> 
+                                        <t t-esc="record.current_phase_id.value"/>
+                                    </span>
+                                    <span class="fw-bold text-dark">
+                                        <t t-esc="Math.round(record.phase_progress.raw_value)"/>%
+                                    </span>
+                                </div>
+                                <div class="px-1">
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" 
+                                             t-att-style="'width: ' + record.phase_progress.raw_value + '%'"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="o_project_kanban_boxes d-flex mt-3 border-top pt-2 justify-content-around">
+                                <a class="d-flex flex-column align-items-center" name="action_open_job_orders" type="object">
+                                    <span class="fw-bold text-primary fs-5"><t t-esc="record.job_order_count.raw_value"/></span>
+                                    <span class="text-uppercase fw-bold text-muted small" style="font-size: 0.6rem;">Job Orders</span>
+                                </a>
+                                <a class="d-flex flex-column align-items-center" name="action_open_compliance" type="object">
+                                    <div class="d-flex align-items-center">
+                                        <span class="fw-bold text-success fs-5"><t t-esc="record.compliance_count.raw_value"/></span>
+                                        <t t-if="record.expired_compliance_count.raw_value > 0">
+                                            <span class="badge rounded-pill bg-danger ms-1" style="font-size: 0.6rem;">
+                                                <i class="fa fa-warning"/> <t t-esc="record.expired_compliance_count.raw_value"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                    <span class="text-uppercase fw-bold text-muted small" style="font-size: 0.6rem;">Site Permits</span>
+                                </a>
+                                <div class="d-flex flex-column align-items-center">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Inherit Simplified Form for Quick Creation Wizard -->
+    <record id="view_project_project_form_simplified_inherit_construction" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.inherit.construction</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <group string="Personnel &amp; Classification" attrs="{'invisible': [('project_type', '!=', 'construction')]}">
+                    <field name="user_id" string="Project Manager" placeholder="Select Manager" required="1" options="{'no_create': True}" domain="[('groups_id', 'in', [%(construction_erp.group_construction_manager)d])]"/>
+                    <field name="site_manager_id" string="Site Supervisor" placeholder="Select Site Supervisor" required="1" options="{'no_create': True}" domain="[('groups_id', 'in', [%(construction_erp.group_construction_supervisor)d])]"/>
+                    <field name="lifecycle_id" string="Construction Cycle" placeholder="Select Lifecycle (e.g. 5 Cycle)" required="1"/>
+                    <field name="project_type" invisible="1" force_save="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Project Action (linking back to native project app) -->
+    <record id="action_construction_projects" model="ir.actions.act_window">
+        <field name="name">Construction Projects</field>
+        <field name="res_model">project.project</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_construction_project_kanban')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('project.view_project')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('project.edit_project')})]"/>
+        <field name="domain">[('project_type', '=', 'construction')]</field>
+        <field name="context">{'default_project_type': 'construction', 'active_test': False}</field>
+    </record>
+
+    <menuitem id="menu_construction_project_list"
+              name="Projects"
+              parent="menu_construction_projects"
+              action="action_construction_projects"
+              sequence="10"/>
+</odoo>

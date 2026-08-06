@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_construction" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.construction</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- 1. Move Is Client and custom header fields to the very top, before Name/oe_title -->
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <group>
+                    <group>
+                        <field name="is_client" widget="boolean_toggle"/>
+                        <field name="is_contractor" widget="boolean_toggle" attrs="{'invisible': [('is_client', '=', True)]}"/>
+                    </group>
+                    <group attrs="{'invisible': [('is_client', '=', False)]}">
+                         <field name="file_number"/>
+                         <field name="site_name"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <!-- 2. Ensure Company Type and Name are visible for clients (already in oe_title) -->
+            <!-- Note: We don't hide company_type anymore as per user request -->
+
+            <!-- 3. Add Client Specific Fields AFTER Name (oe_title) -->
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <group attrs="{'invisible': [('is_client', '=', False)]}">
+                    <group>
+                        <field name="gender"/>
+                        <field name="mother_name"/>
+                        <field name="nationality"/>
+                        <field name="marital_status"/>
+                        <field name="spouse_name" attrs="{'invisible': [('marital_status', '!=', 'married')], 'required': [('marital_status', '=', 'married')]}"/>
+                        <field name="id_no"/>
+                        <field name="project_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="bought_project_id" readonly="1" options="{'no_create': True}"/>
+                        <field name="amount_of_share"/>
+                    </group>
+                    <group>
+                        <label for="region" string="Address"/>
+                        <div class="o_address_format">
+                            <field name="region" placeholder="Region" class="o_address_region"/>
+                            <field name="zone" placeholder="Zone" class="o_address_zone"/>
+                            <field name="city" placeholder="City" class="o_address_city"/>
+                            <field name="woreda" placeholder="Woreda" class="o_address_woreda"/>
+                            <field name="kebele" placeholder="Kebele" class="o_address_kebele"/>
+                            <field name="house_no" placeholder="House No" class="o_address_house_no"/>
+                        </div>
+                        <field name="email" widget="email"/>
+                        <field name="phone" widget="phone"/>
+                        <field name="function" string="Job"/>
+                    </group>
+                </group>
+
+                <!-- Client Notification Preferences -->
+                <group attrs="{'invisible': [('is_client', '=', False)]}" string="Notification Preferences">
+                    <field name="notification_preference" widget="radio"/>
+                    <field name="whatsapp_number" attrs="{'invisible': [('notification_preference', '!=', 'whatsapp')], 'required': [('notification_preference', '=', 'whatsapp')]}"/>
+                    <label for="telegram_chat_id" attrs="{'invisible': [('notification_preference', '!=', 'telegram')]}"/>
+                    <div class="o_row" attrs="{'invisible': [('notification_preference', '!=', 'telegram')]}">
+                        <field name="telegram_chat_id" placeholder="Click Sync to fetch ID..."/>
+                        <button name="action_sync_telegram_id_nemal" 
+                                type="object" 
+                                string=" Sync" 
+                                class="btn-primary btn-sm" 
+                                icon="fa-telegram" 
+                                help="Ensure the client messaged the bot first."/>
+                    </div>
+                    <field name="receipt_upload_pin" password="True"/>
+                </group>
+            </xpath>
+
+            <!-- 4. Hide ALL standard groups and fields when is_client is True -->
+            <!-- We target the main group and specific fields that might be outside -->
+            <xpath expr="//group[group[div[field[@name='street']]]]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_client', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_client', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_client', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu for Contractors -->
+    <record id="action_construction_contractors" model="ir.actions.act_window">
+        <field name="name">Contractors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_contractor', '=', True)]</field>
+        <field name="context">{'default_is_contractor': True}</field>
+    </record>
+
+    <menuitem id="menu_construction_contractors"
+              name="Contractors"
+              parent="menu_construction_projects"
+              action="action_construction_contractors"
+              sequence="20"/>
+    <!-- Inherit Partner Search View to Add Bought Project Filter -->
+    <record id="view_res_partner_filter_inherit_construction" model="ir.ui.view">
+        <field name="name">res.partner.select.inherit.construction</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Bought Project" name="group_by_bought_project" context="{'group_by': 'bought_project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu for Clients -->
+    <record id="action_construction_clients" model="ir.actions.act_window">
+        <field name="name">Clients</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_client', '=', True)]</field>
+        <field name="context">{'default_is_client': True, 'search_default_group_by_bought_project': 1}</field>
+    </record>
+
+    <menuitem id="menu_construction_clients"
+              name="Clients"
+              parent="menu_construction_real_estate"
+              action="action_construction_clients"
+              sequence="20"/>
+</odoo>

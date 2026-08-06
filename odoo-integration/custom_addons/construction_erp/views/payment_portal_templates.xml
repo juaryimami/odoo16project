@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_payment_receipt_upload" name="Payment Receipt Upload">
+        <t t-call="portal.portal_layout">
+            <div id="wrap" class="oe_structure oe_empty" style="background-color: #f4f7f6; min-height: 100vh; padding: 50px 0;">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                                <!-- Header -->
+                                <div style="background-color: #1a2a40; padding: 40px; text-align: center;">
+                                    <h2 style="color: #ffffff; margin: 0; font-weight: 700;">NEMAL ENGINEERING</h2>
+                                    <p style="color: #a5b1c2; margin-top: 10px; font-size: 16px;">Payment Proof Submission</p>
+                                </div>
+                                
+                                <div class="card-body p-5">
+                                    <t t-if="not has_receipt">
+                                        <h4 class="mb-4 text-dark" style="font-weight: 600;">Installment Details</h4>
+                                        <div class="p-4 mb-5" style="background-color: #f8f9fa; border-radius: 10px; border-left: 5px solid #1a2a40;">
+                                            <div class="row mb-2">
+                                                <div class="col-sm-4 text-muted">Reference:</div>
+                                                <div class="col-sm-8 font-weight-bold"><t t-out="invoice.name"/></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-4 text-muted">Property / Asset:</div>
+                                                <div class="col-sm-8 font-weight-bold"><t t-out="invoice.installment_line_id.plan_id.unit_id.product_id.name or invoice.invoice_origin"/></div>
+                                            </div>
+                                            <div class="row mb-2">
+                                                <div class="col-sm-4 text-muted">Description:</div>
+                                                <div class="col-sm-8"><t t-out="invoice.invoice_line_ids[0].name"/></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-4 text-muted">Amount Due:</div>
+                                                <div class="col-sm-8 text-primary font-weight-bold" style="font-size: 1.2rem;">
+                                                    <t t-out="invoice.amount_total" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form action="/payment/receipt/submit" method="post" enctype="multipart/form-data" class="js_website_submit_form">
+                                            <input type="hidden" name="invoice_id" t-att-value="invoice.id"/>
+                                            <input type="hidden" name="access_token" t-att-value="invoice.payment_token"/>
+                                            <div class="form-group mb-4">
+                                                <label class="h5" style="font-weight: 600;">Upload Bank Receipt / Slip</label>
+                                                <p class="text-muted small">Please upload a clear photo or PDF of your bank transfer confirmation.</p>
+                                                <div class="custom-file mt-2">
+                                                    <input type="file" name="receipt_file" class="custom-file-input" id="receipt_file" required="1" accept="image/*,application/pdf"/>
+                                                    <label class="custom-file-label" for="receipt_file">Choose file...</label>
+                                                </div>
+                                            </div>
+                                            <div class="text-center mt-5">
+                                                <button type="submit" class="btn btn-primary btn-lg px-5" style="background-color: #1a2a40; border: none; border-radius: 8px; font-weight: 600;">
+                                                    <i class="fa fa-cloud-upload mr-2"></i> Submit Payment Proof
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="text-center py-5">
+                                            <div style="font-size: 80px; color: #28a745;" class="mb-4">
+                                                <i class="fa fa-check-circle"></i>
+                                            </div>
+                                            <h3 style="font-weight: 700;">Receipt Already Submitted</h3>
+                                            <p class="text-muted lead mt-3">We have already received your payment proof for this installment. Our finance team is currently verifying the transaction.</p>
+                                            <div class="mt-5">
+                                                <a href="/" class="btn btn-outline-secondary">Return to Home</a>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_payment_receipt_success" name="Submission Success">
+        <t t-call="portal.portal_layout">
+            <div id="wrap" class="oe_structure oe_empty" style="background-color: #f4f7f6; min-height: 100vh; padding: 100px 0;">
+                <div class="container text-center">
+                    <div class="card shadow border-0 mx-auto" style="max-width: 600px; border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <div style="font-size: 80px; color: #28a745;" class="mb-4">
+                                <i class="fa fa-check-circle"></i>
+                            </div>
+                            <h2 style="font-weight: 700;">Submission Successful!</h2>
+                            <p class="text-muted lead mt-3">Thank you for providing your payment proof. We have notified our site operations and finance teams.</p>
+                            <p class="mt-4">Your reference number: <strong><t t-out="invoice.name"/></strong></p>
+                            <div class="mt-5">
+                                <a href="/" class="btn btn-primary btn-lg px-5" style="background-color: #1a2a40; border: none; border-radius: 8px;">Done</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

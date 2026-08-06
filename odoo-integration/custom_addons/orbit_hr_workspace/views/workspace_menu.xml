@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_my_workspace" name="My Workspace" sequence="1" groups="orbit_hr_workspace.group_hr_employee_workspace" web_icon="hr,static/description/icon.svg"/>
+</odoo>

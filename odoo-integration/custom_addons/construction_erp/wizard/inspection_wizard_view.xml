@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_inspection_wizard_form" model="ir.ui.view">
+        <field name="name">construction.inspection.wizard.form</field>
+        <field name="model">construction.inspection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send Inspection Request">
+                <sheet>
+                    <div class="alert alert-info" role="alert" style="margin-bottom: 20px;">
+                        <i class="fa fa-info-circle me-2"></i> Review the inspection request email below. The recipient is the assigned project inspector.
+                    </div>
+                    <group>
+                        <group name="meta">
+                            <field name="job_order_id" readonly="1"/>
+                            <field name="inspection_id" readonly="1"/>
+                        </group>
+                        <group name="inspector">
+                            <field name="inspector_id" readonly="1" options="{'no_open': True}"/>
+                        </group>
+                    </group>
+                    <group name="email_content">
+                        <field name="subject" placeholder="e.g. Quality Inspection Request: Concrete Pouring Phase"/>
+                        <field name="body" widget="html" options="{'style-inline': true, 'codeview': true}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_send_request" string="Send Inspection Request" type="object" class="btn-primary" icon="fa-paper-plane"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_material_requisition_approve_wizard_form" model="ir.ui.view">
+        <field name="name">material.requisition.approve.wizard.form</field>
+        <field name="model">material.requisition.approve.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Approve Requisition &amp; Select Vendors">
+                <sheet>
+                    <p class="oe_grey">
+                        Adjust the quantities and select the preferred vendor for each requested material. 
+                        Once confirmed, the system will generate an RFQ (Request for Quotation) for each selected vendor.
+                    </p>
+                    <group>
+                        <field name="requisition_id" readonly="1" force_save="1"/>
+                    </group>
+                    <field name="line_ids">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="product_id" readonly="1"/>
+                            <field name="requested_qty" readonly="1"/>
+                            <field name="remaining_qty" readonly="1"/>
+                            <field name="purchase_qty" decoration-bf="1" decoration-info="1"/>
+                            <field name="partner_id" widget="many2one_avatar_public" placeholder="Select Vendor..."/>
+                            <field name="req_line_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Approve &amp; Generate RFQs" type="object" class="btn-primary" icon="fa-check"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

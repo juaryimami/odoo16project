@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_member_tree" model="ir.ui.view">
+        <field name="name">book.club.member.tree</field>
+        <field name="model">book_club.member</field>
+        <field name="arch" type="xml">
+            <tree string="Members">
+                <field name="number"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_member_form" model="ir.ui.view">
+        <field name="name">book.club.member.form</field>
+        <field name="model">book_club.member</field>
+        <field name="arch" type="xml">
+            <form string="Member">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Member Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="number"/>
+                            <field name="email"/>
+                            <field name="address"/>
+                        </group>
+                        <group>
+                            <field name="membership_date"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Borrows" name="borrows">
+                            <field name="borrow_ids" context="{'default_member_id': id}">
+                                <tree>
+                                    <field name="book_id"/>
+                                    <field name="loan_date"/>
+                                    <field name="due_date"/>
+                                    <field name="status"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_book_club_member" model="ir.actions.act_window">
+        <field name="name">Members</field>
+        <field name="res_model">book_club.member</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_book_club_member"
+              name="Members"
+              parent="menu_book_club_management"
+              action="action_book_club_member"
+              groups="book_club.group_book_club_manager,book_club.group_book_club_administrator"
+              sequence="40"/>
+</odoo>

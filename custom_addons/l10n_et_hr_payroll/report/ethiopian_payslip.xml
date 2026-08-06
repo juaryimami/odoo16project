@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_ethiopian_payslip" model="ir.actions.report">
+            <field name="name">Ethiopian Payslip</field>
+            <field name="model">hr.payslip</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_et_hr_payroll.report_ethiopian_payslip</field>
+            <field name="report_file">l10n_et_hr_payroll.report_ethiopian_payslip</field>
+            <field name="print_report_name">'Payslip - %s' % (object.employee_id.name)</field>
+            <field name="binding_model_id" ref="hr_payroll_community.model_hr_payslip"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <template id="report_ethiopian_payslip">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Ethiopian Payslip</h2>
+                            <p t-field="o.name"/>
+
+                            <table class="table table-sm table-bordered">
+                                <tr>
+                                    <td><strong>Employee</strong></td>
+                                    <td><span t-field="o.employee_id"/></td>
+                                    <td><strong>Designation</strong></td>
+                                    <td><span t-field="o.employee_id.job_title"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date From</strong></td>
+                                    <td><span t-field="o.date_from"/></td>
+                                    <td><strong>Date To</strong></td>
+                                    <td><span t-field="o.date_to"/></td>
+                                </tr>
+                            </table>
+
+                            <table class="table table-sm mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Code</th>
+                                        <th>Amount (ETB)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Cash Items (Standard Earnings and Deductions) -->
+                                    <t t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip and line.category_id.code != 'FRINGE')" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.name"/></td>
+                                            <td><span t-field="line.code"/></td>
+                                            <td class="text-right">
+                                                <span t-esc="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <!-- Non-Cash Fringe Benefits (Informational) -->
+                                    <t t-if="o.line_ids.filtered(lambda line: line.category_id.code == 'FRINGE')">
+                                        <tr class="bg-light">
+                                            <td colspan="3"><strong>Non-Cash Taxable Fringe Benefits (Added to Taxable Base Only)</strong></td>
+                                        </tr>
+                                        <t t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip and line.category_id.code == 'FRINGE')" t-as="line">
+                                            <tr>
+                                                <td><em t-field="line.name"/></td>
+                                                <td><em t-field="line.code"/></td>
+                                                <td class="text-right">
+                                                    <em t-esc="line.total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <p class="mt-4"><strong>Net Pay: </strong>
+                                <span t-esc="sum(o.line_ids.filtered(lambda l: l.code == 'NET').mapped('total'))" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

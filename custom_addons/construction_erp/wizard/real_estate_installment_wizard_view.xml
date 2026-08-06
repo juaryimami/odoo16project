@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_real_estate_installment_wizard_form" model="ir.ui.view">
+        <field name="name">real.estate.installment.wizard.form</field>
+        <field name="model">real.estate.installment.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Configure Installment Plan">
+                    <group>
+                        <field name="sale_order_id" readonly="1"/>
+                        <group string="Financial Terms">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="deposit_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="monthly_payment_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="start_date"/>
+                        </group>
+                        <group string="Legal Documentation">
+                            <field name="agreement_filename" invisible="1"/>
+                            <field name="agreement_file" filename="agreement_filename" widget="binary" string="Sales Agreement PDF"/>
+                        </group>
+                    </group>
+                <footer>
+                    <button name="action_confirm_installment" string="Confirm &amp; Generate Plan" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_real_estate_installment_wizard" model="ir.actions.act_window">
+        <field name="name">Installment Configuration</field>
+        <field name="res_model">real.estate.installment.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

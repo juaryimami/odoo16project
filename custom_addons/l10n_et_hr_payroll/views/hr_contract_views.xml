@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_et" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.et</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='salary']" position="after">
+                <group name="et_allowances" string="Ethiopian Cash Allowances">
+                    <field name="transport_allowance"/>
+                    <field name="housing_allowance"/>
+                    <field name="position_allowance"/>
+                    <field name="mobile_allowance"/>
+                    <field name="meal_allowance"/>
+                    <field name="desert_allowance"/>
+                </group>
+                <group name="et_exemptions" string="Exemptions &amp; Conditions">
+                    <field name="subject_to_pension"/>
+                    <field name="is_exempt_canteen_eligible"/>
+                    <field name="travels_for_work"/>
+                </group>
+                <group name="et_fringe_benefits" string="Fringe Benefits (Non-Cash)">
+                    <field name="has_company_vehicle"/>
+                    <field name="company_leased_housing_rent"/>
+                    <field name="employee_housing_contribution"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

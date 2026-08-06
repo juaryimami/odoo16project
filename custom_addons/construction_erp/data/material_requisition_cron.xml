@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_material_requisition_deadline_check" model="ir.cron">
+            <field name="name">Construction ERP: Material Requisition Deadline Monitor</field>
+            <field name="model_id" ref="model_construction_material_requisition"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_requisition_deadlines()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="priority">5</field>
+        </record>
+    </data>
+</odoo>

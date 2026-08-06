@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_job_order_tree" model="ir.ui.view">
+        <field name="name">construction.job.order.tree</field>
+        <field name="model">construction.job.order</field>
+        <field name="arch" type="xml">
+            <tree string="Job Orders">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="phase_id"/>
+                <field name="contractor_id"/>
+                <field name="total_cost"/>
+                <field name="progress_ratio" widget="progressbar"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_job_order_form" model="ir.ui.view">
+        <field name="name">construction.job.order.form</field>
+        <field name="model">construction.job.order</field>
+        <field name="arch" type="xml">
+            <form string="Job Order">
+                <header>
+                    <button name="action_offer" string="Offer Job" type="object" class="btn-primary" attrs="{'invisible': [('state', 'in', ['accepted', 'active', 'ready_for_inspection', 'approved', 'completed', 'closed'])]}"/>
+                    <button name="action_accept" string="Accept Job" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'offered')]}"/>
+                    <button name="action_start" string="Start Work" type="object" class="btn-primary" icon="fa-play" attrs="{'invisible': [('state', '!=', 'accepted')]}"/>
+                    <button name="action_rework" string="Request Rework" type="object" class="btn-danger" icon="fa-warning" attrs="{'invisible': [('state', '!=', 'ready_for_inspection')]}"/>
+                    <button name="action_mark_done" string="Mark as Done" type="object" class="btn-primary" icon="fa-flag-checkered" attrs="{'invisible': [('state', '!=', 'approved')]}"/>
+                    <button name="action_load_from_cost_sheet" string="Sync From Budget" type="object" class="btn-secondary" icon="fa-refresh" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_budget_synced', '=', True)]}"/>
+                    <button name="action_create_picking" string="Stock request" type="object" class="btn-primary" icon="fa-truck" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                    <button name="action_add_daily_log" string="Add Daily Log" type="object" class="btn-info" icon="fa-pencil-square-o" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                    <button name="action_add_material_requisition" string="Materal RQT" type="object" class="btn-warning" icon="fa-file-text-o" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                    <button name="action_add_site_expense" string="Add Expense" type="object" class="btn-success" icon="fa-money" attrs="{'invisible': [('state', '!=', 'active')]}"/>
+                    <button name="action_return_to_warehouse" string="Return Materials" type="object" class="btn-warning" icon="fa-undo" attrs="{'invisible': [('state', 'not in', ['completed', 'closed'])]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,offered,active,ready_for_inspection,approved,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!--
+                        <button name="action_view_pickings" type="object" class="oe_stat_button" icon="fa-cubes">
+                            <field name="picking_count" widget="statinfo" string="Stock Pickings"/>
+                        </button>
+                        -->
+                        <button name="action_view_material_issue_requests" type="object" class="oe_stat_button" icon="fa-clipboard">
+                            <field name="issue_request_count" widget="statinfo" string="Issue Requests"/>
+                        </button>
+                        <button name="action_view_daily_logs" type="object" class="oe_stat_button" icon="fa-tasks">
+                            <field name="daily_log_count" widget="statinfo" string="Daily Logs"/>
+                        </button>
+                        <button name="action_open_material_requisitions" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="requisition_count" widget="statinfo" string="Material Req."/>
+                        </button>
+                        <button name="action_view_on_hand" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="on_hand_count" widget="statinfo" string="On Hand Qty"/>
+                        </button>
+                        <button name="action_open_site_expenses" type="object" class="oe_stat_button" icon="fa-money">
+                            <field name="expense_count" widget="statinfo" string="Site Expenses"/>
+                        </button>
+                        <button name="action_view_payment_requests" type="object" class="oe_stat_button" icon="fa-credit-card">
+                            <field name="payment_request_count" widget="statinfo" string="Payment Requests"/>
+                        </button>
+                        <button name="action_view_inspections" type="object" class="oe_stat_button" icon="fa-search-plus">
+                            <field name="inspection_count" widget="statinfo" string="Inspections"/>
+                        </button>
+                        <button name="action_view_estimates" type="object" class="oe_stat_button" icon="fa-calculator">
+                            <field name="estimate_count" widget="statinfo" string="Cost Estimation"/>
+                        </button>
+                    </div>
+
+                    <!-- Diagrammatic Milestone Tracker -->
+                    <field name="milestone_progress_data" widget="milestone_tracker" nolabel="1"/>
+
+                    <div class="alert alert-success text-center mb-2" role="alert" attrs="{'invisible': [('is_inspected_passed', '=', False)]}">
+                        <i class="fa fa-check-circle me-2"/> <strong>Quality Passed:</strong> All current execution requirements have been met.
+                    </div>
+                    
+                    <div class="alert alert-danger text-center o_form_header" role="alert" attrs="{'invisible': [('rejection_reason', '=', False)]}">
+                        <i class="fa fa-warning me-2"/> <strong>Contractor Declined Offer:</strong> <field name="rejection_reason" readonly="1" class="ms-1"/>
+                    </div>
+
+                    <field name="lifecycle_id" invisible="1"/>
+
+                    <div class="oe_title">
+                        <label for="project_id" string="Job Order / " class="oe_inline"/>
+                        <field name="project_id" class="oe_inline" options="{'no_open': True}" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                        <span class="oe_inline"> - </span>
+                        <field name="name" class="oe_inline text-primary"/>
+                    </div>
+                    <group attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}">
+                        <group name="job_info">
+                            <field name="project_id" string="Project" required="1" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="agreed_rate" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="date_deadline" string="Deadline" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="phase_id" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="current_milestone_id" readonly="1" decoration-bf="1" decoration-info="1" attrs="{'invisible': [('current_milestone_id', '=', False)]}"/>
+                        </group>
+                        <group name="financial_summary">
+                            <field name="cost_sheet_id" string="Budget Center" options="{'no_create': True}" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="contractor_id" string="Contractor" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="contract_type" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="advance_payment_pct" attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            <field name="portal_password" attrs="{'invisible': [('state', 'not in', ['accepted', 'active', 'ready_for_inspection', 'approved', 'completed', 'closed'])], 'readonly': 1}"/>
+                            <label for="progress_ratio" string="Site Progress"/>
+                            <div class="o_row">
+                                <field name="progress_ratio" widget="progressbar" style="width: 100px;"/>
+                                <field name="is_budget_synced" invisible="1"/>
+                                <field name="is_inspected_passed" invisible="1"/>
+                                <span class="badge text-bg-success" attrs="{'invisible': [('is_inspected_passed', '=', False)]}">PASSED</span>
+                            </div>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Instructions" name="description">
+                            <group>
+                                <field name="checklist_template_id" options="{'no_create': True}" placeholder="Select Template to auto-populate checklist..."/>
+                                <field name="description" placeholder="Technical instructions for site teams..." attrs="{'readonly': [('state', 'not in', ['draft', 'offered'])]}"/>
+                            </group>
+                        </page>
+                        <page string="Quality Checklist" name="checklist">
+                            <field name="checklist_ids" attrs="{'readonly': [('state', 'in', ['completed', 'closed'])]}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="mandatory"/>
+                                    <field name="is_done" readonly="1"/>
+                                    <field name="verified_by" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Material Plannings" name="material_planning">
+                            <field name="material_plan_ids" readonly="1">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="description"/>
+                                        <field name="quantity" string="Planned"/>
+                                        <field name="consumption" string="Consumption"/>
+                                        <field name="product_uom_id"/>
+                                        <field name="unit_price"/>
+                                        <field name="cost" sum="Total Planned Cost"/>
+                                    </tree>
+                            </field>
+                        </page>
+                        <page string="Vehicles &amp; Fleet" name="vehicle">
+                            <field name="vehicle_line_ids" context="{'default_resource_type': 'vehicle'}" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="name" placeholder="e.g., Contractor Crane-01"/>
+                                    <field name="date"/>
+                                    <field name="unit"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_cost"/>
+                                    <field name="total_cost" sum="Total Vehicle Cost"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Equipment" name="equipment">
+                            <field name="equipment_line_ids" context="{'default_resource_type': 'equipment'}" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="name" placeholder="e.g., Excavator Model X"/>
+                                    <field name="date"/>
+                                    <field name="unit"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_cost"/>
+                                    <field name="total_cost" sum="Total Equipment Cost"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Labor Budget" name="labor_budget">
+                            <field name="labor_budget_line_ids" context="{'default_resource_type': 'labor'}" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="name" placeholder="e.g., General Laborers"/>
+                                    <field name="date"/>
+                                    <field name="unit" string="Hours/Man-days"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_cost" string="Hourly Rate"/>
+                                    <field name="total_cost" sum="Total Labor Budget"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Financial Payments" name="payments">
+                            <field name="payment_ids">
+                                <tree editable="bottom">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="payment_type"/>
+                                    <field name="amount" sum="Total Payments"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" widget="badge" 
+                                           decoration-info="state == 'requested'" 
+                                           decoration-success="state == 'paid'"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group name="budget_audit_dashboard" string="Projected Budget Analysis" class="mt-4">
+                        <group name="projected_totals" string="Planned Category Totals">
+                            <field name="planned_material_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="planned_fleet_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="planned_equipment_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="planned_labor_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="planned_overhead_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <separator/>
+                            <field name="total_planned_budget" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-bf="1" string="Total Planned Budget"/>
+                        </group>
+                        <group name="actual_spend_totals" string="Actual Spend Category Totals">
+                            <field name="actual_material_spend" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="actual_fleet_spend" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="actual_equipment_spend" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="actual_labor_spend" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="actual_overhead_spend" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <separator/>
+                            <field name="total_actual_spend" widget="monetary" options="{'currency_field': 'currency_id'}" decoration-bf="1" string="Total Actual Spent"/>
+                            <label for="budget_utilization_pct" string="Budget Utilization"/>
+                            <div class="o_row">
+                                <field name="budget_utilization_pct" widget="progressbar"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <group name="financial_comparison" string="Site Job Costing Dashboard (Actual Progress)" class="mt-4 border-top">
+                        <div class="o_horizontal_separator">Budget vs Actual Comparison Graph</div>
+                        <group>
+                            <label for="utilization_material" string="Material Budget"/>
+                            <div class="o_row">
+                                <field name="utilization_material" widget="progressbar"/>
+                                <field name="actual_material_spend" widget="monetary" options="{'currency_field': 'currency_id'}" nolabel="1"/>
+                            </div>
+                            <label for="utilization_fleet" string="Fleet Budget"/>
+                            <div class="o_row">
+                                <field name="utilization_fleet" widget="progressbar"/>
+                                <field name="actual_fleet_spend" widget="monetary" options="{'currency_field': 'currency_id'}" nolabel="1"/>
+                            </div>
+                            <label for="utilization_equipment" string="Equipment Budget"/>
+                            <div class="o_row">
+                                <field name="utilization_equipment" widget="progressbar"/>
+                                <field name="actual_equipment_spend" widget="monetary" options="{'currency_field': 'currency_id'}" nolabel="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="utilization_labor" string="Labor Budget"/>
+                            <div class="o_row">
+                                <field name="utilization_labor" widget="progressbar"/>
+                                <field name="actual_labor_spend" widget="monetary" options="{'currency_field': 'currency_id'}" nolabel="1"/>
+                            </div>
+                            <label for="utilization_overhead" string="Overhead Budget"/>
+                            <div class="o_row">
+                                <field name="utilization_overhead" widget="progressbar"/>
+                                <field name="actual_overhead_spend" widget="monetary" options="{'currency_field': 'currency_id'}" nolabel="1"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_job_consumption_line_form" model="ir.ui.view">
+        <field name="name">construction.job.consumption.line.form</field>
+        <field name="model">construction.job.consumption.line</field>
+        <field name="arch" type="xml">
+            <form string="Material Consumption Line">
+                <sheet>
+                    <group>
+                        <group name="material_info" string="Material Identification">
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="description"/>
+                            <field name="job_order_id" readonly="1"/>
+                        </group>
+                        <group name="usage_metrics" string="Consumption Details">
+                            <label for="quantity"/>
+                            <div class="o_row">
+                                <field name="quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_job_order" model="ir.actions.act_window">
+        <field name="name">Job Orders</field>
+        <field name="res_model">construction.job.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_job_orders"
+              name="Job Orders"
+              parent="menu_construction_operations"
+              action="action_construction_job_order"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_genre_tree" model="ir.ui.view">
+        <field name="name">book.club.genre.tree</field>
+        <field name="model">book_club.genre</field>
+        <field name="arch" type="xml">
+            <tree string="Genres">
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_genre_form" model="ir.ui.view">
+        <field name="name">book.club.genre.form</field>
+        <field name="model">book_club.genre</field>
+        <field name="arch" type="xml">
+            <form string="Genre">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_book_club_genre" model="ir.actions.act_window">
+        <field name="name">Genres</field>
+        <field name="res_model">book_club.genre</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_book_club_genre"
+              name="Genres configuration"
+              parent="menu_book_club_configuration"
+              action="action_book_club_genre"
+              groups="book_club.group_book_club_administrator"
+              sequence="10"/>
+</odoo>

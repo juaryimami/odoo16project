@@ -9,22 +9,18 @@
 *
 **********************************************************************************/
 
-// $o-brand-odoo: white;
-// $o-brand-primary: #5D8DA8;
-//
-// $mk-menu-color: #f8f9fa;
-// $mk-appbar-color: #dee2e6;
-// $mk-appbar-background: #000000;
-
-$o-brand-odoo: #217E6B;
-$o-brand-primary: #217E6B;
-$navbar-color: black;
-$o-sidebar-hover: #217E6B;
+// Nemal Engineering Branded Palette
+$o-brand-odoo: #1D5DA3;         // Construction Blue
+$o-brand-primary: #1D5DA3;      // Primary Brand Color
+$navbar-background: #1B1D1F;    // Deep Charcoal (Logo Background)
+$navbar-color: white;           // High-contrast text
+$o-sidebar-hover: #1D5DA3;      // Sidebar focus
 $mk-menu-color: white;
-//$ashewa-text-color: #252B48;
-$ashewa-text-color: #334756;
+$ashewa-text-color: #1B1D1F;    // Core body text
 $ashewa-hover-text-color: white;
 $mk-appbar-color: white;
 $ashewa-font-type: "Poppins", sans-serif;
-$mk-appbar-background: ffffff;
+$mk-appbar-background: #1B1D1F; // Branded App Bar
 $content-width: 95%;
+$success-green: #15A34A;        // Engineering Green from Logo
+$accent-red: #D2232A;           // Logo Accent Red

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_site_expense_form" model="ir.ui.view">
+        <field name="name">construction.site.expense.form</field>
+        <field name="model">construction.site.expense</field>
+        <field name="arch" type="xml">
+            <form string="Site Expense">
+                <header>
+                    <button name="action_submit" string="Submit for Approval" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_approve" string="PM Approve" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'submitted')]}"/>
+                    <button name="action_owner_approve" string="Owner Approve" type="object" class="btn-success" attrs="{'invisible': [('state', '!=', 'pm_approved')]}"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger" attrs="{'invisible': [('state', 'not in', ['submitted', 'pm_approved'])]}"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" attrs="{'invisible': [('state', 'not in', ['rejected', 'submitted', 'pm_approved'])]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,pm_approved,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_bill" type="object" class="oe_stat_button" icon="fa-pencil-square-o" attrs="{'invisible': [('invoice_id', '=', False)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Vendor Bill</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                        <label for="description" class="oe_edit_only"/>
+                        <h2><field name="description" placeholder="e.g., Local Transport for Site Team" attrs="{'readonly': [('state', '!=', 'draft')]}"/></h2>
+                    </div>
+                    <group>
+                        <group name="operational_context" string="Site Context">
+                            <field name="project_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="job_order_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="overhead_line_id" options="{'no_create': True}" readonly="1" force_save="1" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                        </group>
+                        <group name="financial_details" string="Financial Details">
+                            <field name="partner_id" string="Vendor/Supplier" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <label for="amount"/>
+                            <div class="o_row">
+                                <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="currency_id" invisible="1"/>
+                            </div>
+                            <field name="date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="invoice_id" attrs="{'invisible': [('invoice_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Attachments &amp; Proof" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" string="Upload Receipts" attrs="{'readonly': [('state', '=', 'approved')]}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_site_expense_tree" model="ir.ui.view">
+        <field name="name">construction.site.expense.tree</field>
+        <field name="model">construction.site.expense</field>
+        <field name="arch" type="xml">
+            <tree string="Site Expenses" decoration-info="state in ('submitted', 'pm_approved')" decoration-success="state == 'approved'" decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="project_id"/>
+                <field name="job_order_id"/>
+                <field name="partner_id"/>
+                <field name="amount" sum="Total Expenses"/>
+                <field name="state" widget="badge" decoration-info="state in ('submitted', 'pm_approved')" decoration-success="state == 'approved'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_site_expense_kanban" model="ir.ui.view">
+        <field name="name">construction.site.expense.kanban</field>
+        <field name="model">construction.site.expense</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="amount"/>
+                <field name="date"/>
+                <field name="description"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <span class="badge rounded-pill"><field name="amount" widget="monetary"/></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-muted">
+                                    <span><field name="description"/></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-muted small">
+                                    <i class="fa fa-calendar me-1"/> <field name="date"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_construction_site_expense" model="ir.actions.act_window">
+        <field name="name">Site Expenses</field>
+        <field name="res_model">construction.site.expense</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a new site expense
+            </p>
+            <p>
+                Track out-of-pocket expenses directly from the site and get them approved for billing.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_construction_site_expense"
+              name="Site Expenses"
+              parent="menu_construction_operations"
+              action="action_construction_site_expense"
+              sequence="45"/>
+</odoo>

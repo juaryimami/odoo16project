@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_publisher_tree" model="ir.ui.view">
+        <field name="name">book.club.publisher.tree</field>
+        <field name="model">book_club.publisher</field>
+        <field name="arch" type="xml">
+            <tree string="Publishers">
+                <field name="name"/>
+                <field name="city"/>
+                <field name="established_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_publisher_form" model="ir.ui.view">
+        <field name="name">book.club.publisher.form</field>
+        <field name="model">book_club.publisher</field>
+        <field name="arch" type="xml">
+            <form string="Publisher">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Publisher Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="city"/>
+                            <field name="established_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Published Books" name="books">
+                            <field name="book_ids">
+                                <tree>
+                                    <field name="title"/>
+                                    <field name="isbn"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_book_club_publisher" model="ir.actions.act_window">
+        <field name="name">Publishers</field>
+        <field name="res_model">book_club.publisher</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_book_club_publisher"
+              name="Publishers"
+              parent="menu_book_club_management"
+              action="action_book_club_publisher"
+              groups="book_club.group_book_club_manager,book_club.group_book_club_administrator"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="advance_salary_email_template" model="mail.template">
+           <field name="name">Advance Salary Email Template</field>
+           <field name="model_id" ref="ohrms_salary_advance.model_salary_advance"/>
+<!--           <field name="auto_delete" eval="True"/>-->
+<!--           <field name="email_from">{{user.email_formatted}}</field>-->
+           <field name="email_to">{{object.employee_id.work_email}}</field>
+<!--           <field name="report_template" ref="action_example_pdf"/>-->
+           <field name="subject">Your Advance Salary is approved</field>
+           <field name="body_html" type="html">
+
+                   <p>Hello ,</p>
+          <p>Dear <strong>${object.employee_id.name}</strong>
+             Your Advance Salary is in approved
+
+          </p>
+
+
+           </field>
+       </record>
+
+
+
+    </data>
+</odoo>

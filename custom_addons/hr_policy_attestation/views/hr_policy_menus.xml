@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level Menu -->
+    <menuitem id="menu_hr_policy_root"
+              name="Policy &amp; Compliance"
+              web_icon="hr_policy_attestation,static/description/icon.png"
+              sequence="100"
+              groups="hr.group_hr_manager,base.group_user"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_hr_policy_dashboard"
+              name="Dashboard"
+              parent="menu_hr_policy_root"
+              sequence="10"
+              action="action_hr_policy_dashboard_client"
+              groups="hr.group_hr_manager"/>
+
+    <!-- Templates -->
+    <menuitem id="menu_hr_policy_templates"
+              name="Policies"
+              parent="menu_hr_policy_root"
+              sequence="20"
+              action="action_hr_policy_template"
+              groups="hr.group_hr_manager"/>
+
+    <!-- Attestations (HR view) -->
+    <menuitem id="menu_hr_policy_attestations_admin"
+              name="Attestations"
+              parent="menu_hr_policy_root"
+              sequence="30"
+              action="action_hr_policy_attestation_admin"
+              groups="hr.group_hr_manager"/>
+
+    <!-- Employee Workspace (My Agreements) Category -->
+    <menuitem id="menu_my_compliance_category"
+              name="Compliance"
+              parent="orbit_hr_workspace.menu_my_workspace"
+              sequence="90"/>
+
+    <menuitem id="menu_employee_agreements"
+              name="My Agreements"
+              parent="menu_my_compliance_category"
+              sequence="10"
+              action="action_employee_agreements"/>
+
+</odoo>

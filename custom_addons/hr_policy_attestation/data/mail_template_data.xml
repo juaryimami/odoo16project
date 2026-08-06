@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_policy_reminder" model="mail.template">
+            <field name="name">HR Policy: Attestation Reminder</field>
+            <field name="model_id" ref="hr_policy_attestation.model_hr_policy_attestation"/>
+            <field name="subject">Action Required: Pending HR Policy for Signature - {{ object.template_id.name }}</field>
+            <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
+            <field name="partner_to">{{ object.employee_id.user_id.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.employee_id.name or 'Employee'"></t>,<br/><br/>
+        This is a reminder that you have a pending HR policy document that requires your review and signature.<br/>
+        <strong>Policy:</strong> <t t-out="object.template_id.name or ''"></t><br/>
+        <strong>Status:</strong> <span style="color: red;">Pending Action</span><br/><br/>
+        Please log in to your employee workspace and navigate to <strong>"My Agreements"</strong> to review and accept the document.<br/><br/>
+        <div style="margin: 16px 0px 16px 0px;">
+            <a t-attf-href="/my/agreements"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                Review Policy
+            </a>
+        </div>
+        Thank you,<br/>
+        HR Department
+    </p>
+</div>
+            </field>
+            <field name="lang">{{ object.employee_id.user_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

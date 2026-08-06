@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_orbit_leave" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.orbit.leave</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_start']" position="after">
+                <field name="probation_working_days"/>
+                <field name="probation_end_date" attrs="{'invisible': [('probation_working_days', '=', 0)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

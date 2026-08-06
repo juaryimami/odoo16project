@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="loan_advance_email_template_id" model="mail.template">
+           <field name="name">Loan/Advance Email Template</field>
+           <field name="model_id" ref="ohrms_loan.model_hr_loan"/>
+<!--           <field name="auto_delete" eval="True"/>-->
+           <field name="email_from">{{user.company_id.email}}</field>
+           <field name="email_to">{{object.employee_id.work_email}}</field>
+<!--           <field name="report_template" ref="action_example_pdf"/>-->
+           <field name="subject">Loan Application Approval </field>
+           <field name="body_html" type="html">
+
+               <p> <span>Dear <t t-esc="object.employee_id.name"/> </span></p>
+               <p> We hope this email finds you well.  We are writing to inform you about the details
+                   of your loan application, which has been processed and is now ready for your review</p>
+               <h6>Loan Details:</h6>
+               <ul>
+                   <li><span>Loan Amount: <t t-esc="object.loan_amount"/> </span></li>
+                   <li><span>Interest Rate:  <t t-esc="object.interest_rate"/> </span></li>
+                   <li><span>Repayment Period: <t t-esc="object.payment_date"/> - <t t-esc="object.end_date"/>  </span></li>
+                   <li><span><t t-esc="object.payment_cycle"/> Payment <t t-esc="object.term_payment"/> </span></li>
+                   <li><span>Dear <t t-esc="object.loan_amount"/> </span></li>
+               </ul>
+               <p>Please take a moment to review the terms and conditions.
+                   If you have any questions or would like to discuss the loan further,
+                   feel free to reach us .</p>
+               <p>Thank you for your attention, and I look forward to your response.</p>
+               <p> Best regards,</p>
+           </field>
+       </record>
+
+
+
+    </data>
+</odoo>

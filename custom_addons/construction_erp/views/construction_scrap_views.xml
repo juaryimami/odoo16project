@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_scrap_tree" model="ir.ui.view">
+        <field name="name">construction.scrap.tree</field>
+        <field name="model">construction.scrap</field>
+        <field name="arch" type="xml">
+            <tree string="Wastage Logs" decoration-danger="state=='validated'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_scrap_form" model="ir.ui.view">
+        <field name="name">construction.scrap.form</field>
+        <field name="model">construction.scrap</field>
+        <field name="arch" type="xml">
+            <form string="Wastage Log">
+                <header>
+                    <button name="action_validate" string="Validate Scrap" type="object" states="draft" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                            <field name="product_id" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                            <field name="quantity" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                            <field name="user_id" attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                            <field name="scrap_id" attrs="{'invisible': [('scrap_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Loss Details">
+                            <field name="reason" placeholder="Describe precisely how the material was damaged or lost..." attrs="{'readonly': [('state', '=', 'validated')]}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_scrap" model="ir.actions.act_window">
+        <field name="name">Wastage / Scrap Logs</field>
+        <field name="res_model">construction.scrap</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_scrap"
+              name="Wastage Logs"
+              parent="menu_construction_operations"
+              action="action_construction_scrap"
+              sequence="35"/>
+</odoo>

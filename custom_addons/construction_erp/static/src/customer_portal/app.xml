@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="construction_erp.CustomerPortalApp" owl="1">
+        <div class="customer-portal-app h-100 w-100 d-flex flex-column" style="min-height: 100vh;">
+            <t t-if="state.loading">
+                <div class="d-flex justify-content-center align-items-center flex-grow-1">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </t>
+            <t t-elif="!state.loggedIn">
+                <CustomerPortalLogin onLogin.bind="onLogin"/>
+            </t>
+            <t t-else="">
+                <!-- Header -->
+                <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm py-3">
+                    <div class="container-fluid px-md-5">
+                        <a class="navbar-brand font-weight-bold fs-4" href="#" t-on-click.prevent="navigateHome">
+                            <i class="fa fa-building-o me-2"></i> Real Estate Portal
+                        </a>
+                        <div class="d-flex text-white align-items-center">
+                            <div class="dropdown me-4">
+                                <a class="text-white text-decoration-none dropdown-toggle d-flex align-items-center font-weight-bold fs-5" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" t-on-click.prevent="() => {}">
+                                    <t t-if="state.partnerId">
+                                        <img t-attf-src="/web/image?model=res.partner&amp;id=#{state.partnerId}&amp;field=avatar_128" alt="Profile" class="rounded-circle me-3 bg-white" style="width: 48px; height: 48px; object-fit: cover; border: 2px solid rgba(255,255,255,0.7);"/>
+                                    </t>
+                                    <t t-else="">
+                                        <i class="fa fa-user-circle fa-2x me-3"></i>
+                                    </t>
+                                    <t t-esc="state.userName"/>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="profileDropdown">
+                                    <li><a class="dropdown-item py-2" href="#" t-on-click.prevent="() => this.navigateTo('profile')"><i class="fa fa-cog me-2 text-muted"></i> Profile Settings</a></li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-light font-weight-bold text-primary rounded-pill px-4 py-2 shadow-sm" t-on-click="onLogout">Logout</button>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- Main Content -->
+                <div class="container-fluid px-md-5 mt-5 mb-5 flex-grow-1">
+                    <t t-if="state.currentRoute === 'dashboard'">
+                        <CustomerPortalDashboard navigateTo.bind="navigateTo"/>
+                    </t>
+                    <t t-elif="state.currentRoute === 'property_details'">
+                        <CustomerPortalPropertyDetails propertyId="state.currentPropertyId" navigateTo.bind="navigateTo"/>
+                    </t>
+                    <t t-elif="state.currentRoute === 'profile'">
+                        <CustomerPortalProfile navigateTo.bind="navigateTo" partnerId="state.partnerId"/>
+                    </t>
+                </div>
+                
+                <!-- Footer -->
+                <footer class="bg-white py-4 mt-auto border-top">
+                    <div class="container text-center text-muted">
+                        <small>&amp;copy; 2026 Real Estate Co. All rights reserved.</small>
+                    </div>
+                </footer>
+            </t>
+        </div>
+    </t>
+</templates>

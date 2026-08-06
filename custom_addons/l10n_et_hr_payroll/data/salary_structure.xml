@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="structure_et_base" model="hr.payroll.structure">
+            <field name="code">ET_BASE</field>
+            <field name="name">Ethiopian Standard Salary Structure</field>
+            <field eval="[(6, 0, [
+                ref('l10n_et_hr_payroll.et_rule_basic'),
+                ref('l10n_et_hr_payroll.et_rule_alw_cash'),
+                ref('l10n_et_hr_payroll.et_rule_alw_meal_tax'),
+                ref('l10n_et_hr_payroll.et_rule_alw_meal_exempt'),
+                ref('l10n_et_hr_payroll.et_rule_alw_desert_tax'),
+                ref('l10n_et_hr_payroll.et_rule_alw_desert_exempt'),
+                ref('l10n_et_hr_payroll.et_rule_per_diem_tax'),
+                ref('l10n_et_hr_payroll.et_rule_per_diem_exempt'),
+                ref('l10n_et_hr_payroll.et_rule_indemnity_exempt'),
+                ref('l10n_et_hr_payroll.et_rule_ot_norm'),
+                ref('l10n_et_hr_payroll.et_rule_ot_night'),
+                ref('l10n_et_hr_payroll.et_rule_ot_week'),
+                ref('l10n_et_hr_payroll.et_rule_ot_hol'),
+                ref('l10n_et_hr_payroll.et_rule_fringe_capped'),
+                ref('l10n_et_hr_payroll.et_rule_gross'),
+                ref('l10n_et_hr_payroll.et_rule_taxable'),
+                ref('l10n_et_hr_payroll.et_rule_emp_pension'),
+                ref('l10n_et_hr_payroll.et_rule_er_pension'),
+                ref('l10n_et_hr_payroll.et_rule_paye'),
+                ref('l10n_et_hr_payroll.et_rule_net')
+            ])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+    </data>
+</odoo>

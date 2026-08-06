@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_estimate_tree" model="ir.ui.view">
+        <field name="name">construction.estimate.tree</field>
+        <field name="model">construction.estimate</field>
+        <field name="arch" type="xml">
+            <tree string="Estimates (BOQ)">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="date"/>
+                <field name="total_estimated_amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_estimate_form" model="ir.ui.view">
+        <field name="name">construction.estimate.form</field>
+        <field name="model">construction.estimate</field>
+        <field name="arch" type="xml">
+            <form string="Estimate (BOQ)">
+                <header>
+                    <button name="action_submit" string="Submit for Review" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_approve" string="PM Approve" type="object" states="submitted" class="btn-primary" groups="project.group_project_manager"/>
+                    <button name="action_owner_approve" string="Owner Approve" type="object" states="pm_approved" class="btn-success"/>
+                    <button name="action_reject" string="Reject" type="object" states="submitted,pm_approved" class="btn-secondary" groups="project.group_project_manager"/>
+                    <button name="action_import_excel" string="Import Lines (Excel)" type="object" states="draft" class="btn-info" icon="fa-file-excel-o"/>
+                    <button name="action_create_cost_sheet" string="Initialize Project Budget" type="object" attrs="{'invisible': ['|', ('state', '!=', 'approved'), ('cost_sheet_id', '!=', False)]}" class="btn-success" icon="fa-rocket"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,pm_approved,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_cost_sheet" type="object" class="oe_stat_button" icon="fa-th-list" string="Cost Sheet" attrs="{'invisible': [('cost_sheet_id', '=', False)]}"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="project_info">
+                            <field name="project_id"/>
+                            <field name="job_order_id" string="Associated Job Order" options="{'no_create': True}"/>
+                            <field name="date"/>
+                        </group>
+                        <group name="budget_info">
+                            <field name="cost_sheet_id" attrs="{'invisible': [('cost_sheet_id', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Material Lines" name="materials">
+                            <field name="material_line_ids" context="{'default_type': 'material'}" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree decoration-danger="quantity_consumed &gt; quantity">
+                                    <field name="type" optional="show"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="quantity_consumed" force_save="1" readonly="1" optional="show"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </tree>
+                                <form string="Material Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="type" readonly="1"/>
+                                                <field name="product_id"/>
+                                            </group>
+                                            <group>
+                                                <field name="quantity"/>
+                                                <field name="unit_price"/>
+                                                <field name="subtotal" readonly="1"/>
+                                                <field name="quantity_consumed" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Labor Lines" name="labor">
+                            <field name="labor_line_ids" context="{'default_type': 'labor'}" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree>
+                                    <field name="type" optional="show"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity" string="Hours"/>
+                                    <field name="unit_price" string="Rate/Hr"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </tree>
+                                <form string="Labor Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="type" readonly="1"/>
+                                                <field name="product_id" string="Service"/>
+                                            </group>
+                                            <group>
+                                                <field name="quantity" string="Hours"/>
+                                                <field name="unit_price" string="Rate/Hr"/>
+                                                <field name="subtotal" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Equipment Cost" name="equipment">
+                            <field name="equipment_line_ids" context="{'default_type': 'equipment'}" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree>
+                                    <field name="type" optional="show"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </tree>
+                                <form string="Equipment Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="type" readonly="1"/>
+                                                <field name="product_id" string="Equipment"/>
+                                            </group>
+                                            <group>
+                                                <field name="quantity"/>
+                                                <field name="unit_price"/>
+                                                <field name="subtotal" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Vehicle / Fleet" name="fleet">
+                            <field name="vehicle_line_ids" context="{'default_type': 'vehicle'}" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree>
+                                    <field name="type" optional="show"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </tree>
+                                <form string="Fleet Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="type" readonly="1"/>
+                                                <field name="product_id" string="Vehicle/Fleet"/>
+                                            </group>
+                                            <group>
+                                                <field name="quantity"/>
+                                                <field name="unit_price"/>
+                                                <field name="subtotal" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Overhead &amp; Admin" name="overhead">
+                            <field name="overhead_line_ids" context="{'default_type': 'overhead'}" attrs="{'readonly': [('state', '!=', 'draft')]}">
+                                <tree>
+                                    <field name="type" optional="show"/>
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="subtotal" sum="Total"/>
+                                </tree>
+                                <form string="Overhead Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name="type" readonly="1"/>
+                                                <field name="product_id" string="Overhead Item"/>
+                                            </group>
+                                            <group>
+                                                <field name="quantity"/>
+                                                <field name="unit_price"/>
+                                                <field name="subtotal" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_material" widget="monetary"/>
+                        <field name="total_labor" widget="monetary"/>
+                        <field name="total_equipment" widget="monetary"/>
+                        <field name="total_vehicle" widget="monetary"/>
+                        <field name="total_overhead" widget="monetary"/>
+                        <field name="total_estimated_amount" class="oe_subtotal_footer_separator" widget="monetary"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_construction_estimate" model="ir.actions.act_window">
+        <field name="name">Estimations (BOQ)</field>
+        <field name="res_model">construction.estimate</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_construction_estimate"
+              name="Estimations (BOQ)"
+              parent="menu_construction_commercials"
+              action="action_construction_estimate"
+              sequence="10"/>
+</odoo>

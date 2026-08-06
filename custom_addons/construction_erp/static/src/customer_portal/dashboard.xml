@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="construction_erp.CustomerPortalDashboard" owl="1">
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0 font-weight-bold text-dark">My Properties</h3>
+            </div>
+            
+            <t t-if="state.loading">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </t>
+            <t t-elif="state.properties.length === 0">
+                <div class="alert alert-info text-center py-4 rounded shadow-sm border-0">
+                    <i class="fa fa-info-circle fa-2x mb-2 d-block text-info"></i>
+                    You currently do not have any active properties.
+                </div>
+            </t>
+            <t t-else="">
+                <div class="row">
+                    <t t-foreach="state.properties" t-as="prop" t-key="prop.id">
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card h-100 shadow-sm border-0 property-card transition-hover" t-on-click="() => this.viewProperty(prop.id)" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 20px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 .125rem .25rem rgba(0,0,0,.075)';">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="card-title font-weight-bold text-primary mb-0"><t t-esc="prop.name"/></h5>
+                                        <span class="badge rounded-pill bg-success" t-if="prop.state === 'sale'">Confirmed</span>
+                                        <span class="badge rounded-pill bg-info text-white" t-elif="prop.state === 'done'">Locked</span>
+                                    </div>
+                                    <p class="card-text text-muted mb-3"><i class="fa fa-building-o me-2"></i> <t t-esc="prop.project_name"/></p>
+                                    <h4 class="card-text font-weight-bold text-dark mb-0">
+                                        <t t-esc="prop.currency"/> <t t-esc="prop.amount_total.toLocaleString()"/>
+                                    </h4>
+                                </div>
+                                <div class="card-footer bg-light border-top-0 text-end p-3 rounded-bottom">
+                                    <button class="btn btn-sm btn-outline-primary rounded-pill px-4 font-weight-bold">View Details <i class="fa fa-arrow-right ms-2"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

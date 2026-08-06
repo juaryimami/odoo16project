@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_site_expense_approve_wizard_form" model="ir.ui.view">
+        <field name="name">construction.site.expense.approve.wizard.form</field>
+        <field name="model">construction.site.expense.approve.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Approve Site Expense">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Financial Oversight:</strong> Please select the budget center that should bear this cost.
+                    </div>
+                    <group>
+                        <group name="expense_summary" string="Expense Summary">
+                            <field name="description"/>
+                            <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group name="allocation" string="Budget Allocation">
+                            <field name="job_order_id" invisible="1"/>
+                            <field name="overhead_line_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm" string="Approve &amp; Generate Bill" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

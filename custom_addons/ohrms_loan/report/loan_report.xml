@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="loan_advance_print_report" model="ir.actions.report">
+            <field name="name">Print Loan Report</field>
+            <field name="model">hr.loan</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">ohrms_loan.report_loan</field>
+            <field name="report_file">ohrms_loan.report_loan</field>
+            <field name="print_report_name">'Loan print report</field>
+            <field name="binding_model_id" ref="model_hr_loan"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+     <template id="report_loan">
+        <t t-call="web.html_container">
+               <t t-call="web.external_layout">
+<!--                   <t t-call="provident_fund.pad_custom_header_layout"></t>-->
+                 <t t-foreach="docs" t-as="o">
+
+                     <h2 style="text-align:center;">
+                         Salary Advance or Staff Loan Request
+                     </h2>
+
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         1. Name of the requester: <span t-field="o.employee_id.name" />
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        2. Position: <span t-field="o.employee_id.job_id.name" />  Location <span t-field="o.employee_id.work_location_id.name" />
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         3. Employment Date: <t t-foreach="request.env['hr.contract'].search([('employee_id','=',o.employee_id.id),('state','=','open'),])" t-as="obj">
+                         <t t-esc="obj.date_start" />
+                     </t>
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        4. Request Type  Staff Loan
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         5. Current Monthly basic salary:
+                         <t t-foreach="request.env['hr.contract'].search([('employee_id','=',o.employee_id.id),('state','=','open'),])" t-as="obj">
+
+                         <t t-esc="'{:,}'.format(round(obj.wage),2)" />
+                     </t>
+                         Loan request Amount: <span t-field="o.loan_amount"/>
+                     </p>
+
+                     <p  style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        6. Repayment perid: <span t-field="o.installment"/> month
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        7. Purpose of the loan (Witten evidence to be attached):  <span t-field="o.purpose"/>
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        <b> 8. Note that: </b>
+                • Salary advances shall not exceed 30% of the monthly net salary and must be repaid completely when the salary is paid.
+                • Staff loan cannot exceed two-month basic salary and must be repaid in monthly instalments over a maximum period of six months
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+
+                         9. I clarify that the information provided above are correct and agree to the terms and
+                         conditions set by PAD for deducting of the loan from my salary or any termination benefits
+                         should I leave PAD before full settlement of the loan.
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                        10. Signature of requester __________________________   Date <span t-field="o.date" />
+                     </p>
+                     <p  style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         11. I endorse the loan request of _________________________________as outline above.
+                     </p>
+                     <p  style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         12. Name of the Manager/Head <span t-field="o.checked_by"/> Signature_____________ Date <span t-field="o.checked_date"/>
+                     </p>
+                     <p style="text-align:center; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         For Head Office Finance Section
+                     </p>
+                     <br/>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         <t t-set="schedule" t-value="o.loan_amount / o.installment" />
+
+                         13. Payment Schedule <span t-esc="'{:,}'.format(round(schedule),2)" /> Birr per month for <span t-field="o.installment" /> months starting from <span t-field="o.payment_date" />
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         14. Checked by: <span t-field="o.checked_by"/> Signature _____________ Date <span t-field="o.checked_date"/>
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         15. Comment_____________________________________________________________________________________________
+                         _______________________________________________________________
+                     </p>
+                     <p style="text-align:left; font-weight:bold; font-size: 18px; border: none solid #7D7C7C; 18px;">
+                         16. Approved/Disapproved by <span t-field="o.approved_by"/> Signature ________________ Date <span t-field="o.approved_date"/>
+                     </p>
+                 </t>
+                </t>
+        </t>
+
+    </template>
+
+
+</odoo>

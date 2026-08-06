@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     
+    <record id="action_my_attendance" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records to display
+            </p><p>
+                The attendance records of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_my_attendance_kiosk_mode" model="ir.actions.client">
+        <field name="name">Attendances</field>
+        <field name="tag">hr_attendance_kiosk_mode</field>
+        <field name="target">fullscreen</field>
+    </record>
+
+    <record id="action_my_attendance_checkin_checkout" model="ir.actions.client">
+        <field name="name">Attendance</field>
+        <field name="tag">hr_attendance_my_attendances</field>
+        <field name="target">main</field>
+    </record>
+    
+    <menuitem id="menu_my_attendance" name="My Attendance" parent="de_hr_workspace.menu_my_workspace" sequence="30"/>
+    
+    <menuitem id="menu_my_attendance_attendance" name="Attendance" parent="menu_my_attendance" action="action_my_attendance" sequence="10"/>
+    
+    <menuitem id="menu_my_attendance_checkin_checkout" name="Check In/Check Out" parent="menu_my_attendance" action="action_my_attendance_checkin_checkout" sequence="20" groups="group_hr_workspace_allow_manul_attendance"/>
+
+
+   
+</odoo>

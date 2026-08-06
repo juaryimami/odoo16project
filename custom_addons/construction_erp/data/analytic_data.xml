@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Construction Projects Analytic Plan (Required for Odoo 16) -->
+    <record id="analytic_plan_projects" model="account.analytic.plan">
+        <field name="name">Construction Projects</field>
+        <field name="description">Standard analytic grouping for site-level financial tracking.</field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_absence_confirmation_wizard_form" model="ir.ui.view">
+        <field name="name">absence.confirmation.wizard.form</field>
+        <field name="model">absence.confirmation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Absence Deduction Confirmation">
+                <sheet>
+                    <field name="message" nolabel="1" readonly="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_compute_and_deduct" string="Compute &amp; Deduct" type="object" class="btn-primary"/>
+                    <button name="action_compute_and_forgive" string="Compute &amp; Forgive (Warning Only)" type="object" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_construction_usage_log_tree" model="ir.ui.view">
+        <field name="name">construction.usage.log.tree</field>
+        <field name="model">construction.usage.log</field>
+        <field name="arch" type="xml">
+            <tree string="Resource Usage Logs" decoration-info="resource_type == 'vehicle'" decoration-warning="resource_type == 'equipment'">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="lifecycle_id" invisible="1"/>
+                <field name="phase_id"/>
+                <field name="resource_type"/>
+                <field name="product_id"/>
+                <field name="quantity" sum="Total Quantity"/>
+                <field name="uom_id"/>
+                <field name="total_cost" sum="Total Cost"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_usage_log_form" model="ir.ui.view">
+        <field name="name">construction.usage.log.form</field>
+        <field name="model">construction.usage.log</field>
+        <field name="arch" type="xml">
+            <form string="Resource Usage Log">
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Usage Reference</span>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Site Context">
+                            <field name="project_id"/>
+                            <field name="lifecycle_id" invisible="1"/>
+                            <field name="phase_id"/>
+                            <field name="date"/>
+                            <field name="operator_id"/>
+                        </group>
+                        <group string="Resource Details">
+                            <field name="resource_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="product_id"/>
+                            <field name="uom_id" readonly="1"/>
+                            <field name="cost_line_id" domain="[('product_id', '=', product_id), ('cost_sheet_id.project_id', '=', project_id)]"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Usage Metrics" attrs="{'invisible': [('resource_type', '=', 'labor')]}">
+                            <field name="start_reading"/>
+                            <field name="end_reading"/>
+                            <field name="quantity" readonly="1" force_save="1"/>
+                        </group>
+                        <group string="Manual Quantity" attrs="{'invisible': [('resource_type', 'in', ['vehicle', 'equipment'])]}">
+                             <field name="quantity" attrs="{'readonly': [('resource_type', 'in', ['vehicle', 'equipment'])]}"/>
+                        </group>
+                        <group string="Financials">
+                            <field name="unit_cost" readonly="1"/>
+                            <field name="total_cost" readonly="1" force_save="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Work Performed / Notes">
+                            <field name="notes" placeholder="Describe the activity performed during this usage period..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_usage_log_search" model="ir.ui.view">
+        <field name="name">construction.usage.log.search</field>
+        <field name="model">construction.usage.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Usage Logs">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="product_id"/>
+                <filter string="Vehicles" name="vehicles" domain="[('resource_type', '=', 'vehicle')]"/>
+                <filter string="Equipment" name="equipment" domain="[('resource_type', '=', 'equipment')]"/>
+                <filter string="Labor" name="labor" domain="[('resource_type', '=', 'labor')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_by_project" context="{'group_by':'project_id'}"/>
+                    <filter string="Phase" name="group_by_phase" context="{'group_by':'phase_id'}"/>
+                    <filter string="Resource Type" name="group_by_type" context="{'group_by':'resource_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_construction_usage_log" model="ir.actions.act_window">
+        <field name="name">Site Resource Usage</field>
+        <field name="res_model">construction.usage.log</field>
+        <field name="view_mode">tree,form,search</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Record daily resource usage on site.
+            </p>
+            <p>
+                Track machine hours, vehicle mileage, and contractor manpower outputs to feed the Job Costing engine.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_construction_usage_log"
+              name="Site Usage Logs"
+              parent="menu_construction_operations"
+              action="action_construction_usage_log"
+              sequence="25"/>
+</odoo>

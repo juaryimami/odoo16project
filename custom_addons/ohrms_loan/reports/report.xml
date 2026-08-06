@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+                id="report_hr_loan_pdf"
+                string="HR Loan"
+                model="hr.loan"
+                report_type="qweb-pdf"
+                name="ohrms_loan.report_hr_loan"
+                file="ohrms_loan.report_hr_loan"/>
+
+
+
+    </data>
+</odoo>

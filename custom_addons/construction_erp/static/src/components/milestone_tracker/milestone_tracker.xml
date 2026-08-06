@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="construction_erp.MilestoneTracker" owl="1">
+        <div class="milestone-mini-tracker">
+            <div class="tracker-header-mini d-flex justify-content-between align-items-center">
+                <span class="text-uppercase x-small fw-bold text-muted">Work Execution Roadmap</span>
+            </div>
+            <div class="tracker-body-mini">
+                <div class="tracker-nodes-container">
+                    <div class="tracker-line"></div>
+                    <t t-foreach="state.milestones" t-as="m" t-key="m.id">
+                        <div t-attf-class="tracker-node-item {{getStatusClass(m.state)}} {{m.is_current ? 'current' : ''}}">
+                            <div class="tracker-dot-wrapper">
+                                <div class="tracker-dot" t-on-click="() => this.openMilestone(m.id)" t-att-data-tooltip="m.description">
+                                    <t t-if="m.state == 'approved' or m.state == 'billed'">
+                                        <i class="fa fa-check x-small"></i>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="tracker-info">
+                                <span class="tracker-name" t-att-title="m.name"><t t-esc="m.name"/></span>
+                                <div class="tracker-badge-container d-flex align-items-center x-small">
+                                    <t t-if="m.has_checklist">
+                                        <span class="badge rounded-pill bg-light text-primary border me-1">
+                                            <i class="fa fa-list-ul me-1"></i><t t-esc="m.checklist_summary"/>
+                                        </span>
+                                    </t>
+                                </div>
+                                <div class="tracker-actions" t-if="m.state != 'approved' and m.state != 'billed'">
+                                    <button class="btn-tracker-config" t-on-click="() => this.openMilestone(m.id)">
+                                        <i class="fa fa-pencil me-1"></i>Edit
+                                    </button>
+                                    <button class="btn-tracker-delete text-danger ms-2 border-0 bg-transparent x-small" t-on-click="() => this.deleteMilestone(m.id)" title="Delete Section">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <!-- Add Node Button -->
+                    <div class="tracker-node-item add-action" t-on-click="addWorkMilestone">
+                        <div class="tracker-dot-wrapper">
+                            <div class="tracker-dot add-dot">
+                                <i class="fa fa-plus x-small"></i>
+                            </div>
+                        </div>
+                        <div class="tracker-info">
+                            <span class="tracker-name text-muted">Add Section</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

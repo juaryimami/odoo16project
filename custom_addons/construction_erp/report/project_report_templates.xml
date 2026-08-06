@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_project_comprehensive_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Master Project Analytics: <span t-field="o.name"/></h2>
+                        
+                        <!-- Header Dashboard -->
+                        <div class="row mt32 mb32" style="background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                            <div class="col-3">
+                                <strong>Active Phase:</strong><br/>
+                                <span t-field="o.current_phase_id.name"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Total Analytical Expenses:</strong><br/>
+                                <span t-field="o.total_expense" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Total Validated Income:</strong><br/>
+                                <span t-field="o.total_collected" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Net Profitability:</strong><br/>
+                                <span t-field="o.profitability" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                            </div>
+                        </div>
+
+                        <!-- Estimate Phase Tables -->
+                        <h3 class="mt32">Approved Phase Budget Estimates</h3>
+                        <table class="table table-sm o_main_table table-striped mt16">
+                            <thead style="background-color: #e9ecef;">
+                                <tr>
+                                    <th>Operational Phase</th>
+                                    <th>Material / Scope Definition</th>
+                                    <th class="text-right">Projected Quantity</th>
+                                    <th class="text-right">Estimated Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.estimate_line_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-esc="line.estimate_id.phase_id.name or 'General'"/></td>
+                                        <td><span t-field="line.product_id.name"/></td>
+                                        <td class="text-right"><span t-field="line.quantity"/></td>
+                                        <td class="text-right"><span t-field="line.total_cost" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Physical Blueprint -->
+                        <h3 class="mt32">Geospatial Footprint</h3>
+                        <table class="table table-sm mt16">
+                            <tr>
+                                <td><strong>Site Area:</strong></td>
+                                <td><span t-field="o.site_area"/> sq.m</td>
+                                <td><strong>GPS Coordinates:</strong></td>
+                                <td><span t-field="o.site_latitude"/> , <span t-field="o.site_longitude"/></td>
+                            </tr>
+                        </table>
+                        <!-- Extracted Operational Matrices -->
+                        <t t-set="requisitions" t-value="o.env['construction.material.requisition'].search([('project_id', '=', o.id)])"/>
+                        <t t-set="pickings" t-value="requisitions.mapped('picking_ids')"/>
+                        <t t-set="pos" t-value="requisitions.mapped('purchase_ids')"/>
+                        <t t-set="analytic_lines" t-value="o.env['account.analytic.line'].search([('account_id', '=', o.analytic_account_id.id)])"/>
+                        <t t-set="units" t-value="o.env['real_estate.unit'].search([('project_id', '=', o.id), ('status', 'in', ['reserved', 'sold'])])"/>
+
+                        <t t-if="requisitions">
+                            <h3 class="mt32 text-primary">Material Requisitions</h3>
+                            <table class="table table-sm o_main_table table-striped mt16">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th>Requisition Ref</th>
+                                        <th>Request Date</th>
+                                        <th>Requested By</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="requisitions" t-as="req">
+                                        <tr>
+                                            <td><span t-field="req.name"/></td>
+                                            <td><span t-field="req.request_date"/></td>
+                                            <td><span t-field="req.requested_by.name"/></td>
+                                            <td><span t-field="req.state"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="pickings">
+                            <h3 class="mt32 text-info">Internal Stock Transfers</h3>
+                            <table class="table table-sm o_main_table table-striped mt16">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th>Transfer Reference</th>
+                                        <th>Origin</th>
+                                        <th>Logistics Route (Source -> Dest)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="pickings" t-as="pick">
+                                        <tr>
+                                            <td><span t-field="pick.name"/></td>
+                                            <td><span t-field="pick.origin"/></td>
+                                            <td><span t-field="pick.location_id.name"/> -> <span t-field="pick.location_dest_id.name"/></td>
+                                            <td><span t-field="pick.state"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="pos">
+                            <h3 class="mt32 text-warning">Procurement (Purchase Orders)</h3>
+                            <table class="table table-sm o_main_table table-striped mt16">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th>PO Reference</th>
+                                        <th>Vendor</th>
+                                        <th>Source Requisition</th>
+                                        <th class="text-right">Total Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="pos" t-as="po">
+                                        <tr>
+                                            <td><span t-field="po.name"/></td>
+                                            <td><span t-field="po.partner_id.name"/></td>
+                                            <td><span t-field="po.origin"/></td>
+                                            <td class="text-right"><span t-field="po.amount_total" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                            <td><span t-field="po.state"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="analytic_lines">
+                            <h3 class="mt32 text-danger">Detailed Analytic Expenses</h3>
+                            <table class="table table-sm o_main_table table-striped mt16">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th>Posting Date</th>
+                                        <th>Description</th>
+                                        <th>Vendor / Partner</th>
+                                        <th class="text-right">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="analytic_lines" t-as="aline">
+                                        <tr>
+                                            <td><span t-field="aline.date"/></td>
+                                            <td><span t-field="aline.name"/></td>
+                                            <td><span t-field="aline.partner_id.name"/></td>
+                                            <td class="text-right"><span t-field="aline.amount" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="units">
+                            <h3 class="mt32 text-success">Real Estate Commercial Sales</h3>
+                            <table class="table table-sm o_main_table table-striped mt16">
+                                <thead style="background-color: #e9ecef;">
+                                    <tr>
+                                        <th>Unit ID</th>
+                                        <th>Client</th>
+                                        <th class="text-right">Sale Price</th>
+                                        <th class="text-right">Amount Paid</th>
+                                        <th class="text-right">Remaining Balance</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="units" t-as="unit">
+                                        <tr>
+                                            <td><span t-field="unit.name"/> (<span t-field="unit.unit_type"/>)</td>
+                                            <td><span t-field="unit.client_id.name"/></td>
+                                            <td class="text-right"><span t-field="unit.price" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                            <td class="text-right"><span t-field="unit.amount_paid" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                            <td class="text-right"><span t-field="unit.amount_remaining" t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

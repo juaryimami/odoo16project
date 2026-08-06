@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_installment_invoice_wizard_form" model="ir.ui.view">
+        <field name="name">installment.invoice.wizard.form</field>
+        <field name="model">installment.invoice.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Installment Invoice">
+                <header attrs="{'invisible': [('method', '!=', 'selection')]}">
+                    <div class="alert alert-info mb-0" role="alert">
+                        Selected: <strong><field name="line_ids" widget="many2many_tags" readonly="1"/></strong> 
+                        | Total Selection: <strong><field name="total_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/></strong>
+                    </div>
+                </header>
+                <group>
+                    <group>
+                        <field name="plan_id" readonly="1" force_save="1"/>
+                        <field name="client_id" readonly="1"/>
+                        <field name="method" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="invoice_date"/>
+                        <field name="invoice_date_due"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="total_amount" force_save="1" attrs="{'readonly': [('method', '=', 'selection')], 'required': [('method', '=', 'amount')]}"/>
+                    </group>
+                </group>
+                <div attrs="{'invisible': [('method', '!=', 'selection')]}">
+                    <p class="text-muted">Select the specific installments you want to include in this invoice.</p>
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom" create="0">
+                            <field name="name" readonly="1"/>
+                            <field name="due_date" readonly="1"/>
+                            <field name="amount" readonly="1" sum="Total"/>
+                        </tree>
+                    </field>
+                </div>
+                <div attrs="{'invisible': [('method', '!=', 'amount')]}">
+                    <p class="alert alert-info">
+                        <strong>Amount Mode:</strong> The system will automatically allocate the entered amount starting from the earliest unpaid installment. 
+                        If the amount covers more than one installment, multiple lines will be marked as paid. 
+                        Any remainder will be deducted from the next upcoming installment.
+                    </p>
+                </div>
+                <footer>
+                    <button name="action_create_invoice" string="Generate Invoice" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_installment_invoice_wizard" model="ir.actions.act_window">
+        <field name="name">Quick Invoice</field>
+        <field name="res_model">installment.invoice.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- RFI Views -->
+    <record id="view_construction_rfi_tree" model="ir.ui.view">
+        <field name="name">construction.rfi.tree</field>
+        <field name="model">construction.rfi</field>
+        <field name="arch" type="xml">
+            <tree string="RFIs" decoration-info="state == 'sent'" decoration-success="state == 'responded'" decoration-muted="state == 'closed'">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="subject"/>
+                <field name="requested_from_id"/>
+                <field name="date"/>
+                <field name="due_date"/>
+                <field name="aging_days" string="Aging"/>
+                <field name="state" widget="badge" decoration-info="state == 'sent'" decoration-success="state == 'responded'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_rfi_form" model="ir.ui.view">
+        <field name="name">construction.rfi.form</field>
+        <field name="model">construction.rfi</field>
+        <field name="arch" type="xml">
+            <form string="Request for Information">
+                <header>
+                    <button name="action_send" string="Send to Consultant" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_respond" string="Record Response" type="object" states="sent" class="btn-info"/>
+                    <button name="action_close" string="Close RFI" type="object" states="responded" class="btn-secondary"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,responded,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">RFI Reference</span>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Basic Info">
+                            <field name="project_id"/>
+                            <field name="phase_id"/>
+                            <field name="subject"/>
+                            <field name="requested_from_id"/>
+                        </group>
+                        <group string="Dates &amp; Impact">
+                            <field name="date"/>
+                            <field name="due_date"/>
+                            <field name="response_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="aging_days"/>
+                            <label for="impact_cost" string="Impact Analysis"/>
+                            <div class="o_row">
+                                <field name="impact_cost"/> <span class="pl-2">Cost</span>
+                                <field name="impact_schedule" class="ml-3"/> <span class="pl-2">Schedule</span>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Technical Question">
+                            <field name="question" placeholder="Describe the technical query in detail..."/>
+                        </page>
+                        <page string="Consultant Response" attrs="{'invisible': [('state', '=', 'draft')]}">
+                            <field name="response" placeholder="Record the official response from the consultant..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_rfi_kanban" model="ir.ui.view">
+        <field name="name">construction.rfi.kanban</field>
+        <field name="model">construction.rfi</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" quick_create="false">
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="project_id"/>
+                <field name="aging_days"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-muted">
+                                    <field name="subject"/>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6 text-muted">
+                                    <field name="project_id"/>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span t-attf-class="badge #{record.aging_days.raw_value > 7 ? 'badge-danger' : 'badge-info'}">
+                                        <t t-esc="record.aging_days.value"/> Days
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Submittal Views -->
+    <record id="view_construction_submittal_tree" model="ir.ui.view">
+        <field name="name">construction.submittal.tree</field>
+        <field name="model">construction.submittal</field>
+        <field name="arch" type="xml">
+            <tree string="Technical Submittals">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="project_id"/>
+                <field name="submittal_type"/>
+                <field name="revision"/>
+                <field name="reviewer_id"/>
+                <field name="approval_status" widget="badge" 
+                       decoration-success="approval_status == 'approved'" 
+                       decoration-warning="approval_status == 'approved_noted'"
+                       decoration-danger="approval_status in ('rejected', 'resubmit')"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_construction_submittal_form" model="ir.ui.view">
+        <field name="name">construction.submittal.form</field>
+        <field name="model">construction.submittal</field>
+        <field name="arch" type="xml">
+            <form string="Technical Submittal">
+                <header>
+                    <button name="action_approve" string="Approve" type="object" states="pending" class="btn-success"/>
+                    <button name="action_resubmit" string="Revise &amp; Resubmit" type="object" states="pending" class="btn-warning"/>
+                    <button name="action_reject" string="Reject" type="object" states="pending" class="btn-danger"/>
+                    <field name="approval_status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <span class="o_form_label">Submittal ID</span>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="title"/>
+                            <field name="submittal_type"/>
+                            <field name="project_id"/>
+                            <field name="phase_id"/>
+                        </group>
+                        <group>
+                            <field name="reviewer_id"/>
+                            <field name="revision"/>
+                            <field name="date_submitted"/>
+                            <field name="date_response"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Technical Details">
+                            <field name="notes" placeholder="Approval remarks or technical specifications..."/>
+                        </page>
+                        <page string="Documents">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_construction_submittal_kanban" model="ir.ui.view">
+        <field name="name">construction.submittal.kanban</field>
+        <field name="model">construction.submittal</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="approval_status" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="approval_status"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div><strong><field name="name"/></strong></div>
+                                <div><field name="title"/></div>
+                                <div class="mt-2 text-muted">
+                                    <field name="submittal_type"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_construction_rfi" model="ir.actions.act_window">
+        <field name="name">Requests for Information (RFI)</field>
+        <field name="res_model">construction.rfi</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Record your first technical query.</p>
+        </field>
+    </record>
+
+    <record id="action_construction_submittal" model="ir.actions.act_window">
+        <field name="name">Technical Submittals</field>
+        <field name="res_model">construction.submittal</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage your material and drawing approvals here.</p>
+        </field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_construction_engineering"
+              name="Engineering Control"
+              parent="menu_construction_operations"
+              sequence="22"/>
+
+    <menuitem id="menu_construction_rfi"
+              name="RFIs"
+              parent="menu_construction_engineering"
+              action="action_construction_rfi"
+              sequence="10"/>
+
+    <menuitem id="menu_construction_submittal"
+              name="Technical Submittals"
+              parent="menu_construction_engineering"
+              action="action_construction_submittal"
+              sequence="20"/>
+</odoo>

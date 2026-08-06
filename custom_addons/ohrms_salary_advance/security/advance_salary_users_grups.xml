@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+          <record model="ir.module.category" id="advance_salary_res_groups_category">
+              <field name="name">Advance Salary Request</field>
+            <field name="description">Helps you manage Advance salary request.</field>
+        </record>
+
+        <record id="advance_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name ="category_id" ref="advance_salary_res_groups_category" />
+        </record>
+        <record id="advance_group_manager" model="res.groups">
+            <field name="name">Manager/Head</field>
+            <field name = "category_id" ref="advance_salary_res_groups_category" />
+        </record>
+        <record id="advance_group_approver" model="res.groups">
+            <field name="name">Finance Manager</field>
+            <field name = "category_id" ref="advance_salary_res_groups_category" />
+        </record>
+    </data>
+</odoo>

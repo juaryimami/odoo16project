@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_my_payslips" model="ir.actions.act_window">
+        <field name="name">My Payslips</field>
+        <field name="res_model">hr.payslip</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No payslips found.
+            </p>
+            <p>
+                Your generated payslips will appear here.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_my_payslips" name="My Payslips" parent="menu_my_workspace" sequence="70"/>
+    <menuitem id="menu_my_payslips_list" name="Payslips" parent="menu_my_payslips" action="action_my_payslips" sequence="10"/>
+</odoo>

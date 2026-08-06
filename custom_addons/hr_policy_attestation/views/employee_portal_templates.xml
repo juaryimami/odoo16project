@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- This file is left intentionally blank to prevent FileNotFoundError during cached UI upgrades. 
+         It has been removed from the manifest and can be safely ignored. -->
+</odoo>
